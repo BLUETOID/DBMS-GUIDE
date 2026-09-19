@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="DBMS &amp; SQL Cheat Sheet - Fast visual reference cards covering ANSI/SPARC, ER modeling, Relational Algebra, SQL DDL/DML/TCL, PL/SQL, Normalization (1NF-5NF), ACID, Serializability, 2PL, and Recovery.">
+    <title>DBMS &amp; SQL Cheat Sheet | DBMS Learning Hub (BCS501)</title>
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+</head>
+<body>
+    <nav class="navbar" role="navigation" aria-label="Main navigation">
+        <div class="nav-container">
+            <a href="index.html" class="logo" aria-label="DBMS Hub Home">
+                <i class="fas fa-database" aria-hidden="true"></i> DBMS Hub
+            </a>
+            <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation menu" aria-expanded="false" aria-controls="navMenu">
+                <i class="fas fa-bars" aria-hidden="true"></i>
+            </button>
+            <ul class="nav-menu" id="navMenu">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="unit1.html">Unit I</a></li>
+                <li><a href="unit2.html">Unit II</a></li>
+                <li><a href="unit3.html">Unit III</a></li>
+                <li><a href="unit4.html">Unit IV</a></li>
+                <li><a href="unit5.html">Unit V</a></li>
+                <li><a href="theory.html">Theory</a></li>
+                <li><a href="mcq.html">MCQ Bank</a></li>
+                <li><a href="cheatsheet.html" class="active">Cheat Sheet</a></li>
+                <li class="nav-divider"></li>
+                <li><a href="previousyear.html">Solved PYQs</a></li>
+            </ul>
+            <button class="theme-toggle-btn" id="darkModeToggle" onclick="toggleDarkMode()" aria-label="Toggle Dark Mode">
+                <i class="fas fa-moon"></i>
+            </button>
+        </div>
+    </nav>
+
+    <header class="cheatsheet-header">
+        <div class="container">
+            <h1><i class="fas fa-bolt"></i> DBMS &amp; SQL Cheat Sheet</h1>
+            <p>Comprehensive High-Density Visual Revision Cards for BCS501 &amp; Competitive Exams</p>
+            <div class="cheatsheet-search">
+                <i class="fas fa-search"></i>
+                <input type="text" id="cheatsheetSearch" placeholder="Filter concepts, algorithms, SQL syntax (e.g. BCNF, JOIN, ACID, 2PL, Recovery)..." autofocus>
+            </div>
+        </div>
+    </header>
+
+    <section class="cheatsheet-section">
+        <div class="container">
+            <nav class="cheatsheet-nav" aria-label="Cheat Sheet Filter Navigation">
+                <a href="#unit1-section"><i class="fas fa-layer-group"></i> Unit 1: Architecture &amp; ER</a>
+                <a href="#unit2-section"><i class="fas fa-code"></i> Unit 2: Relational &amp; SQL</a>
+                <a href="#unit3-section"><i class="fas fa-sitemap"></i> Unit 3: Normalization &amp; FDs</a>
+                <a href="#unit4-section"><i class="fas fa-exchange-alt"></i> Unit 4: Transactions &amp; ACID</a>
+                <a href="#unit5-section"><i class="fas fa-shield-alt"></i> Unit 5: Concurrency &amp; Recovery</a>
+            </nav>
+
+            <!-- UNIT 1 CARDS -->
+            <div id="unit1-section" style="margin-top: 10px; margin-bottom: 25px;">
+                <h2 style="font-size: 1.25rem; color: var(--primary-color); border-bottom: 2px solid var(--primary-color); padding-bottom: 6px; margin-bottom: 16px;">
+                    <i class="fas fa-layer-group"></i> Unit I: Database Architecture, ER Modeling &amp; Keys
+                </h2>
+                <div class="cheatsheet-grid">
+                    <!-- Card 1: 3-Tier Architecture -->
+                    <div class="cheat-card cheat-blue">
+                        <div class="cheat-card-header">
+                            <h3><i class="fas fa-cubes"></i> 3-Level ANSI/SPARC Architecture</h3>
+                        </div>
+                        <div class="cheat-card-body">
+                            <table class="syntax-table">
+                                <tr><td>External (View)</td><td>Individual user views; abstracts away other table schemas.</td></tr>
+                                <tr><td>Conceptual (Logical)</td><td>Entire database structure: entities, attributes, constraints.</td></tr>
+                                <tr><td>Internal (Physical)</td><td>Data storage, block allocation, record formats, B-tree indexes.</td></tr>
+                            </table>
+                            <h4>Data Independence</h4>
+                            <table class="syntax-table">
+                                <tr><td>Logical</td><td>Altering Conceptual schema without changing External views.</td></tr>
+                                <tr><td>Physical</td><td>Altering Physical storage without changing Conceptual schema.</td></tr>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Card 2: ER Symbols -->
+                    <div class="cheat-card cheat-emerald">
+                        <div class="cheat-card-header">
+                            <h3><i class="fas fa-project-diagram"></i> ER Diagram Symbols Reference</h3>
+                        </div>
+                        <div class="cheat-card-body">
+                            <table class="syntax-table">
+                                <tr><td>Rectangle</td><td>Strong Entity Set (independent existence)</td></tr>
+                                <tr><td>Double Rectangle</td><td>Weak Entity Set (depends on identifying owner)</td></tr>
+                                <tr><td>Diamond</td><td>Relationship Set</td></tr>
+                                <tr><td>Double Diamond</td><td>Identifying Relationship for weak entity</td></tr>
+                                <tr><td>Ellipse (Oval)</td><td>Attribute</td></tr>
+                                <tr><td>Solid Underline</td><td>Primary Key / Candidate Key attribute</td></tr>
+                                <tr><td>Dashed Underline</td><td>Partial Key (Discriminator) of Weak Entity</td></tr>
+                                <tr><td>Double Ellipse</td><td>Multivalued Attribute (e.g. Phone numbers)</td></tr>
+                                <tr><td>Dashed Ellipse</td><td>Derived Attribute (e.g. Age from DOB)</td></tr>
+                                <tr><td>Double Line</td><td>Total Participation (Existence dependency)</td></tr>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Card 3: Keys Taxonomy -->
+                    <div class="cheat-card cheat-amber">
+                        <div class="cheat-card-header">
+                            <h3><i class="fas fa-key"></i> Database Keys Hierarchy</h3>
+                        </div>
+                        <div class="cheat-card-body">
+                            <table class="syntax-table">
+                                <tr><td>Superkey</td><td>Any attribute set uniquely identifying a tuple ($SK \implies \text{Unique}$).</td></tr>
+                                <tr><td>Candidate Key</td><td>Minimal superkey (no redundant attributes; removal destroys uniqueness).</td></tr>
+                                <tr><td>Primary Key</td><td>Chosen candidate key; strictly NOT NULL and uniquely indexed.</td></tr>
+                                <tr><td>Alternate Key</td><td>Candidate keys not chosen as the primary key.</td></tr>
+                                <tr><td>Foreign Key</td><td>Attribute in child table referencing primary key of parent table.</td></tr>
+                                <tr><td>Compound Key</td><td>Key composed of two or more attributes.</td></tr>
+                            </table>
+                            <h4>Key Superkey Formula</h4>
+                            <p style="font-size: 0.8rem; margin: 4px 0;">For $R(A_1, \dots, A_n)$ with candidate key of size $k$: Total superkeys = $2^{n-k}$.</p>
+                        </div>
+                    </div>
+
+                    <!-- Card 4: Integrity Constraints -->
+                    <div class="cheat-card cheat-purple">
+                        <div class="cheat-card-header">
+                            <h3><i class="fas fa-check-double"></i> Relational Integrity Constraints</h3>
+                        </div>
+                        <div class="cheat-card-body">
+                            <table class="syntax-table">
+                                <tr><td>Domain Integrity</td><td>Attribute values must belong to declared data type/domain range.</td></tr>
+                                <tr><td>Entity Integrity</td><td>Primary key cannot contain NULL values ($PK \neq \text{NULL}$).</td></tr>
+                                <tr><td>Referential Integrity</td><td>Foreign key value must equal an existing parent PK value or be NULL.</td></tr>
+                                <tr><td>Key Constraint</td><td>No two distinct tuples can share identical candidate key values.</td></tr>
+                            </table>
+                            <h4>FK Delete Cascade Options</h4>
+                            <div class="cheat-code">ON DELETE CASCADE | SET NULL | RESTRICT | NO ACTION</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- UNIT 2 CARDS -->
+            <div id="unit2-section" style="margin-top: 35px; margin-bottom: 25px;">
+                <h2 style="font-size: 1.25rem; color: var(--primary-color); border-bottom: 2px solid var(--primary-color); padding-bottom: 6px; margin-bottom: 16px;">
+                    <i class="fas fa-code"></i> Unit II: Relational Algebra &amp; SQL Reference
+                </h2>
+                <div class="cheatsheet-grid">
+                    <!-- Card 5: Relational Algebra Operators -->
+                    <div class="cheat-card cheat-blue">
+                        <div class="cheat-card-header">
+                            <h3><i class="fas fa-square-root-alt"></i> Relational Algebra Core Operators</h3>
+                        </div>
+                        <div class="cheat-card-body">
+                            <table class="syntax-table">
+                                <tr><td>Selection $\sigma_p(R)$</td><td>Horizontal slice: filters tuples satisfying predicate $p$.</td></tr>
+                                <tr><td>Projection $\pi_{A}(R)$</td><td>Vertical slice: selects attributes $A$, eliminates duplicates.</td></tr>
+                                <tr><td>Cartesian Product $R \times S$</td><td>Cross product: combines all rows ($|R| \times |S|$ tuples).</td></tr>
+                                <tr><td>Set Union $R \cup S$</td><td>Tuples in $R$ or $S$ (requires union-compatibility).</td></tr>
+                                <tr><td>Set Difference $R - S$</td><td>Tuples in $R$ but not in $S$.</td></tr>
+                                <tr><td>Rename $\rho_{S}(R)$</td><td>Renames relation $R$ to $S$ or attributes.</td></tr>
+                                <tr><td>Natural Join $R \bowtie S$</td><td>Equality on all shared column names without column duplication.</td></tr>
+                                <tr><td>Division $R \div S$</td><td>Finds tuples in $R$ associated with ALL tuples in $S$.</td></tr>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Card 6: SQL Command Categories -->
+                    <div class="cheat-card cheat-emerald">
+                        <div class="cheat-card-header">
+                            <h3><i class="fas fa-terminal"></i> SQL Command Categories</h3>
+                        </div>
+                        <div class="cheat-card-body">
+                            <table class="syntax-table">
+                                <tr><td>DDL</td><td><code>CREATE</code>, <code>ALTER</code>, <code>DROP</code>, <code>TRUNCATE</code> (Auto-committed)</td></tr>
+                                <tr><td>DML</td><td><code>SELECT</code>, <code>INSERT</code>, <code>UPDATE</code>, <code>DELETE</code> (Requires commit)</td></tr>
+                                <tr><td>DCL</td><td><code>GRANT</code>, <code>REVOKE</code> (Privilege security management)</td></tr>
+                                <tr><td>TCL</td><td><code>COMMIT</code>, <code>ROLLBACK</code>, <code>SAVEPOINT</code>, <code>SET TRANSACTION</code></td></tr>
+                            </table>
+                            <h4>TRUNCATE vs DELETE</h4>
+                            <table class="syntax-table">
+                                <tr><td>TRUNCATE</td><td>DDL, deallocates pages, resets identity, faster, no WHERE.</td></tr>
+                                <tr><td>DELETE</td><td>DML, row-by-row logged, preserves space, supports WHERE.</td></tr>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Card 7: SQL Joins -->
+                    <div class="cheat-card cheat-amber">
+                        <div class="cheat-card-header">
+                            <h3><i class="fas fa-object-group"></i> SQL Joins Quick Summary</h3>
+                        </div>
+                        <div class="cheat-card-body">
+                            <table class="syntax-table">
+                                <tr><td>INNER JOIN</td><td>Returns only rows with matches in BOTH tables.</td></tr>
+                                <tr><td>LEFT JOIN</td><td>ALL rows from left table + matched rows from right table (NULL padded).</td></tr>
+                                <tr><td>RIGHT JOIN</td><td>ALL rows from right table + matched rows from left table (NULL padded).</td></tr>
+                                <tr><td>FULL OUTER JOIN</td><td>ALL rows when there is a match in either left or right table.</td></tr>
+                                <tr><td>CROSS JOIN</td><td>Cartesian product of both tables.</td></tr>
+                            </table>
+                            <div class="cheat-code">SELECT e.name, d.dept_name
+FROM Employee e
+LEFT JOIN Department d ON e.dept_id = d.dept_id;</div>
+                        </div>
+                    </div>
+
+                    <!-- Card 8: SQL Aggregation &amp; Grouping -->
+                    <div class="cheat-card cheat-rose">
+                        <div class="cheat-card-header">
+                            <h3><i class="fas fa-chart-bar"></i> Aggregation, GROUP BY &amp; HAVING</h3>
+                        </div>
+                        <div class="cheat-card-body">
+                            <table class="syntax-table">
+                                <tr><td>Aggregates</td><td><code>COUNT()</code>, <code>SUM()</code>, <code>AVG()</code>, <code>MIN()</code>, <code>MAX()</code></td></tr>
+                                <tr><td>WHERE vs HAVING</td><td><code>WHERE</code> filters individual rows; <code>HAVING</code> filters grouped rows.</td></tr>
+                                <tr><td>Query Execution</td><td>FROM &rarr; WHERE &rarr; GROUP BY &rarr; HAVING &rarr; SELECT &rarr; ORDER BY</td></tr>
+                            </table>
+                            <div class="cheat-code">SELECT dept_id, AVG(salary) AS avg_sal
+FROM Employee
+WHERE status = 'ACTIVE'
+GROUP BY dept_id
+HAVING AVG(salary) > 50000
+ORDER BY avg_sal DESC;</div>
+                        </div>
+                    </div>
+
+                    <!-- Card 9: PL/SQL Blocks &amp; Cursors -->
+                    <div class="cheat-card cheat-purple">
+                        <div class="cheat-card-header">
+                            <h3><i class="fas fa-cogs"></i> PL/SQL Block &amp; Explicit Cursors</h3>
+                        </div>
+                        <div class="cheat-card-body">
+                            <h4>Block Structure</h4>
+                            <div class="cheat-code">DECLARE (optional)
+BEGIN   (mandatory)
+EXCEPTION (optional)
+END;    (mandatory)</div>
+                            <h4>Cursor Life Cycle</h4>
+                            <p style="font-size: 0.78rem; margin: 4px 0;"><strong>DECLARE</strong> &rarr; <strong>OPEN</strong> &rarr; <strong>FETCH</strong> &rarr; <strong>CLOSE</strong></p>
+                            <h4>Cursor Attributes</h4>
+                            <table class="syntax-table">
+                                <tr><td><code>%FOUND</code></td><td>TRUE if FETCH returned a row.</td></tr>
+                                <tr><td><code>%NOTFOUND</code></td><td>TRUE if active set exhausted.</td></tr>
+                                <tr><td><code>%ISOPEN</code></td><td>TRUE if cursor is currently open.</td></tr>
+                                <tr><td><code>%ROWCOUNT</code></td><td>Number of rows fetched so far.</td></tr>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Card 10: PL/SQL Triggers -->
+                    <div class="cheat-card cheat-cyan">
+                        <div class="cheat-card-header">
+                            <h3><i class="fas fa-bell"></i> PL/SQL Database Triggers</h3>
+                        </div>
+                        <div class="cheat-card-body">
+                            <table class="syntax-table">
+                                <tr><td>Timing</td><td><code>BEFORE</code> or <code>AFTER</code> or <code>INSTEAD OF</code> (Views)</td></tr>
+                                <tr><td>Event</td><td><code>INSERT</code>, <code>UPDATE</code>, or <code>DELETE</code></td></tr>
+                                <tr><td>Granularity</td><td>Statement-level (default) vs Row-level (<code>FOR EACH ROW</code>)</td></tr>
+                            </table>
+                            <h4>Trigger Pseudo-Records</h4>
+                            <table class="syntax-table">
+                                <tr><td><code>:OLD</code></td><td>Prior tuple values (available in UPDATE, DELETE).</td></tr>
+                                <tr><td><code>:NEW</code></td><td>New tuple values (available in INSERT, UPDATE).</td></tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- UNIT 3 CARDS -->
+            <div id="unit3-section" style="margin-top: 35px; margin-bottom: 25px;">
+                <h2 style="font-size: 1.25rem; color: var(--primary-color); border-bottom: 2px solid var(--primary-color); padding-bottom: 6px; margin-bottom: 16px;">
+                    <i class="fas fa-sitemap"></i> Unit III: Normalization &amp; Functional Dependencies
+                </h2>
+                <div class="cheatsheet-grid">
+                    <!-- Card 11: Armstrong's Axioms -->
+                    <div class="cheat-card cheat-blue">
+                        <div class="cheat-card-header">
+                            <h3><i class="fas fa-calculator"></i> Armstrong's Axioms &amp; Inference Rules</h3>
+                        </div>
+                        <div class="cheat-card-body">
+                            <h4>Primary Axioms (Sound &amp; Complete)</h4>
+                            <table class="syntax-table">
+                                <tr><td>Reflexivity</td><td>If $Y \subseteq X$, then $X \to Y$.</td></tr>
+                                <tr><td>Augmentation</td><td>If $X \to Y$, then $XZ \to YZ$.</td></tr>
+                                <tr><td>Transitivity</td><td>If $X \to Y$ and $Y \to Z$, then $X \to Z$.</td></tr>
+                            </table>
+                            <h4>Secondary Derived Rules</h4>
+                            <table class="syntax-table">
+                                <tr><td>Union</td><td>$X \to Y \land X \to Z \implies X \to YZ$</td></tr>
+                                <tr><td>Decomposition</td><td>$X \to YZ \implies X \to Y \land X \to Z$</td></tr>
+                                <tr><td>Pseudo-transitivity</td><td>$X \to Y \land \gamma Y \to Z \implies \gamma X \to Z$</td></tr>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Card 12: Normal Forms Summary -->
+                    <div class="cheat-card cheat-emerald">
+                        <div class="cheat-card-header">
+                            <h3><i class="fas fa-stream"></i> Normal Forms Summary (1NF to BCNF)</h3>
+                        </div>
+                        <div class="cheat-card-body">
+                            <table class="syntax-table">
+                                <tr><td>1NF</td><td>All attribute values atomic; no repeating groups or multivalued arrays.</td></tr>
+                                <tr><td>2NF</td><td>In 1NF + NO partial dependencies (non-prime dependent on proper subset of candidate key).</td></tr>
+                                <tr><td>3NF</td><td>In 2NF + For every $X \to A$, either $X$ is a superkey OR $A$ is prime attribute.</td></tr>
+                                <tr><td>BCNF</td><td>Strict: For every non-trivial $X \to A$, $X$ MUST strictly be a superkey.</td></tr>
+                                <tr><td>4NF</td><td>In BCNF + No non-trivial Multivalued Dependencies ($\alpha \twoheadrightarrow \beta$).</td></tr>
+                                <tr><td>5NF</td><td>In 4NF + No Join Dependencies not implied by candidate keys.</td></tr>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Card 13: Attribute Closure Algorithm -->
+                    <div class="cheat-card cheat-amber">
+                        <div class="cheat-card-header">
+                            <h3><i class="fas fa-search-plus"></i> Attribute Closure Algorithm ($X^+$)</h3>
+                        </div>
+                        <div class="cheat-card-body">
+                            <h4>Algorithm Steps</h4>
+                            <ol style="font-size: 0.78rem; padding-left: 18px; margin: 6px 0; color: var(--text-color);">
+                                <li>Initialize: $X^{(0)} = X$.</li>
+                                <li>Repeat: For each FD $Y \to Z \in F$, if $Y \subseteq X^{(i)}$, then $X^{(i+1)} = X^{(i)} \cup Z$.</li>
+                                <li>Stop when $X^{(i+1)} = X^{(i)}$. Output $X^+ = X^{(i)}$.</li>
+                            </ol>
+                            <h4>Key Testing Rule</h4>
+                            <p style="font-size: 0.78rem; margin: 4px 0;">If $X^+$ contains ALL attributes of relation $R$, then $X$ is a <strong>Superkey</strong>. If no proper subset of $X$ covers $R$, $X$ is a <strong>Candidate Key</strong>.</p>
+                        </div>
+                    </div>
+
+                    <!-- Card 14: Decomposition Properties -->
+                    <div class="cheat-card cheat-purple">
+                        <div class="cheat-card-header">
+                            <h3><i class="fas fa-puzzle-piece"></i> Decomposition Properties</h3>
+                        </div>
+                        <div class="cheat-card-body">
+                            <h4>Lossless Join Test (2 Sub-relations)</h4>
+                            <p style="font-size: 0.78rem; margin: 4px 0;">$R = R_1 \cup R_2$ is Lossless Join if and only if:</p>
+                            <div class="cheat-code">(R1 ∩ R2) → R1  OR  (R1 ∩ R2) → R2</div>
+                            <h4>Dependency Preservation</h4>
+                            <p style="font-size: 0.78rem; margin: 4px 0;">$(F_1 \cup F_2)^+ = F^+$</p>
+                            <h4>3NF vs BCNF Guarantee</h4>
+                            <table class="syntax-table">
+                                <tr><td>3NF</td><td>Guaranteed Lossless Join + Dependency Preserving.</td></tr>
+                                <tr><td>BCNF</td><td>Guaranteed Lossless Join; may NOT preserve dependencies.</td></tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- UNIT 4 CARDS -->
+            <div id="unit4-section" style="margin-top: 35px; margin-bottom: 25px;">
+                <h2 style="font-size: 1.25rem; color: var(--primary-color); border-bottom: 2px solid var(--primary-color); padding-bottom: 6px; margin-bottom: 16px;">
+                    <i class="fas fa-exchange-alt"></i> Unit IV: Transactions &amp; Serializability
+                </h2>
+                <div class="cheatsheet-grid">
+                    <!-- Card 15: ACID Properties -->
+                    <div class="cheat-card cheat-blue">
+                        <div class="cheat-card-header">
+                            <h3><i class="fas fa-gem"></i> ACID Properties &amp; Subsystems</h3>
+                        </div>
+                        <div class="cheat-card-body">
+                            <table class="syntax-table">
+                                <tr><td>Atomicity</td><td>All or Nothing execution (Recovery Manager &amp; UNDO logs).</td></tr>
+                                <tr><td>Consistency</td><td>Preserves schema integrity constraints &amp; invariant balances.</td></tr>
+                                <tr><td>Isolation</td><td>Concurrent executions do not cross-contaminate (Concurrency Controller).</td></tr>
+                                <tr><td>Durability</td><td>Committed changes survive system crashes (WAL log &amp; REDO lists).</td></tr>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Card 16: Conflict Serializability -->
+                    <div class="cheat-card cheat-emerald">
+                        <div class="cheat-card-header">
+                            <h3><i class="fas fa-project-diagram"></i> Conflict Serializability Test</h3>
+                        </div>
+                        <div class="cheat-card-body">
+                            <h4>Conflicting Operations</h4>
+                            <p style="font-size: 0.78rem; margin: 4px 0;">Two operations conflict iff they are from different transactions, access the SAME data item, and at least ONE is a WRITE ($R_1(A)-W_2(A)$, $W_1(A)-R_2(A)$, $W_1(A)-W_2(A)$).</p>
+                            <h4>Precedence Graph Rule</h4>
+                            <ul style="font-size: 0.78rem; padding-left: 18px; margin: 6px 0; color: var(--text-color);">
+                                <li>Draw edge $T_i \to T_j$ if $T_i$ performs conflicting op before $T_j$.</li>
+                                <li><strong>Acyclic Graph</strong> &hArr; Schedule is <strong>Conflict Serializable</strong>.</li>
+                                <li>Topological sort gives equivalent serial schedule order.</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Card 17: Schedule Recoverability Hierarchy -->
+                    <div class="cheat-card cheat-amber">
+                        <div class="cheat-card-header">
+                            <h3><i class="fas fa-history"></i> Schedule Classes Hierarchy</h3>
+                        </div>
+                        <div class="cheat-card-body">
+                            <div class="cheat-code">Serial ⊂ Strict ⊂ Cascadeless (ACA) ⊂ Recoverable</div>
+                            <table class="syntax-table">
+                                <tr><td>Recoverable</td><td>If $T_j$ reads $X$ written by $T_i$, then $T_i$ must commit before $T_j$ commits.</td></tr>
+                                <tr><td>Cascadeless</td><td>Transactions only read COMMITTED values of data items.</td></tr>
+                                <tr><td>Strict</td><td>Transactions neither read NOR write $X$ until the writer commits/aborts.</td></tr>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Card 18: Concurrency Anomalies -->
+                    <div class="cheat-card cheat-rose">
+                        <div class="cheat-card-header">
+                            <h3><i class="fas fa-bug"></i> Concurrency Anomalies &amp; Isolation</h3>
+                        </div>
+                        <div class="cheat-card-body">
+                            <table class="syntax-table">
+                                <tr><td>Dirty Read (G1)</td><td>$T_1$ reads uncommitted value written by $T_2$ which later aborts.</td></tr>
+                                <tr><td>Non-Repeatable Read (G2)</td><td>$T_1$ reads row, $T_2$ updates/deletes it, $T_1$ re-reads different data.</td></tr>
+                                <tr><td>Phantom Read (A3)</td><td>$T_1$ reads range, $T_2$ inserts matching rows, $T_1$ re-reads extra rows.</td></tr>
+                                <tr><td>Lost Update</td><td>$T_1$ and $T_2$ overwrite each other's changes without seeing updates.</td></tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- UNIT 5 CARDS -->
+            <div id="unit5-section" style="margin-top: 35px; margin-bottom: 25px;">
+                <h2 style="font-size: 1.25rem; color: var(--primary-color); border-bottom: 2px solid var(--primary-color); padding-bottom: 6px; margin-bottom: 16px;">
+                    <i class="fas fa-shield-alt"></i> Unit V: Concurrency Control, Deadlocks &amp; Recovery
+                </h2>
+                <div class="cheatsheet-grid">
+                    <!-- Card 19: Lock Modes &amp; 2PL -->
+                    <div class="cheat-card cheat-blue">
+                        <div class="cheat-card-header">
+                            <h3><i class="fas fa-lock"></i> Lock Modes &amp; Two-Phase Locking (2PL)</h3>
+                        </div>
+                        <div class="cheat-card-body">
+                            <h4>Lock Compatibility Matrix</h4>
+                            <table class="syntax-table">
+                                <tr><td>Requested \ Held</td><td>Shared (S)</td><td>Exclusive (X)</td></tr>
+                                <tr><td><strong>Shared (S)</strong></td><td style="color:#10b981; font-weight:bold;">Granted</td><td style="color:#ef4444; font-weight:bold;">Blocked</td></tr>
+                                <tr><td><strong>Exclusive (X)</strong></td><td style="color:#ef4444; font-weight:bold;">Blocked</td><td style="color:#ef4444; font-weight:bold;">Blocked</td></tr>
+                            </table>
+                            <h4>2PL Rule</h4>
+                            <p style="font-size: 0.78rem; margin: 4px 0;"><strong>Growing Phase:</strong> Locks acquired, none released. <strong>Shrinking Phase:</strong> Locks released, none acquired. Guarantees <em>Serializability</em>, but NOT deadlock-free.</p>
+                            <h4>Strict vs Rigorous 2PL</h4>
+                            <table class="syntax-table">
+                                <tr><td>Strict 2PL</td><td>Hold ALL Exclusive (X) locks until Commit/Abort.</td></tr>
+                                <tr><td>Rigorous 2PL</td><td>Hold ALL locks (both S and X) until Commit/Abort.</td></tr>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Card 20: Deadlock Handling Schemes -->
+                    <div class="cheat-card cheat-rose">
+                        <div class="cheat-card-header">
+                            <h3><i class="fas fa-ban"></i> Deadlock Prevention Schemes</h3>
+                        </div>
+                        <div class="cheat-card-body">
+                            <h4>Timestamp Prevention ($TS(T_i) < TS(T_j) \implies T_i \text{ is Older}$)</h4>
+                            <table class="syntax-table">
+                                <tr><td>Wait-Die (Non-preemptive)</td><td>If $T_{old}$ requests lock held by $T_{young}$ &rarr; $T_{old}$ <strong>Waits</strong>.<br>If $T_{young}$ requests lock held by $T_{old}$ &rarr; $T_{young}$ <strong>Dies</strong> (Aborts).</td></tr>
+                                <tr><td>Wound-Wait (Preemptive)</td><td>If $T_{old}$ requests lock held by $T_{young}$ &rarr; $T_{old}$ <strong>Wounds</strong> (Preempts/Aborts) $T_{young}$.<br>If $T_{young}$ requests lock held by $T_{old}$ &rarr; $T_{young}$ <strong>Waits</strong>.</td></tr>
+                            </table>
+                            <h4>Deadlock Detection</h4>
+                            <p style="font-size: 0.78rem; margin: 4px 0;">Wait-For Graph (WFG) cycle detection algorithm $O(V+E)$. Victim selected based on minimum rollback cost.</p>
+                        </div>
+                    </div>
+
+                    <!-- Card 21: Timestamp Ordering &amp; Thomas Write Rule -->
+                    <div class="cheat-card cheat-amber">
+                        <div class="cheat-card-header">
+                            <h3><i class="fas fa-clock"></i> Timestamp Ordering &amp; Thomas Rule</h3>
+                        </div>
+                        <div class="cheat-card-body">
+                            <h4>Read Operation Rule for $T_i$ on $Q$</h4>
+                            <ul style="font-size: 0.75rem; padding-left: 16px; margin: 4px 0;">
+                                <li>If $TS(T_i) < W\text{-}TS(Q)$ &rarr; Abort and restart $T_i$.</li>
+                                <li>Else &rarr; Execute $R(Q)$, set $R\text{-}TS(Q) = \max(R\text{-}TS(Q), TS(T_i))$.</li>
+                            </ul>
+                            <h4>Write Operation Rule for $T_i$ on $Q$</h4>
+                            <ul style="font-size: 0.75rem; padding-left: 16px; margin: 4px 0;">
+                                <li>If $TS(T_i) < R\text{-}TS(Q)$ &rarr; Abort and restart $T_i$.</li>
+                                <li>If $TS(T_i) < W\text{-}TS(Q)$ &rarr; <strong>Standard TS:</strong> Abort $T_i$. <strong>Thomas Write Rule:</strong> Ignore write! (Obsolete).</li>
+                                <li>Else &rarr; Execute $W(Q)$, set $W\text{-}TS(Q) = TS(T_i)$.</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Card 22: Log-Based Recovery &amp; WAL -->
+                    <div class="cheat-card cheat-purple">
+                        <div class="cheat-card-header">
+                            <h3><i class="fas fa-hdd"></i> Log-Based Recovery &amp; Checkpointing</h3>
+                        </div>
+                        <div class="cheat-card-body">
+                            <h4>Write-Ahead Logging (WAL) Protocol</h4>
+                            <p style="font-size: 0.78rem; margin: 4px 0;">Log record reflecting an update must be flushed to stable storage BEFORE the dirty data page is written to database disk.</p>
+                            <h4>Crash Recovery Rules from Checkpoint</h4>
+                            <table class="syntax-table">
+                                <tr><td>REDO List</td><td>Transactions with both <code>&lt;Ti start&gt;</code> and <code>&lt;Ti commit&gt;</code> in log. Replay writes forward.</td></tr>
+                                <tr><td>UNDO List</td><td>Transactions with <code>&lt;Ti start&gt;</code> but NO <code>&lt;Ti commit&gt;</code> at crash. Roll back changes backward.</td></tr>
+                            </table>
+                            <h4>Immediate vs Deferred Update</h4>
+                            <p style="font-size: 0.78rem; margin: 4px 0;"><strong>Immediate:</strong> Requires both UNDO and REDO. <strong>Deferred:</strong> Updates kept in cache until commit; requires REDO only (never UNDO).</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <div class="footer-logo">
+                        <i class="fas fa-database"></i> DBMS Hub
+                    </div>
+                    <p>High-yield, mathematically rigorous, and comprehensive study guide for Database Management Systems (BCS501).</p>
+                </div>
+                <div class="footer-col">
+                    <h4>Course Navigation</h4>
+                    <ul class="footer-links">
+                        <li><a href="index.html">Course Overview</a></li>
+                        <li><a href="unit1.html">Unit I: ER &amp; Architecture</a></li>
+                        <li><a href="unit2.html">Unit II: Relational Algebra &amp; SQL</a></li>
+                        <li><a href="unit3.html">Unit III: Normalization &amp; FDs</a></li>
+                        <li><a href="unit4.html">Unit IV: Transactions &amp; ACID</a></li>
+                        <li><a href="unit5.html">Unit V: Concurrency &amp; Recovery</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Quick Links</h4>
+                    <ul class="footer-links">
+                        <li><a href="mcq.html">Interactive MCQ Bank (100 Qs)</a></li>
+                        <li><a href="cheatsheet.html">Visual Cheat Sheet Cards</a></li>
+                        <li><a href="previousyear.html">Solved University PYQ Bank</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 DBMS Learning Hub (BCS501). Built for academic and competitive exam excellence.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/script.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            if (typeof renderMathInElement === 'function') {
+                renderMathInElement(document.body, {
+                    delimiters: [
+                        {left: '$$', right: '$$', display: true},
+                        {left: '$', right: '$', display: false}
+                    ],
+                    throwOnError: false
+                });
+            }
+            if (typeof mermaid !== 'undefined') {
+                mermaid.initialize({ startOnLoad: true, theme: 'neutral', securityLevel: 'loose' });
+            }
+        });
+    </script>
+</body>
+</html>

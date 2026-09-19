@@ -1,0 +1,952 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="100 Comprehensive DBMS Multiple Choice Questions with Explanations for BCS501, University Exams, and GATE Computer Science.">
+    <title>MCQ Question Bank | DBMS Learning Hub (BCS501)</title>
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+</head>
+<body>
+    <nav class="navbar" role="navigation" aria-label="Main navigation">
+        <div class="nav-container">
+            <a href="index.html" class="logo" aria-label="DBMS Hub Home">
+                <i class="fas fa-database" aria-hidden="true"></i> DBMS Hub
+            </a>
+            <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation menu" aria-expanded="false" aria-controls="navMenu">
+                <i class="fas fa-bars" aria-hidden="true"></i>
+            </button>
+            <ul class="nav-menu" id="navMenu">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="unit1.html">Unit I</a></li>
+                <li><a href="unit2.html">Unit II</a></li>
+                <li><a href="unit3.html">Unit III</a></li>
+                <li><a href="unit4.html">Unit IV</a></li>
+                <li><a href="unit5.html">Unit V</a></li>
+                <li><a href="theory.html">Theory</a></li>
+                <li><a href="mcq.html" class="active">MCQ Bank</a></li>
+                <li><a href="cheatsheet.html">Cheat Sheet</a></li>
+                <li class="nav-divider"></li>
+                <li><a href="previousyear.html">Solved PYQs</a></li>
+            </ul>
+            <button class="theme-toggle-btn" id="darkModeToggle" onclick="toggleDarkMode()" aria-label="Toggle Dark Mode">
+                <i class="fas fa-moon"></i>
+            </button>
+        </div>
+    </nav>
+
+    <header class="unit-header">
+        <div class="container">
+            <h1>MCQ Question Bank</h1>
+        </div>
+    </header>
+
+    <main id="main-content" class="unit-content">
+        <div class="container">
+            <div class="mcq-controls">
+                <div class="mcq-filter">
+                    <label for="unitFilter"><i class="fas fa-filter"></i> Filter by Unit:</label>
+                    <select id="unitFilter">
+                        <option value="all">All Units (100 Questions)</option>
+                        <option value="1">Unit I — ER Model, Architecture &amp; Data Independence</option>
+                        <option value="2">Unit II — Relational Algebra, Calculus, SQL &amp; PL/SQL</option>
+                        <option value="3">Unit III — Functional Dependencies &amp; Normalization</option>
+                        <option value="4">Unit IV — Transaction Processing &amp; Serializability</option>
+                        <option value="5">Unit V — Concurrency Control, Deadlocks &amp; Recovery</option>
+                    </select>
+                </div>
+                <div class="mcq-stats">
+                    <span id="mcqCount">Showing 100 questions</span>
+                </div>
+            </div>
+
+            <div id="mcqContainer" class="mcq-list">
+                <!-- Loaded dynamically via JavaScript -->
+            </div>
+
+            <div class="mcq-score-panel" id="scorePanel" style="display:none;">
+                <h3><i class="fas fa-trophy" style="color: #f59e0b;"></i> Performance Summary</h3>
+                <div class="score-display">
+                    <span id="correctCount">0</span> / <span id="totalAnswered">0</span>
+                    <span style="font-size: 1rem; font-weight: 500; display: block; color: var(--text-light); margin-top: 5px;">
+                        Accuracy: <strong id="accuracyRate" style="color: var(--primary-color);">0%</strong>
+                    </span>
+                </div>
+                <button class="btn btn-primary" onclick="resetMCQ()">
+                    <i class="fas fa-redo"></i> Reset Assessment
+                </button>
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <div class="footer-logo">
+                        <i class="fas fa-database"></i> DBMS Hub
+                    </div>
+                    <p>Comprehensive, rigorous, and interactive study platform for Database Management Systems (BCS501).</p>
+                </div>
+                <div class="footer-col">
+                    <h4>Quick Navigation</h4>
+                    <ul class="footer-links">
+                        <li><a href="index.html">Course Overview</a></li>
+                        <li><a href="unit1.html">Unit I: ER &amp; Architecture</a></li>
+                        <li><a href="unit2.html">Unit II: Relational Algebra &amp; SQL</a></li>
+                        <li><a href="unit3.html">Unit III: Normalization &amp; FDs</a></li>
+                        <li><a href="unit4.html">Unit IV: Transactions &amp; ACID</a></li>
+                        <li><a href="unit5.html">Unit V: Concurrency &amp; Recovery</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Exam Prep Resources</h4>
+                    <ul class="footer-links">
+                        <li><a href="mcq.html">Interactive MCQ Bank (100 Qs)</a></li>
+                        <li><a href="cheatsheet.html">Quick Revision Cheat Sheet</a></li>
+                        <li><a href="previousyear.html">Solved University PYQ Bank</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 DBMS Learning Hub (BCS501). Built for academic and competitive exam excellence.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/script.js"></script>
+    <script>
+        const mcqQuestions = [
+            // ==========================================
+            // UNIT 1: ER Model, Architecture & Relational Concepts (20 Questions)
+            // ==========================================
+            {
+                unit: 1,
+                q: "Which level of the ANSI/SPARC 3-tier database architecture describes what data is stored in the database and the relationships among data without exposing physical storage structures?",
+                options: ["Physical / Internal Level", "Conceptual / Logical Level", "External / View Level", "User Presentation Level"],
+                answer: 1,
+                explanation: "The Conceptual (Logical) level describes what data is stored, its data types, relationships, constraints, and semantics across the entire database, hiding storage details."
+            },
+            {
+                unit: 1,
+                q: "The ability to modify the conceptual schema without having to alter existing external schemas or application programs is known as:",
+                options: ["Physical Data Independence", "Logical Data Independence", "Hardware Independence", "Storage Decoupling"],
+                answer: 1,
+                explanation: "Logical Data Independence enables changes to the conceptual schema (e.g., adding an attribute or table) without impacting external views or existing applications."
+            },
+            {
+                unit: 1,
+                q: "In an Entity-Relationship (ER) diagram, how is a Weak Entity Set conventionally represented?",
+                options: ["Single rectangle", "Double rectangle", "Dashed rectangle", "Double diamond"],
+                answer: 1,
+                explanation: "A weak entity set is represented by a double rectangle. Its identifying relationship is represented by a double diamond."
+            },
+            {
+                unit: 1,
+                q: "A partial key (discriminator) of a weak entity set is denoted in an ER diagram by which of the following?",
+                options: ["Solid underline", "Dashed underline", "Double line", "Bold text"],
+                answer: 1,
+                explanation: "The partial key (discriminator) of a weak entity set is denoted by a dashed (broken) underline beneath the attribute name inside the oval."
+            },
+            {
+                unit: 1,
+                q: "If every entity in entity set E must participate in at least one relationship instance in relationship set R, what type of participation constraint exists?",
+                options: ["Partial Participation", "Total Participation (Existence Dependency)", "Transitive Participation", "Disjunctive Participation"],
+                answer: 1,
+                explanation: "Total participation (existence dependency) means every entity in the entity set is involved in the relationship. It is denoted by double lines in ER diagrams."
+            },
+            {
+                unit: 1,
+                q: "Which of the following is a minimal superkey containing no redundant attributes?",
+                options: ["Primary Key", "Foreign Key", "Candidate Key", "Secondary Key"],
+                answer: 2,
+                explanation: "A candidate key is a minimal superkey; removal of any attribute destroys the uniqueness property across all valid relations."
+            },
+            {
+                unit: 1,
+                q: "Entity Integrity constraint in relational databases dictates that:",
+                options: ["Foreign keys cannot reference non-existent primary keys", "No primary key attribute value may be NULL", "Domain values must strictly be positive integers", "Candidate keys must have unique names"],
+                answer: 1,
+                explanation: "Entity Integrity mandates that no attribute that forms part of the primary key of a base relation can accept a NULL value."
+            },
+            {
+                unit: 1,
+                q: "Referential Integrity is enforced through which database mechanism?",
+                options: ["Check Constraints", "Foreign Key Constraints", "Unique Indexing", "Default Values"],
+                answer: 1,
+                explanation: "Referential integrity requires that foreign key values in a child table must match an existing primary key value in the referenced parent table or be NULL."
+            },
+            {
+                unit: 1,
+                q: "In ER modeling, when an attribute is composed of several basic components (e.g., Name composed of First_Name, Middle_Initial, Last_Name), it is classified as a:",
+                options: ["Multivalued Attribute", "Derived Attribute", "Composite Attribute", "Complex Entity"],
+                answer: 2,
+                explanation: "Composite attributes can be divided into smaller sub-parts that represent more basic attributes with independent meanings."
+            },
+            {
+                unit: 1,
+                q: "Which attribute type is calculated dynamically from other stored attributes (such as calculating Age from Date_of_Birth) and shown with a dashed oval?",
+                options: ["Composite Attribute", "Derived Attribute", "Multivalued Attribute", "Key Attribute"],
+                answer: 1,
+                explanation: "Derived attributes are computed dynamically and are represented by dashed ovals in ER diagrams."
+            },
+            {
+                unit: 1,
+                q: "In an ER diagram, multivalued attributes (such as multiple Phone_Numbers for a single person) are represented by:",
+                options: ["Dashed ellipse", "Double ellipse", "Rectangle inside ellipse", "Hexagon"],
+                answer: 1,
+                explanation: "Multivalued attributes are denoted by double ellipses (double ovals) in standard Chen ER notation."
+            },
+            {
+                unit: 1,
+                q: "The process of treating a relationship set as an abstract higher-level entity set so that it can participate in other relationships is called:",
+                options: ["Generalization", "Specialization", "Aggregation", "Encapsulation"],
+                answer: 2,
+                explanation: "Aggregation is an abstraction through which relationships are treated as higher-level entities to allow them to participate in other relationships."
+            },
+            {
+                unit: 1,
+                q: "In mapping an M:N relationship between entities E1 and E2 to the relational schema, what is the standard approach?",
+                options: ["Place E1's primary key into E2 as a foreign key", "Place E2's primary key into E1 as a foreign key", "Create a new cross-reference relation with primary keys of both E1 and E2 as foreign keys", "Merge E1 and E2 into a single table"],
+                answer: 2,
+                explanation: "An M:N relationship is mapped to a dedicated join table whose composite primary key is formed by the primary keys of both participating entities."
+            },
+            {
+                unit: 1,
+                q: "What is the degree of a relationship set?",
+                options: ["The number of attributes in the relation", "The number of tuples in the relation", "The number of participating entity sets in the relationship", "The maximum cardinality ratio"],
+                answer: 2,
+                explanation: "The degree of a relationship refers to the number of participating entity sets (e.g., binary = 2, ternary = 3)."
+            },
+            {
+                unit: 1,
+                q: "Which of the following database users interacts with the system primarily by invoking canned application programs rather than writing ad-hoc queries?",
+                options: ["Database Administrator (DBA)", "Sophisticated User", "Parametric / End User", "Database Designer"],
+                answer: 2,
+                explanation: "Parametric or naive end users interact with the database through pre-written application interfaces (e.g., bank tellers, airline reservation agents)."
+            },
+            {
+                unit: 1,
+                q: "The database catalog (data dictionary) stores:",
+                options: ["User application binaries", "Metadata describing database schemas, tables, constraints, and indexes", "Operating system log traces", "Encrypted user passwords only"],
+                answer: 1,
+                explanation: "The catalog contains metadata: table definitions, column types, constraints, user privileges, and storage parameters."
+            },
+            {
+                unit: 1,
+                q: "In an ER model, specialization is a:",
+                options: ["Bottom-up design process", "Top-down design process", "Mathematical equivalence relation", "Decomposition algorithm"],
+                answer: 1,
+                explanation: "Specialization is a top-down design process where higher-level entity sets are subdivided into lower-level specialized entity sets."
+            },
+            {
+                unit: 1,
+                q: "What is the maximum number of superkeys for a relation R(A, B, C, D) with candidate key {A}?",
+                options: ["4", "8", "16", "15"],
+                answer: 1,
+                explanation: "Any superset of {A} is a superkey. There are 3 remaining attributes (B, C, D). Each can either be included or excluded, giving 2^3 = 8 superkeys."
+            },
+            {
+                unit: 1,
+                q: "Which constraint guarantees that an entity cannot belong to more than one lower-level entity set in a specialization hierarchy?",
+                options: ["Disjointness Constraint", "Completeness Constraint", "Overlapping Constraint", "Referential Constraint"],
+                answer: 0,
+                explanation: "The disjointness constraint mandates that specialized entity sets are mutually exclusive; an entity can belong to at most one child entity set."
+            },
+            {
+                unit: 1,
+                q: "Physical data independence protects external applications from changes to:",
+                options: ["Table names and attribute types", "File structures, access paths, B-trees, or physical disk placement", "Integrity constraints", "Security authorizations"],
+                answer: 1,
+                explanation: "Physical data independence isolates conceptual schemas from alterations in physical storage organizations, indexes, and storage media."
+            },
+
+            // ==========================================
+            // UNIT 2: Relational Algebra, Calculus, SQL & PL/SQL (20 Questions)
+            // ==========================================
+            {
+                unit: 2,
+                q: "Which relational algebra operation selects rows that satisfy a specified predicate condition?",
+                options: ["Projection (π)", "Selection (σ)", "Cartesian Product (×)", "Division (÷)"],
+                answer: 1,
+                explanation: "The Selection operator (σ) filters tuples from a relation that satisfy a specified boolean condition."
+            },
+            {
+                unit: 2,
+                q: "Which relational algebra operation outputs a relation containing only the specified columns and eliminates duplicate tuples?",
+                options: ["Selection (σ)", "Projection (π)", "Rename (ρ)", "Theta Join (⋈θ)"],
+                answer: 1,
+                explanation: "The Projection operator (π) performs vertical partitioning, selecting specified attributes and removing duplicate rows according to mathematical set semantics."
+            },
+            {
+                unit: 2,
+                q: "What is the cardinality (number of tuples) resulting from the Cartesian product of relation R with m tuples and relation S with n tuples?",
+                options: ["m + n", "m × n", "max(m, n)", "m^n"],
+                answer: 1,
+                explanation: "The Cartesian product R × S pairs every tuple of R with every tuple of S, yielding exactly m × n tuples."
+            },
+            {
+                unit: 2,
+                q: "Which relational algebra operator is best suited for queries containing phrases like 'find students who have taken ALL courses offered by the CS department'?",
+                options: ["Natural Join", "Cartesian Product", "Division (÷)", "Intersection (∩)"],
+                answer: 2,
+                explanation: "The Division operator (÷) is used for universal quantification ('for all') queries in relational algebra."
+            },
+            {
+                unit: 2,
+                q: "Which of the following SQL statements is a Data Definition Language (DDL) command?",
+                options: ["UPDATE", "INSERT", "TRUNCATE", "SELECT"],
+                answer: 2,
+                explanation: "TRUNCATE is a DDL command that deallocates relation storage pages and immediately commits changes to the database catalog."
+            },
+            {
+                unit: 2,
+                q: "What is the primary operational difference between TRUNCATE and DELETE in SQL?",
+                options: ["DELETE cannot use a WHERE clause", "TRUNCATE removes rows one by one with rollback logs; DELETE resets high-water marks", "TRUNCATE is a DDL command that cannot be selectively filtered and is faster; DELETE is a row-logged DML command", "DELETE alters the schema structure while TRUNCATE preserves constraints"],
+                answer: 2,
+                explanation: "TRUNCATE deallocates data pages as a DDL command without generating individual row delete log entries; DELETE is a logged DML operation that supports WHERE clauses."
+            },
+            {
+                unit: 2,
+                q: "In SQL, what is the purpose of the HAVING clause?",
+                options: ["To filter individual tuples before grouping", "To filter groups created by the GROUP BY clause based on aggregate conditions", "To specify sort order for aggregate results", "To replace the WHERE clause in joins"],
+                answer: 1,
+                explanation: "The HAVING clause filters aggregated groups after the GROUP BY operation has executed; WHERE filters individual rows before grouping."
+            },
+            {
+                unit: 2,
+                q: "Which SQL operator tests whether a subquery returns at least one row?",
+                options: ["IN", "EXISTS", "ANY", "LIKE"],
+                answer: 1,
+                explanation: "EXISTS evaluates to TRUE if the correlated or uncorrelated subquery returns one or more tuples."
+            },
+            {
+                unit: 2,
+                q: "What result does the following SQL expression yield: NULL = NULL?",
+                options: ["TRUE", "FALSE", "UNKNOWN (Three-Valued Logic)", "Error"],
+                answer: 2,
+                explanation: "In SQL three-valued logic, comparisons involving NULL evaluate to UNKNOWN. To check for nulls, IS NULL or IS NOT NULL must be used."
+            },
+            {
+                unit: 2,
+                q: "A relation R has attributes (A, B) and relation S has attributes (B, C). What will the Natural Join (R ⋈ S) evaluate to?",
+                options: ["R × S", "π(R.A, R.B, S.C)(σ(R.B = S.B)(R × S))", "R ∪ S", "σ(R.A = S.C)(R × S)"],
+                answer: 1,
+                explanation: "Natural join projects the union of attributes over the Cartesian product where all common attribute names are equated, eliminating duplicate columns."
+            },
+            {
+                unit: 2,
+                q: "Which join returns all tuples from the left table regardless of whether there is a matching row in the right table, padding with NULLs when no match is found?",
+                options: ["INNER JOIN", "LEFT OUTER JOIN", "RIGHT OUTER JOIN", "FULL OUTER JOIN"],
+                answer: 1,
+                explanation: "LEFT OUTER JOIN retains all tuples from the left relation, filling unmatched right relation attributes with NULLs."
+            },
+            {
+                unit: 2,
+                q: "In PL/SQL, which cursor attribute returns TRUE when an explicit cursor has fetched its last record and has no more rows to retrieve?",
+                options: ["%FOUND", "%NOTFOUND", "%ISOPEN", "%ROWCOUNT"],
+                answer: 1,
+                explanation: "%NOTFOUND evaluates to TRUE when the most recent FETCH operation failed to retrieve a row because the active set was exhausted."
+            },
+            {
+                unit: 2,
+                q: "What type of database trigger fires automatically once for each row affected by an INSERT, UPDATE, or DELETE statement?",
+                options: ["Statement-Level Trigger", "Row-Level Trigger (FOR EACH ROW)", "DDL Event Trigger", "Transaction Trigger"],
+                answer: 1,
+                explanation: "Row-level triggers include the FOR EACH ROW clause and execute once for every single tuple modified by the triggering statement."
+            },
+            {
+                unit: 2,
+                q: "What pseudo-records are available inside a row-level UPDATE trigger in PL/SQL to inspect before and after values?",
+                options: [":OLD only", ":NEW only", "Both :OLD and :NEW", "No pseudo-records exist in UPDATE triggers"],
+                answer: 2,
+                explanation: "An UPDATE row trigger has access to :OLD (pre-modification tuple values) and :NEW (post-modification values)."
+            },
+            {
+                unit: 2,
+                q: "Which clause in SQL is used to eliminate duplicate values before passing data to aggregate functions like COUNT or SUM?",
+                options: ["ALL", "DISTINCT", "UNIQUE", "GROUP"],
+                answer: 1,
+                explanation: "The DISTINCT keyword (e.g., COUNT(DISTINCT Department_ID)) discards duplicate values prior to aggregation."
+            },
+            {
+                unit: 2,
+                q: "What is the key characteristic of a Correlated Subquery?",
+                options: ["It executes only once before the outer query runs", "It references attributes from the enclosing outer query and executes once per outer tuple", "It cannot contain aggregate functions", "It can only return a single scalar value"],
+                answer: 1,
+                explanation: "A correlated subquery references columns of the outer query; it is re-evaluated for every candidate row evaluated by the outer query."
+            },
+            {
+                unit: 2,
+                q: "A database VIEW is best defined as:",
+                options: ["A physically materialized snapshot stored permanently in base table storage", "A stored virtual relation defined by a saved SQL query without duplicating physical tuple storage", "An index structure that speeds up sequential table scans", "A client-side temporary table"],
+                answer: 1,
+                explanation: "A standard view is a virtual relation computed on demand by executing its stored defining query against underlying base relations."
+            },
+            {
+                unit: 2,
+                q: "Which PL/SQL section is mandatory in an executable block?",
+                options: ["DECLARE", "BEGIN ... END;", "EXCEPTION", "PRAGMA AUTONOMOUS_TRANSACTION"],
+                answer: 1,
+                explanation: "The execution section enclosed within BEGIN and END; is the only mandatory section of an anonymous PL/SQL block."
+            },
+            {
+                unit: 2,
+                q: "What is the return type of the aggregate function COUNT(*) when evaluated on an empty table?",
+                options: ["NULL", "0", "Runtime Exception", "-1"],
+                answer: 1,
+                explanation: "COUNT(*) returns 0 when executed on an empty relation, whereas other aggregates like SUM() or AVG() return NULL."
+            },
+            {
+                unit: 2,
+                q: "Which relational calculus is based on first-order predicate logic where variables range over tuples of a relation?",
+                options: ["Domain Relational Calculus (DRC)", "Tuple Relational Calculus (TRC)", "Relational Algebra", "Datalog"],
+                answer: 1,
+                explanation: "Tuple Relational Calculus (TRC) uses variables that represent entire tuples, written in the form { t | P(t) }."
+            },
+
+            // ==========================================
+            // UNIT 3: Functional Dependencies & Normalization (20 Questions)
+            // ==========================================
+            {
+                unit: 3,
+                q: "Which Armstrong's axiom states that if Y ⊆ X, then the functional dependency X → Y holds unconditionally?",
+                options: ["Augmentation Rule", "Transitivity Rule", "Reflexivity Rule", "Decomposition Rule"],
+                answer: 2,
+                explanation: "Reflexivity states that if Y is a subset of X, then X → Y must always hold. Such dependencies are termed trivial."
+            },
+            {
+                unit: 3,
+                q: "Given relation R(A, B, C, D) with functional dependencies {A → B, B → C, C → D}, what is the attribute closure {A}+?",
+                options: ["{A, B}", "{A, B, C}", "{A, B, C, D}", "{A, D}"],
+                answer: 2,
+                explanation: "Starting with {A}: A → B adds B; B → C adds C; C → D adds D. Thus, {A}+ = {A, B, C, D}."
+            },
+            {
+                unit: 3,
+                q: "A relation is in First Normal Form (1NF) if and only if:",
+                options: ["Every non-prime attribute is fully functionally dependent on every candidate key", "All attribute domains contain only atomic (indivisible) values and no repeating groups exist", "No transitive dependencies exist", "Every determinant is a superkey"],
+                answer: 1,
+                explanation: "1NF requires that all attribute values in every tuple are atomic (indivisible scalars) with no composite or multivalued repeating groups."
+            },
+            {
+                unit: 3,
+                q: "Second Normal Form (2NF) directly eliminates which type of undesirable dependency?",
+                options: ["Transitive Dependencies", "Partial Dependencies (where a non-prime attribute depends on a proper subset of a candidate key)", "Multivalued Dependencies", "Join Dependencies"],
+                answer: 1,
+                explanation: "2NF eliminates partial functional dependencies: no non-prime attribute may depend on a proper subset of any candidate key."
+            },
+            {
+                unit: 3,
+                q: "A relation schema R is in Third Normal Form (3NF) if, for every non-trivial functional dependency X → A:",
+                options: ["X is a superkey only", "X is a superkey OR A is a prime attribute", "A is a superkey OR X is a prime attribute", "X and A are both candidate keys"],
+                answer: 1,
+                explanation: "3NF allows a non-trivial FD X → A if either X is a superkey, OR A is a prime attribute (part of some candidate key)."
+            },
+            {
+                unit: 3,
+                q: "Boyce-Codd Normal Form (BCNF) strictly requires that for every non-trivial functional dependency X → A:",
+                options: ["A must be a prime attribute", "X must be a superkey", "Both X and A must be prime attributes", "X must be a single scalar attribute"],
+                answer: 1,
+                explanation: "BCNF removes the prime-attribute relaxation of 3NF: for every non-trivial FD X → A, X must strictly be a superkey."
+            },
+            {
+                unit: 3,
+                q: "Which property is GUARANTEED by 3NF decomposition algorithms that cannot always be guaranteed when decomposing into BCNF?",
+                options: ["Lossless Join Property", "Dependency Preservation", "Atomic Value Domain", "Minimality of Keys"],
+                answer: 1,
+                explanation: "3NF decompositions can always achieve both lossless join AND dependency preservation. BCNF guarantees lossless joins but may sacrifice dependency preservation."
+            },
+            {
+                unit: 3,
+                q: "A decomposition of relation R into R1 and R2 is Lossless-Join if and only if:",
+                options: ["R1 ∪ R2 = R", "(R1 ∩ R2) → R1 OR (R1 ∩ R2) → R2 holds in F+", "R1 ∩ R2 = ∅", "R1 and R2 have equal number of attributes"],
+                answer: 1,
+                explanation: "Lossless join decomposition requires that the shared common attributes (R1 ∩ R2) form a superkey in at least one of the decomposed schemas (R1 or R2)."
+            },
+            {
+                unit: 3,
+                q: "In a relation R(A, B, C) with candidate key {A, B}, the functional dependency A → C violates which normal form?",
+                options: ["1NF", "2NF", "3NF but not 2NF", "BCNF only"],
+                answer: 1,
+                explanation: "{A} is a proper subset of the composite candidate key {A, B}, and C is a non-prime attribute. This is a partial dependency, violating 2NF."
+            },
+            {
+                unit: 3,
+                q: "What is an attribute called if it is a member of at least one candidate key of a relation?",
+                options: ["Foreign attribute", "Prime attribute", "Super attribute", "Secondary attribute"],
+                answer: 1,
+                explanation: "Any attribute that is part of any candidate key of a relation schema is formally designated as a prime attribute."
+            },
+            {
+                unit: 3,
+                q: "A Canonical Cover (Minimal Cover) Fc of a set of functional dependencies F satisfies which of the following?",
+                options: ["Every FD has a composite RHS", "Fc contains no extraneous attributes, RHS is a single attribute, and no redundant FDs exist", "Fc has strictly more FDs than F", "Fc is identical to F+"],
+                answer: 1,
+                explanation: "A canonical cover is an irredundant, minimal equivalent set of FDs with singleton right-hand sides and no extraneous attributes on the LHS or RHS."
+            },
+            {
+                unit: 3,
+                q: "Fourth Normal Form (4NF) is designed to handle which specific type of data dependency?",
+                options: ["Functional Dependencies", "Multivalued Dependencies (MVDs)", "Join Dependencies", "Partial Dependencies"],
+                answer: 1,
+                explanation: "4NF deals with Multivalued Dependencies (MVDs, denoted α ↠ β), eliminating independent multi-valued facts about an entity."
+            },
+            {
+                unit: 3,
+                q: "Fifth Normal Form (5NF / Project-Join Normal Form) eliminates anomalies arising from:",
+                options: ["Transitive functional dependencies", "Join Dependencies that are not implied by candidate keys", "Multivalued dependencies", "Domain constraint failures"],
+                answer: 1,
+                explanation: "5NF eliminates join dependencies (JDs) that are not implied by the superkeys of the original relation schema."
+            },
+            {
+                unit: 3,
+                q: "Given relation R(A, B, C) with F = {A → B, B → C, C → A}. Which of the following is true?",
+                options: ["{A} is the only candidate key", "{A}, {B}, and {C} are all individual candidate keys", "R is in 1NF but not 2NF", "R cannot be normalized to BCNF"],
+                answer: 1,
+                explanation: "Closure of A is {A,B,C}, closure of B is {B,C,A}, closure of C is {C,A,B}. All three attributes are candidate keys. Every determinant is a candidate key, so R is in BCNF."
+            },
+            {
+                unit: 3,
+                q: "In an attribute closure computation, an attribute A on the left-hand side of FD XA → Y is extraneous if:",
+                options: ["Y is empty", "Y can be derived from X alone using F (i.e., Y ⊆ X+)", "A is a foreign key", "X is a prime attribute"],
+                answer: 1,
+                explanation: "An attribute A is extraneous on the LHS if deleting it does not reduce the logical closure of the dependency set (Y ⊆ X+ under F)."
+            },
+            {
+                unit: 3,
+                q: "Which anomaly occurs when deleting a tuple causes unintended loss of other unrelated data?",
+                options: ["Insertion Anomaly", "Deletion Anomaly", "Modification Anomaly", "Integrity Anomaly"],
+                answer: 1,
+                explanation: "A deletion anomaly occurs when deleting one fact inadvertently deletes other distinct, valuable facts from the database."
+            },
+            {
+                unit: 3,
+                q: "Every relation with only two attributes (binary relation) is guaranteed to be in at least which normal form?",
+                options: ["1NF only", "2NF only", "3NF only", "BCNF"],
+                answer: 3,
+                explanation: "Any binary relation R(A, B) is inherently in BCNF. The possible non-trivial FDs are A → B, B → A, or both, making the determinant a superkey; or no FDs exist."
+            },
+            {
+                unit: 3,
+                q: "If relation R(A, B, C, D) has FDs {AB → C, C → D, D → A}, what are the candidate keys of R?",
+                options: ["{AB}, {BC}, {BD}", "{AB}, {BC}, {CD}", "{AB} only", "{AB}, {BC}"],
+                answer: 0,
+                explanation: "Starting with {AB}+ = {A,B,C,D}. Replacing A with D (via D → A) gives {BD}+ = {A,B,C,D}. Replacing D with C (via C → D) gives {BC}+ = {A,B,C,D}. Thus {AB}, {BC}, {BD}."
+            },
+            {
+                unit: 3,
+                q: "Dependency Preservation in relational decomposition means:",
+                options: ["Every FD of the original relation must belong directly to one single decomposed table", "The union of the closures of the FDs of the decomposed relations is logically equivalent to the original FD set closure F+", "No foreign keys are dropped", "Candidate keys remain identical"],
+                answer: 1,
+                explanation: "Dependency preservation means that enforcing the FDs on individual decomposed relations is sufficient to enforce all original FDs in F+ without requiring cross-table joins."
+            },
+            {
+                unit: 3,
+                q: "What is the relationship between normal forms?",
+                options: ["BCNF ⊂ 3NF ⊂ 2NF ⊂ 1NF", "1NF ⊂ 2NF ⊂ 3NF ⊂ BCNF", "3NF ⊂ BCNF ⊂ 2NF ⊂ 1NF", "2NF ⊂ 3NF ⊂ BCNF ⊂ 1NF"],
+                answer: 0,
+                explanation: "Every relation in BCNF is also in 3NF; every relation in 3NF is in 2NF; every relation in 2NF is in 1NF: BCNF ⊂ 3NF ⊂ 2NF ⊂ 1NF."
+            },
+
+            // ==========================================
+            // UNIT 4: Transaction Processing & Serializability (20 Questions)
+            // ==========================================
+            {
+                unit: 4,
+                q: "Which ACID property guarantees that all operations in a transaction execute completely or none of them do ('All-or-Nothing')?",
+                options: ["Consistency", "Atomicity", "Isolation", "Durability"],
+                answer: 1,
+                explanation: "Atomicity ensures that a transaction is treated as an indivisible atomic unit: either all operations commit, or the transaction is completely rolled back."
+            },
+            {
+                unit: 4,
+                q: "Which DBMS subsystem is directly responsible for enforcing the Durability property?",
+                options: ["Concurrency Control Manager", "Recovery Manager and Write-Ahead Log (WAL)", "Query Optimizer", "Buffer Pool Manager"],
+                answer: 1,
+                explanation: "The Recovery Manager uses non-volatile log files (Write-Ahead Logging) to guarantee durability of committed transactions across system crashes."
+            },
+            {
+                unit: 4,
+                q: "Two operations in a concurrent schedule are said to conflict if and only if:",
+                options: ["They belong to different transactions, access the same data item, and at least one operation is a WRITE", "They belong to the same transaction and read the same item", "They are both READ operations on the same data item", "They execute on different physical disks simultaneously"],
+                answer: 0,
+                explanation: "Conflicting operations satisfy three conditions: belong to distinct transactions, target the identical data item, and at least one of them is a write (W-R, R-W, or W-W)."
+            },
+            {
+                unit: 4,
+                q: "A precedence graph (serialization graph) is constructed with transactions as vertices. A schedule is Conflict Serializable if and only if:",
+                options: ["The graph contains at least one self-loop", "The graph contains no directed cycles (it is an Acyclic Directed Graph)", "The graph is completely connected", "All transactions have equal in-degrees"],
+                answer: 1,
+                explanation: "A schedule is conflict serializable if and only if its precedence graph contains no directed cycles. A topological sort yields the equivalent serial order."
+            },
+            {
+                unit: 4,
+                q: "Which transaction state is reached immediately after the final statement of a transaction has executed, but before log records have flushed to persistent disk?",
+                options: ["Active", "Partially Committed", "Committed", "Terminated"],
+                answer: 1,
+                explanation: "A transaction enters the 'Partially Committed' state after its final statement has run, but before its commit log record is safely written to disk."
+            },
+            {
+                unit: 4,
+                q: "What condition defines a Recoverable Schedule?",
+                options: ["Transactions never perform dirty reads", "For every pair of transactions Ti and Tj, if Tj reads a data item previously written by Ti, then Ti must commit before Tj commits", "All write operations are logged immediately to disk", "No transaction ever aborts"],
+                answer: 1,
+                explanation: "A schedule is recoverable if whenever transaction Tj reads a value written by Ti, the commit operation of Ti precedes the commit operation of Tj."
+            },
+            {
+                unit: 4,
+                q: "A schedule that Avoids Cascading Aborts (Cascadeless Schedule) requires that:",
+                options: ["Transactions can only read committed data items", "Transactions must never read items written by concurrent transactions", "Transactions must acquire locks in alphabetical order", "Transactions cannot perform write operations"],
+                answer: 0,
+                explanation: "In a cascadeless schedule, transactions are restricted to reading only data values that have already been committed by the writing transaction."
+            },
+            {
+                unit: 4,
+                q: "What is the relationship among schedule classes?",
+                options: ["Serial ⊂ Strict ⊂ Cascadeless (ACA) ⊂ Recoverable ⊂ All Schedules", "Recoverable ⊂ Cascadeless ⊂ Strict ⊂ Serial", "Cascadeless ⊂ Recoverable ⊂ Strict ⊂ Serial", "Strict ⊂ Recoverable ⊂ Cascadeless ⊂ Serial"],
+                answer: 0,
+                explanation: "Every serial schedule is strict; every strict schedule avoids cascading aborts (cascadeless); every cascadeless schedule is recoverable."
+            },
+            {
+                unit: 4,
+                q: "What concurrency anomaly occurs when Transaction T1 reads a data item modified by Transaction T2, and T2 subsequently aborts and rolls back?",
+                options: ["Lost Update Anomaly", "Dirty Read Anomaly (Temporary Update)", "Unrepeatable Read Anomaly", "Phantom Read Anomaly"],
+                answer: 1,
+                explanation: "A dirty read occurs when a transaction reads uncommitted modifications made by another concurrent transaction that later aborts."
+            },
+            {
+                unit: 4,
+                q: "Which phenomenon occurs when Transaction T1 reads a row, Transaction T2 modifies that row and commits, and T1 re-reads the row obtaining a different value?",
+                options: ["Dirty Read", "Non-Repeatable (Fuzzy) Read", "Phantom Read", "Lost Update"],
+                answer: 1,
+                explanation: "Non-repeatable read occurs when re-reading the exact same row yields modified column values because a concurrent transaction committed changes in between."
+            },
+            {
+                unit: 4,
+                q: "View serializability is strictly less restrictive than conflict serializability because it allows:",
+                options: ["Blind writes (writing a data item without reading it first)", "Cascading rollbacks", "Deadlock cycles", "Dirty reads without recovery"],
+                answer: 0,
+                explanation: "View serializability can handle blind writes (W(X) without an antecedent R(X)) where operations are not conflict equivalent but produce the same final state."
+            },
+            {
+                unit: 4,
+                q: "Determining whether an arbitrary concurrent schedule is View Serializable is:",
+                options: ["Solvable in polynomial time using topological sort", "NP-Complete", "Uncomputable", "Constant time O(1)"],
+                answer: 1,
+                explanation: "Testing for view serializability is an NP-Complete problem, whereas testing for conflict serializability is polynomial O(V + E) using cycle detection."
+            },
+            {
+                unit: 4,
+                q: "In a schedule S with 3 transactions T1, T2, T3, how many possible serial schedules exist?",
+                options: ["3", "6 (3!)", "9", "27"],
+                answer: 1,
+                explanation: "For n transactions, there are n! distinct serial execution orders. For n = 3, 3! = 6 possible serial schedules."
+            },
+            {
+                unit: 4,
+                q: "If transaction Ti aborts, causing transaction Tj (which read uncommitted data from Ti) to abort, and so forth, this cascade is called:",
+                options: ["Cascading Rollback (Cascading Abort)", "Deadlock Cascade", "Starvation", "Phantom Abort"],
+                answer: 0,
+                explanation: "Cascading rollback is an undesirable chain reaction where the failure of one transaction forces multiple dependent transactions to abort."
+            },
+            {
+                unit: 4,
+                q: "In SQL-92 isolation levels, which isolation level prevents Dirty Reads, Non-Repeatable Reads, AND Phantom Reads?",
+                options: ["Read Uncommitted", "Read Committed", "Repeatable Read", "Serializable"],
+                answer: 3,
+                explanation: "Serializable is the highest ANSI SQL isolation level and completely prevents dirty reads, non-repeatable reads, and phantom reads."
+            },
+            {
+                unit: 4,
+                q: "What is a Phantom Read?",
+                options: ["Reading corrupted disk sectors", "A transaction executes a range query, and a concurrent transaction inserts/deletes rows satisfying the predicate, causing re-execution to return different row sets", "Writing to an item that is locked by another transaction", "Reading data from an uncommitted aborted transaction"],
+                answer: 1,
+                explanation: "Phantom read occurs when a transaction queries a range of rows, and a concurrent transaction inserts or deletes matching rows before the first transaction finishes."
+            },
+            {
+                unit: 4,
+                q: "Under which condition is a schedule considered Strict?",
+                options: ["Transactions can neither read nor write a data item until the previous transaction that wrote that item has committed or aborted", "Transactions can only use shared locks", "Transactions never release locks before commit", "Transactions execute strictly sequentially"],
+                answer: 0,
+                explanation: "A schedule is strict if a value written by transaction T cannot be read or overwritten by any other transaction until T has terminated (committed or aborted)."
+            },
+            {
+                unit: 4,
+                q: "Which property of transactions ensures that concurrent transactions do not interfere with each other's intermediate state?",
+                options: ["Atomicity", "Consistency", "Isolation", "Durability"],
+                answer: 2,
+                explanation: "Isolation ensures that the intermediate operations and state of a transaction remain hidden from other concurrently executing transactions."
+            },
+            {
+                unit: 4,
+                q: "What happens when a transaction enters the 'Failed' state?",
+                options: ["It commits immediately", "It enters the active state again", "The DBMS rolls back its partial updates and transitions it to the 'Aborted' state", "It acquires exclusive locks"],
+                answer: 2,
+                explanation: "When a transaction fails due to logical errors or aborts, the recovery system undos its partial changes, transitioning it to the Aborted state."
+            },
+            {
+                unit: 4,
+                q: "Which of the following schedules is ALWAYS guaranteed to be conflict serializable?",
+                options: ["Any schedule with no write operations", "Any schedule with only 2 transactions", "Any schedule using shared locks only", "Both A and C"],
+                answer: 3,
+                explanation: "Conflicting operations require at least one WRITE. If a schedule has no write operations (only READs), no conflicts can exist, making cycles impossible."
+            },
+
+            // ==========================================
+            // UNIT 5: Concurrency Control, Deadlocks & Recovery (20 Questions)
+            // ==========================================
+            {
+                unit: 5,
+                q: "According to the Lock Compatibility Matrix, if Transaction T1 holds a Shared Lock (S) on data item Q, which lock request by Transaction T2 on Q will be granted immediately?",
+                options: ["Shared Lock (S) only", "Exclusive Lock (X) only", "Both Shared (S) and Exclusive (X)", "Neither lock will be granted"],
+                answer: 0,
+                explanation: "Shared locks are mutually compatible (multiple transactions can read simultaneously). Exclusive locks require exclusive access and will be blocked."
+            },
+            {
+                unit: 5,
+                q: "The Two-Phase Locking (2PL) protocol guarantees which essential property for all generated schedules?",
+                options: ["Deadlock Freedom", "Conflict Serializability", "Freedom from Starvation", "Strictness"],
+                answer: 1,
+                explanation: "The Two-Phase Locking (2PL) theorem proves that any schedule following the 2PL locking protocol is guaranteed to be conflict serializable."
+            },
+            {
+                unit: 5,
+                q: "What is the primary difference between Basic 2PL and Strict 2PL?",
+                options: ["Basic 2PL prevents deadlocks while Strict 2PL does not", "In Strict 2PL, all Exclusive (X) locks acquired by a transaction must be held until the transaction terminates (commits/aborts)", "In Strict 2PL, no shared locks can be requested", "Strict 2PL does not have a shrinking phase"],
+                answer: 1,
+                explanation: "Strict 2PL mandates that all Exclusive (X) locks held by a transaction must be retained until the transaction terminates, ensuring strict and recoverable schedules."
+            },
+            {
+                unit: 5,
+                q: "Rigorous Two-Phase Locking requires that:",
+                options: ["All locks (both Shared and Exclusive) are held until the transaction terminates", "Locks can be released in any order", "No transaction acquires more than 5 locks", "Locks are converted to timestamps"],
+                answer: 0,
+                explanation: "Rigorous 2PL requires ALL locks (both Shared S-locks and Exclusive X-locks) to be held until the transaction commits or aborts."
+            },
+            {
+                unit: 5,
+                q: "Does the basic Two-Phase Locking protocol prevent deadlocks?",
+                options: ["Yes, deadlocks are mathematically impossible in 2PL", "No, transactions adhering to 2PL can still enter a deadlock state", "Yes, but only if all transactions are read-only", "Only if Rigorous 2PL is used"],
+                answer: 1,
+                explanation: "Basic 2PL guarantees serializability, but does NOT prevent deadlocks. Interleaved lock requests during growing phases can create circular wait conditions."
+            },
+            {
+                unit: 5,
+                q: "In the Wait-Die deadlock prevention scheme (non-preemptive), what happens if an older transaction Ti requests a data item held by a younger transaction Tj?",
+                options: ["Ti is aborted and dies", "Ti is allowed to wait", "Tj is preempted and dies", "Both transactions roll back"],
+                answer: 1,
+                explanation: "In Wait-Die: If Ti is older than Tj (TS(Ti) < TS(Tj)), Ti is allowed to wait. If Ti is younger than Tj, Ti dies (aborts and restarts with its original timestamp)."
+            },
+            {
+                unit: 5,
+                q: "In the Wound-Wait deadlock prevention scheme (preemptive), what happens if an older transaction Ti requests a lock held by a younger transaction Tj?",
+                options: ["Ti waits for Tj to complete", "Ti wounds (preempts) Tj, forcing Tj to abort and roll back", "Ti is killed immediately", "The system declares deadlock"],
+                answer: 1,
+                explanation: "In Wound-Wait: If older Ti requests an item held by younger Tj, Ti 'wounds' Tj (forces Tj to abort). If younger Ti requests an item held by older Tj, Ti waits."
+            },
+            {
+                unit: 5,
+                q: "Deadlock detection using a Wait-For Graph (WFG) operates by identifying:",
+                options: ["Isolated nodes", "Directed cycles in the graph", "Vertices with maximum in-degree", "Topological orderings"],
+                answer: 1,
+                explanation: "A deadlock exists in the system if and only if the Wait-For Graph (where directed edge Ti → Tj indicates Ti is waiting for Tj) contains a directed cycle."
+            },
+            {
+                unit: 5,
+                q: "The Thomas Write Rule in timestamp ordering relaxes standard conflict serializability by:",
+                options: ["Allowing obsolete writes to be safely ignored (discarded) rather than aborting the transaction", "Converting all writes to reads", "Forcing transactions to wait indefinitely", "Aborting all read operations"],
+                answer: 0,
+                explanation: "Thomas Write Rule observes that if Ti attempts W(Q) but TS(Ti) < W-TS(Q), the write is obsolete; rather than aborting Ti, the write can simply be ignored."
+            },
+            {
+                unit: 5,
+                q: "The Write-Ahead Logging (WAL) protocol dictates that:",
+                options: ["Log records must be written to stable non-volatile storage BEFORE the corresponding database page update is written to disk", "Database buffer pages must be flushed before writing to the log", "Transactions must write directly to disk without memory caching", "Logs are written only at system shutdown"],
+                answer: 0,
+                explanation: "WAL requires that the log record reflecting a database modification must be flushed to stable storage before the modified data page is written to disk."
+            },
+            {
+                unit: 5,
+                q: "What is the primary benefit of Periodic Checkpointing in a DBMS log-based recovery subsystem?",
+                options: ["It eliminates the need for transaction undo operations", "It eliminates the need to scan and replay log records prior to the checkpoint during recovery", "It prevents deadlocks permanently", "It automatically commits all active transactions"],
+                answer: 1,
+                explanation: "Checkpointing flushes dirty buffer pages and records active transactions, bounding recovery time so the recovery manager doesn't scan the log from the beginning of time."
+            },
+            {
+                unit: 5,
+                q: "In ARIES / Log-Based Recovery with Checkpointing, which transactions must be REDONE upon system restart?",
+                options: ["Transactions that were active at crash time without a commit record", "Transactions for which both a <Ti start> and a <Ti commit> record exist in the log", "Only transactions that aborted", "All transactions in the database history"],
+                answer: 1,
+                explanation: "Transactions that have both START and COMMIT (or ABORT) records in the log are added to the REDO list to re-establish committed state updates."
+            },
+            {
+                unit: 5,
+                q: "In Log-Based Recovery, which transactions must be UNDONE upon system restart after a crash?",
+                options: ["Transactions that committed before the checkpoint", "Transactions that have a <Ti start> record in the log but NO <Ti commit> record at crash time", "Transactions that only performed read operations", "Transactions with the smallest timestamps"],
+                answer: 1,
+                explanation: "Transactions that started but never committed prior to the crash are incomplete (active); their uncommitted updates must be rolled back (UNDONE)."
+            },
+            {
+                unit: 5,
+                q: "In Immediate Database Modification recovery, when can modified values be written to the physical database disk?",
+                options: ["Only after the transaction issues a COMMIT", "While the transaction is still active, provided the corresponding WAL record has been written to disk", "Only during system reboot", "Never, all data stays in RAM"],
+                answer: 1,
+                explanation: "Under immediate update, buffer pages modified by active transactions may be flushed to disk before commit, requiring both UNDO and REDO recovery mechanisms."
+            },
+            {
+                unit: 5,
+                q: "In Deferred Database Modification recovery, when are actual updates written to physical database disk blocks?",
+                options: ["Immediately upon statement execution", "Only AFTER the transaction successfully commits and its commit log record is flushed", "During the growing phase of 2PL", "Every 10 milliseconds continuously"],
+                answer: 1,
+                explanation: "In deferred modification, updates are kept in private workspace/buffers and written to database disk only after commit, meaning UNDO is never required (only REDO)."
+            },
+            {
+                unit: 5,
+                q: "What is the Phantom Deadlock problem in distributed concurrency control?",
+                options: ["A deadlock that occurs only on magnetic tape", "A false deadlock detected by a distributed deadlock coordinator due to communication propagation delays when no real deadlock exists", "A deadlock between memory caches", "A deadlock that self-resolves without aborting transactions"],
+                answer: 1,
+                explanation: "Phantom deadlocks occur in distributed systems when network messaging delays cause the global coordinator to detect a cycle that has already been resolved."
+            },
+            {
+                unit: 5,
+                q: "In Multiversion Concurrency Control (MVCC), what happens when a transaction issues a READ request on data item Q?",
+                options: ["It blocks if any transaction holds a lock on Q", "It reads an appropriate older version of Q whose timestamp is the largest timestamp less than or equal to TS(T)", "It always reads the latest dirty memory buffer", "It forces writing transactions to commit"],
+                answer: 1,
+                explanation: "MVCC ensures readers do not block writers and writers do not block readers by serving reads from a historical snapshot version matching the transaction's timestamp."
+            },
+            {
+                unit: 5,
+                q: "Which lock granularity provides the highest concurrency but the largest locking overhead in a DBMS?",
+                options: ["Database level", "Table / Relation level", "Disk Block / Page level", "Row / Tuple / Record level"],
+                answer: 3,
+                explanation: "Row-level (fine-grained) locking allows maximum concurrent access to disjoint rows within the same table, but requires the highest memory and lock manager tracking overhead."
+            },
+            {
+                unit: 5,
+                q: "Multiple Granularity Locking introduces Intention Locks (IS, IX, SIX) to:",
+                options: ["Eliminate the need to traverse the tree hierarchy and inspect every child node before locking an ancestor", "Prevent deadlocks permanently", "Replace 2PL completely", "Convert all read locks to write locks"],
+                answer: 0,
+                explanation: "Intention locks tag ancestor nodes in the granularity hierarchy (Database → Table → Page → Row) to indicate that locking is occurring at finer descendant levels."
+            },
+            {
+                unit: 5,
+                q: "What is Starvation in transaction concurrency management?",
+                options: ["A hardware power failure during commit", "A situation where a transaction is perpetually delayed and never granted a requested lock because other transactions keep jumping ahead", "Memory buffer exhaustion", "Disk head thrashing during recovery"],
+                answer: 1,
+                explanation: "Starvation occurs when a transaction waits indefinitely for a resource because the concurrency controller continuously gives priority to other competing transactions."
+            }
+        ];
+
+        let answeredQuestions = {};
+
+        function renderMCQ(filterUnit = 'all') {
+            const container = document.getElementById('mcqContainer');
+            const countEl = document.getElementById('mcqCount');
+            
+            const filtered = filterUnit === 'all' 
+                ? mcqQuestions 
+                : mcqQuestions.filter(q => q.unit === parseInt(filterUnit));
+            
+            countEl.textContent = `Showing ${filtered.length} of ${mcqQuestions.length} questions`;
+            
+            let unitCounters = {};
+            
+            container.innerHTML = filtered.map((q) => {
+                const originalIdx = mcqQuestions.indexOf(q);
+                const answered = answeredQuestions[originalIdx];
+                const isCorrect = answered === q.answer;
+                
+                if (!unitCounters[q.unit]) unitCounters[q.unit] = 0;
+                unitCounters[q.unit]++;
+                const questionNum = unitCounters[q.unit];
+                
+                return `
+                <div class="mcq-item ${answered !== undefined ? (isCorrect ? 'correct' : 'incorrect') : ''}" data-idx="${originalIdx}">
+                    <div class="mcq-unit-badge">Unit ${q.unit}</div>
+                    <p class="mcq-question">${questionNum}. ${q.q}</p>
+                    <div class="mcq-options">
+                        ${q.options.map((opt, optIdx) => `
+                            <label class="mcq-option ${answered === optIdx ? 'selected' : ''} ${answered !== undefined && optIdx === q.answer ? 'correct-answer' : ''} ${answered !== undefined && answered === optIdx && !isCorrect ? 'wrong-answer' : ''}">
+                                <input type="radio" name="q${originalIdx}" value="${optIdx}" ${answered !== undefined ? 'disabled' : ''} ${answered === optIdx ? 'checked' : ''} onchange="checkAnswer(${originalIdx}, ${optIdx})">
+                                <span class="option-letter">${String.fromCharCode(65 + optIdx)}</span>
+                                <span class="option-text">${opt}</span>
+                            </label>
+                        `).join('')}
+                    </div>
+                    ${answered !== undefined ? `
+                        <div class="mcq-feedback ${isCorrect ? 'correct' : 'incorrect'}">
+                            <i class="fas ${isCorrect ? 'fa-check-circle' : 'fa-times-circle'}"></i> 
+                            ${isCorrect ? '<strong>Correct!</strong> ' : '<strong>Incorrect.</strong> Correct answer is <strong>(' + String.fromCharCode(65 + q.answer) + ')</strong>. '}
+                            ${q.explanation}
+                        </div>
+                    ` : ''}
+                </div>
+                `;
+            }).join('');
+            
+            updateScore();
+        }
+
+        function checkAnswer(qIdx, optIdx) {
+            answeredQuestions[qIdx] = optIdx;
+            renderMCQ(document.getElementById('unitFilter').value);
+        }
+
+        function updateScore() {
+            const answered = Object.keys(answeredQuestions).length;
+            if (answered > 0) {
+                document.getElementById('scorePanel').style.display = 'block';
+                let correct = 0;
+                Object.entries(answeredQuestions).forEach(([idx, ans]) => {
+                    if (mcqQuestions[idx].answer === ans) correct++;
+                });
+                document.getElementById('correctCount').textContent = correct;
+                document.getElementById('totalAnswered').textContent = answered;
+                const percentage = Math.round((correct / answered) * 100);
+                document.getElementById('accuracyRate').textContent = percentage + '%';
+            }
+        }
+
+        function resetMCQ() {
+            if (confirm('Are you sure you want to reset all answered questions?')) {
+                answeredQuestions = {};
+                document.getElementById('scorePanel').style.display = 'none';
+                renderMCQ(document.getElementById('unitFilter').value);
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        }
+
+        document.getElementById('unitFilter').addEventListener('change', (e) => {
+            renderMCQ(e.target.value);
+        });
+
+        // Initial render
+        renderMCQ();
+    </script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            if (typeof renderMathInElement === 'function') {
+                renderMathInElement(document.body, {
+                    delimiters: [
+                        {left: '$$', right: '$$', display: true},
+                        {left: '$', right: '$', display: false}
+                    ],
+                    throwOnError: false
+                });
+            }
+            if (typeof mermaid !== 'undefined') {
+                mermaid.initialize({ startOnLoad: true, theme: 'neutral', securityLevel: 'loose' });
+            }
+        });
+    </script>
+</body>
+</html>

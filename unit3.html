@@ -1,0 +1,739 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Unit III: Database Design, Functional Dependencies, Armstrong Axioms, Minimal Cover, 1NF, 2NF, 3NF, BCNF, Lossless Join Decomposition, 4NF, and 5NF. Complete BCS501 guide.">
+    <title>Unit III: Database Design &amp; Normalization — DBMS Learning Hub</title>
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+</head>
+<body>
+    <!-- Top Navigation Bar -->
+    <nav class="navbar" role="navigation" aria-label="Main navigation">
+        <div class="nav-container">
+            <a href="index.html" class="logo" aria-label="DBMS Hub Home">
+                <i class="fas fa-database" aria-hidden="true"></i> DBMS Hub
+            </a>
+            <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation menu" aria-expanded="false" aria-controls="navMenu">
+                <i class="fas fa-bars" aria-hidden="true"></i>
+            </button>
+            <ul class="nav-menu" id="navMenu">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="unit1.html">Unit I</a></li>
+                <li><a href="unit2.html">Unit II</a></li>
+                <li><a href="unit3.html" class="active">Unit III</a></li>
+                <li><a href="unit4.html">Unit IV</a></li>
+                <li><a href="unit5.html">Unit V</a></li>
+                <li><a href="theory.html">Theory</a></li>
+                <li><a href="mcq.html">MCQ Bank</a></li>
+                <li><a href="cheatsheet.html">Cheat Sheet</a></li>
+                <li class="nav-divider"></li>
+                <li><a href="previousyear.html">Solved PYQs</a></li>
+            </ul>
+            <button class="theme-toggle-btn" id="darkModeToggle" onclick="toggleDarkMode()" aria-label="Toggle Dark Mode">
+                <i class="fas fa-moon"></i>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Main Content Container -->
+    <main id="main-content">
+        <!-- Unit Header Banner -->
+        <header class="unit-header">
+            <div class="container">
+                <h1>UNIT 3</h1>
+            </div>
+        </header>
+
+        <!-- Two-Column Layout Section -->
+        <section class="unit-content">
+            <div class="container">
+                <div class="page-layout">
+                    <!-- Sticky Sidebar Navigation -->
+                    <aside class="sidebar">
+                        <h3><i class="fas fa-list-ul"></i> Unit III Topics</h3>
+                        <nav class="sidebar-nav">
+                            <a href="#sec3-1" class="active">3.1 Functional Dependencies</a>
+                            <a href="#sec3-2">3.2 Armstrong's Axioms</a>
+                            <a href="#sec3-3">3.3 Attribute Closure (X+)</a>
+                            <a href="#sec3-4">3.4 Minimal Cover (Fc)</a>
+                            <a href="#sec3-5">3.5 Normal Form Hierarchy</a>
+                            <a href="#sec3-6">3.6 1NF, 2NF &amp; Prime Attrs</a>
+                            <a href="#sec3-7">3.7 Third Normal Form (3NF)</a>
+                            <a href="#sec3-8">3.8 Boyce-Codd Form (BCNF)</a>
+                            <a href="#sec3-9">3.9 Inclusion Dependencies</a>
+                            <a href="#sec3-10">3.10 Lossless Join &amp; Chase</a>
+                            <a href="#sec3-11">3.11 Dependency Preservation</a>
+                            <a href="#sec3-12">3.12 MVD &amp; 4NF</a>
+                            <a href="#sec3-13">3.13 Join Dependencies &amp; 5NF</a>
+                            <a href="#sec3-14">3.14 3NF Synthesis Algorithm</a>
+                            <a href="#sec3-15">3.15 BCNF Decomposition</a>
+                            <a href="#sec3-16">3.16 Solved Exam Numericals</a>
+                        </nav>
+                    </aside>
+
+                    <!-- Main Reading Content -->
+                    <div class="main-content">
+                        <!-- Section 3.1 -->
+                        <div class="topic-section" id="sec3-1">
+                            <h2><i class="fas fa-arrow-right"></i> 3.1 Functional Dependencies (FD)</h2>
+                            <p><strong>Normalization</strong> is the formal mathematical process of evaluating relational schemas to eliminate insertion, deletion, and update anomalies while minimizing data redundancy.</p>
+                            
+                            <div class="info-box note">
+                                <h4><i class="fas fa-info-circle"></i> Formal Definition of Functional Dependency</h4>
+                                <p>Let <code>R</code> be a relation schema and <code>X, Y &sube; R</code> be attribute subsets. A <strong>Functional Dependency</strong> denoted by <code>X &rarr; Y</code> specifies that whenever two tuples agree on attribute set X, they must agree on attribute set Y:</p>
+                                <div style="margin: 8px 0; font-family: var(--font-mono); font-weight: bold; color: var(--primary-color);">
+                                    &forall; t1, t2 &isin; r(R), &nbsp; if t1[X] = t2[X] &rArr; t1[Y] = t2[Y]
+                                </div>
+                                <p>We state that <em>"X functionally determines Y"</em>. X is the <strong>determinant</strong>, and Y is the <strong>dependent</strong>.</p>
+                            </div>
+
+                            <h3>Classification of Dependencies:</h3>
+                            <ul>
+                                <li><strong>Trivial FD:</strong> An FD <code>X &rarr; Y</code> is trivial if <code>Y &sube; X</code> (e.g., <code>{Roll_No, Name} &rarr; Roll_No</code>). Always satisfied.</li>
+                                <li><strong>Non-Trivial FD:</strong> An FD <code>X &rarr; Y</code> is non-trivial if Y is not a subset of X. It is <em>completely non-trivial</em> if <code>X &cap; Y = &empty;</code>.</li>
+                                <li><strong>Full Functional Dependency:</strong> <code>X &rarr; Y</code> is full if removing any attribute A from X destroys the dependency (irreducible determinant).</li>
+                                <li><strong>Partial Dependency:</strong> <code>X &rarr; Y</code> is partial if Y depends on a proper subset of candidate key X.</li>
+                                <li><strong>Transitive Dependency:</strong> If <code>X &rarr; Y</code> and <code>Y &rarr; Z</code> hold where <code>Y &nrarr; X</code> and <code>Z &nsub; Y</code>, then <code>X &rarr; Z</code> is a transitive dependency.</li>
+                            </ul>
+                        </div>
+
+                        <!-- Section 3.2 -->
+                        <div class="topic-section" id="sec3-2">
+                            <h2><i class="fas fa-balance-scale"></i> 3.2 Armstrong's Axioms and Formal Proofs</h2>
+                            <p>Armstrong's Axioms (1974) form a sound and complete inference system for computing the complete closure of functional dependencies (<code>F+</code>).</p>
+
+                            <div class="table-container">
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th>Rule Name</th>
+                                            <th>Formal Mathematical Notation</th>
+                                            <th>Axiom Classification</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td><strong>Reflexivity</strong></td>
+                                            <td>If <code>Y &sube; X</code>, then <code>X &rarr; Y</code></td>
+                                            <td>Primary Axiom</td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Augmentation</strong></td>
+                                            <td>If <code>X &rarr; Y</code>, then <code>XZ &rarr; YZ</code> for any attribute set Z</td>
+                                            <td>Primary Axiom</td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Transitivity</strong></td>
+                                            <td>If <code>X &rarr; Y</code> and <code>Y &rarr; Z</code>, then <code>X &rarr; Z</code></td>
+                                            <td>Primary Axiom</td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Union</strong></td>
+                                            <td>If <code>X &rarr; Y</code> and <code>X &rarr; Z</code>, then <code>X &rarr; YZ</code></td>
+                                            <td>Derived Secondary Rule</td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Decomposition</strong></td>
+                                            <td>If <code>X &rarr; YZ</code>, then <code>X &rarr; Y</code> and <code>X &rarr; Z</code></td>
+                                            <td>Derived Secondary Rule</td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Pseudo-transitivity</strong></td>
+                                            <td>If <code>X &rarr; Y</code> and <code>WY &rarr; Z</code>, then <code>WX &rarr; Z</code></td>
+                                            <td>Derived Secondary Rule</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <!-- Section 3.3 -->
+                        <div class="topic-section" id="sec3-3">
+                            <h2><i class="fas fa-search"></i> 3.3 Attribute Closure Algorithm (X+)</h2>
+                            <p>The <strong>Attribute Closure</strong> <code>X+</code> is the set of all attributes that are functionally determined by X under dependency set F.</p>
+
+                            <div class="info-box tip">
+                                <h4><i class="fas fa-code"></i> Attribute Closure Algorithm</h4>
+                                <ol>
+                                    <li>Initialize <code>X+ = X</code>.</li>
+                                    <li>Repeat until no new attributes can be added:
+                                        <br>For each FD <code>Y &rarr; Z &isin; F</code>:
+                                        <br>If <code>Y &sube; X+</code>, then <code>X+ = X+ &cup; Z</code>.</li>
+                                    <li>Output <code>X+</code>.</li>
+                                </ol>
+                                <p style="margin-top: 8px;"><strong>Candidate Key Test:</strong> If <code>X+</code> equals all attributes of relation R and no proper subset of X determines R, then X is a <strong>Candidate Key</strong>.</p>
+                            </div>
+                        </div>
+
+                        <!-- Section 3.4 -->
+                        <div class="topic-section" id="sec3-4">
+                            <h2><i class="fas fa-compress-alt"></i> 3.4 Canonical / Minimal Cover (Fc)</h2>
+                            <p>A <strong>Minimal Cover</strong> <code>Fc</code> is an equivalent, non-redundant canonical representation of FD set F:</p>
+                            <ol>
+                                <li><strong>Standard Form:</strong> Decompose all RHS attributes into singletons (e.g., <code>A &rarr; BC</code> becomes <code>A &rarr; B</code> and <code>A &rarr; C</code>).</li>
+                                <li><strong>Extraneous Attribute Elimination:</strong> For each FD <code>X &rarr; A</code>, remove extraneous attributes B from LHS determinant if <code>(X - {B})+</code> contains A.</li>
+                                <li><strong>Redundant FD Elimination:</strong> For each remaining FD <code>f &isin; F</code>, if <code>f</code> can be inferred from <code>F - {f}</code>, delete <code>f</code>.</li>
+                            </ol>
+                        </div>
+
+                        <!-- Section 3.5 -->
+                        <div class="topic-section" id="sec3-5">
+                            <h2><i class="fas fa-layer-group"></i> 3.5 Normal Form Inclusion Hierarchy</h2>
+                            <div class="diagram-container">
+                                <svg viewBox="0 0 760 220" width="100%" height="200" xmlns="http://www.w3.org/2000/svg">
+                                    <!-- Concentric Circles -->
+                                    <ellipse cx="380" cy="110" rx="350" ry="100" fill="#f8fafc" stroke="#64748b" stroke-width="1.5"/>
+                                    <text x="120" y="45" font-family="-apple-system, sans-serif" font-size="12" font-weight="700" fill="#64748b">1NF (Atomic Values)</text>
+
+                                    <ellipse cx="380" cy="118" rx="290" ry="85" fill="#eff6ff" stroke="#2563eb" stroke-width="1.5"/>
+                                    <text x="170" y="65" font-family="-apple-system, sans-serif" font-size="12" font-weight="700" fill="#2563eb">2NF (No Partial Dependencies)</text>
+
+                                    <ellipse cx="380" cy="126" rx="230" ry="70" fill="#f0fdf4" stroke="#10b981" stroke-width="1.5"/>
+                                    <text x="215" y="85" font-family="-apple-system, sans-serif" font-size="12" font-weight="700" fill="#047857">3NF (No Transitive Dependencies)</text>
+
+                                    <ellipse cx="380" cy="134" rx="170" ry="55" fill="#fef3c7" stroke="#f59e0b" stroke-width="2"/>
+                                    <text x="270" y="105" font-family="-apple-system, sans-serif" font-size="12" font-weight="700" fill="#b45309">BCNF (Every Determinant is Superkey)</text>
+
+                                    <ellipse cx="380" cy="142" rx="105" ry="40" fill="#fae8ff" stroke="#8b5cf6" stroke-width="1.5"/>
+                                    <text x="380" y="146" font-family="-apple-system, sans-serif" font-size="12" font-weight="700" text-anchor="middle" fill="#6b21a8">4NF / 5NF</text>
+                                </svg>
+                                <p style="font-size: 0.85rem; color: var(--text-light); margin-top: 6px;">Figure 3.1: Strict Mathematical Normal Form Set Inclusions: 5NF &sube; 4NF &sube; BCNF &sube; 3NF &sube; 2NF &sube; 1NF</p>
+
+                                <h4 style="margin-top: 20px;"><i class="fas fa-sitemap"></i> Step-by-Step Normalization Transition Pipeline</h4>
+                                <div class="mermaid">
+graph LR
+    UNF["<b>Unnormalized Data</b><br>Repeating arrays / groups"] -->|Enforce Atomic Values| N1["<b>1NF</b><br>Atomic Domains"]
+    N1 -->|Eliminate Partial FDs| N2["<b>2NF</b><br>Full Dependency on PK"]
+    N2 -->|Eliminate Transitive FDs| N3["<b>3NF</b><br>X Superkey OR Y Prime"]
+    N3 -->|Strict Superkey Rule| NBC["<b>BCNF</b><br>Every Determinant Superkey"]
+    NBC -->|Eliminate Multi-Valued FDs| N4["<b>4NF</b><br>No independent 1:N FDs"]
+    N4 -->|Eliminate Join Dependencies| N5["<b>5NF (PJNF)</b><br>Lossless n-way projection"]
+</div>
+                            </div>
+                        </div>
+
+                        <!-- Section 3.6 -->
+                        <div class="topic-section" id="sec3-6">
+                            <h2><i class="fas fa-check-double"></i> 3.6 1NF, 2NF &amp; Prime Attributes</h2>
+                            <ul>
+                                <li><strong>First Normal Form (1NF):</strong> All attribute domains contain only atomic, indivisible scalar values. No repeating groups, arrays, multi-valued attributes, or nested relations.</li>
+                                <li><strong>Prime Attribute:</strong> An attribute that is a member of <strong>at least one Candidate Key</strong>. All other attributes are <em>non-prime</em>.</li>
+                                <li><strong>Second Normal Form (2NF):</strong> Must be in 1NF and have <strong>NO Partial Dependencies</strong>. Every non-prime attribute must depend on the <em>whole</em> candidate key, not a proper subset of it.</li>
+                            </ul>
+
+                            <h4><i class="fas fa-table"></i> 1NF Concrete Example: Converting Non-Atomic Data</h4>
+                            <p><strong>Unnormalized Table (Violates 1NF):</strong> Column <code>Enrolled_Courses</code> contains non-atomic, multi-valued comma-separated arrays:</p>
+                            <div class="table-wrapper">
+                                <table>
+                                    <thead>
+                                        <tr><th>Roll_No</th><th>Student_Name</th><th>Enrolled_Courses (Non-Atomic)</th><th>City</th></tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr><td>101</td><td>Aman Sharma</td><td style="color:#dc2626; font-weight:600;">DBMS, OS, CN</td><td>Noida</td></tr>
+                                        <tr><td>102</td><td>Priya Verma</td><td style="color:#dc2626; font-weight:600;">AI, ML</td><td>Delhi</td></tr>
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <p><strong>Normalized to 1NF:</strong> Multi-valued attributes are separated into individual tuples such that every cell holds exactly one atomic value:</p>
+                            <div class="table-wrapper">
+                                <table>
+                                    <thead>
+                                        <tr><th>Roll_No</th><th>Student_Name</th><th>Course (Atomic)</th><th>City</th></tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr><td>101</td><td>Aman Sharma</td><td><strong style="color:#059669;">DBMS</strong></td><td>Noida</td></tr>
+                                        <tr><td>101</td><td>Aman Sharma</td><td><strong style="color:#059669;">OS</strong></td><td>Noida</td></tr>
+                                        <tr><td>101</td><td>Aman Sharma</td><td><strong style="color:#059669;">CN</strong></td><td>Noida</td></tr>
+                                        <tr><td>102</td><td>Priya Verma</td><td><strong style="color:#059669;">AI</strong></td><td>Delhi</td></tr>
+                                        <tr><td>102</td><td>Priya Verma</td><td><strong style="color:#059669;">ML</strong></td><td>Delhi</td></tr>
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <h4><i class="fas fa-table"></i> 2NF Concrete Example: Eliminating Partial Dependencies</h4>
+                            <p><strong>Relation with Partial Dependency (Violates 2NF):</strong> Primary Key is Composite: <code>{Student_ID, Course_ID}</code>.</p>
+                            <div class="info-box note">
+                                <p><strong>Functional Dependencies:</strong><br>
+                                1. <code>{Student_ID, Course_ID} &rarr; Grade</code> (Full dependency &check;)<br>
+                                2. <code>Student_ID &rarr; Student_Name</code> (<strong>Partial Dependency &cross;</strong>: non-prime <code>Student_Name</code> depends on only a subset of the primary key!)</p>
+                            </div>
+                            <div class="table-wrapper">
+                                <table>
+                                    <thead>
+                                        <tr><th>Student_ID [PK]</th><th>Course_ID [PK]</th><th>Student_Name (Redundant)</th><th>Grade</th></tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr><td>S101</td><td>CS501</td><td style="color:#dc2626;">Aman Sharma</td><td>A</td></tr>
+                                        <tr><td>S101</td><td>CS502</td><td style="color:#dc2626;">Aman Sharma</td><td>B</td></tr>
+                                        <tr><td>S102</td><td>CS501</td><td style="color:#dc2626;">Priya Verma</td><td>A+</td></tr>
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <p><strong>Lossless 2NF Decomposition:</strong> Decomposed into two independent tables where all non-prime attributes are fully dependent on their table's primary key:</p>
+                            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:16px;">
+                                <div class="table-wrapper">
+                                    <p><strong>Table 1: STUDENT (Key: Student_ID)</strong></p>
+                                    <table>
+                                        <thead><tr><th>Student_ID [PK]</th><th>Student_Name</th></tr></thead>
+                                        <tbody>
+                                            <tr><td>S101</td><td>Aman Sharma</td></tr>
+                                            <tr><td>S102</td><td>Priya Verma</td></tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="table-wrapper">
+                                    <p><strong>Table 2: ENROLLMENT (Key: {Student_ID, Course_ID})</strong></p>
+                                    <table>
+                                        <thead><tr><th>Student_ID [FK]</th><th>Course_ID</th><th>Grade</th></tr></thead>
+                                        <tbody>
+                                            <tr><td>S101</td><td>CS501</td><td>A</td></tr>
+                                            <tr><td>S101</td><td>CS502</td><td>B</td></tr>
+                                            <tr><td>S102</td><td>CS501</td><td>A+</td></tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Section 3.7 -->
+                        <div class="topic-section" id="sec3-7">
+                            <h2><i class="fas fa-medal"></i> 3.7 Third Normal Form (3NF)</h2>
+                            <div class="info-box note">
+                                <h4><i class="fas fa-check"></i> 3NF Formal Condition</h4>
+                                <p>A relation schema R is in <strong>3NF</strong> if it is in 2NF and, for every non-trivial FD <code>X &rarr; Y</code>, at least ONE of the following holds:</p>
+                                <ul>
+                                    <li><strong>1. X is a Superkey</strong> of relation R, OR</li>
+                                    <li><strong>2. Y is a Prime Attribute</strong> (each attribute in Y is a member of at least one candidate key).</li>
+                                </ul>
+                                <p><em>Core Rule:</em> 3NF eliminates all <strong>Transitive Dependencies</strong>: non-prime attributes must not depend on other non-prime attributes.</p>
+                            </div>
+
+                            <h4><i class="fas fa-table"></i> 3NF Concrete Example: Transitive Dependency Elimination</h4>
+                            <p><strong>Relation with Transitive Dependency (Violates 3NF):</strong> Primary Key is <code>Emp_ID</code>.</p>
+                            <div class="info-box tip">
+                                <p><code>Emp_ID &rarr; Dept_ID</code> and <code>Dept_ID &rarr; Dept_Name</code> &rArr; Therefore, <code>Emp_ID &rarr; Dept_Name</code> is a <strong>Transitive Dependency</strong> through non-prime determinant <code>Dept_ID</code>.</p>
+                            </div>
+                            <div class="table-wrapper">
+                                <table>
+                                    <thead><tr><th>Emp_ID [PK]</th><th>Emp_Name</th><th>Dept_ID</th><th>Dept_Name (Redundant)</th><th>Dept_Location (Redundant)</th></tr></thead>
+                                    <tbody>
+                                        <tr><td>E01</td><td>Vikram Rathore</td><td>D10</td><td style="color:#dc2626;">Finance</td><td style="color:#dc2626;">Tower A</td></tr>
+                                        <tr><td>E02</td><td>Sneha Kapoor</td><td>D10</td><td style="color:#dc2626;">Finance</td><td style="color:#dc2626;">Tower A</td></tr>
+                                        <tr><td>E03</td><td>Rahul Roy</td><td>D20</td><td style="color:#dc2626;">Engineering</td><td style="color:#dc2626;">Tower B</td></tr>
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <p><strong>Decomposition into 3NF (Lossless &amp; Dependency Preserving):</strong></p>
+                            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:16px;">
+                                <div class="table-wrapper">
+                                    <p><strong>Table 1: EMPLOYEE</strong></p>
+                                    <table>
+                                        <thead><tr><th>Emp_ID [PK]</th><th>Emp_Name</th><th>Dept_ID [FK]</th></tr></thead>
+                                        <tbody>
+                                            <tr><td>E01</td><td>Vikram Rathore</td><td>D10</td></tr>
+                                            <tr><td>E02</td><td>Sneha Kapoor</td><td>D10</td></tr>
+                                            <tr><td>E03</td><td>Rahul Roy</td><td>D20</td></tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="table-wrapper">
+                                    <p><strong>Table 2: DEPARTMENT</strong></p>
+                                    <table>
+                                        <thead><tr><th>Dept_ID [PK]</th><th>Dept_Name</th><th>Dept_Location</th></tr></thead>
+                                        <tbody>
+                                            <tr><td>D10</td><td>Finance</td><td>Tower A</td></tr>
+                                            <tr><td>D20</td><td>Engineering</td><td>Tower B</td></tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Section 3.8 -->
+                        <div class="topic-section" id="sec3-8">
+                            <h2><i class="fas fa-award"></i> 3.8 Boyce-Codd Normal Form (BCNF)</h2>
+                            <div class="info-box tip">
+                                <h4><i class="fas fa-star"></i> BCNF Strict Rule</h4>
+                                <p>A relation schema R is in <strong>BCNF</strong> if, for every non-trivial functional dependency <code>X &rarr; Y</code> holding in R:</p>
+                                <div style="margin: 8px 0; font-family: var(--font-mono); font-weight: bold; color: var(--primary-color);">
+                                    X must be a SUPERKEY of R
+                                </div>
+                                <p><em>Key Difference:</em> BCNF strictly disallows the "Y is a prime attribute" exception. Every determinant attribute set must independently identify tuples.</p>
+                            </div>
+
+                            <h4><i class="fas fa-table"></i> BCNF Concrete Example: Relation in 3NF but Violating BCNF</h4>
+                            <p>Consider <code>STUDENT_ADVISOR(Student_ID, Subject, Advisor)</code> with constraints:</p>
+                            <ul>
+                                <li>A student can take multiple subjects.</li>
+                                <li>For each subject, a student is assigned one advisor: <code>{Student_ID, Subject} &rarr; Advisor</code>.</li>
+                                <li>Each advisor teaches only one subject: <code>Advisor &rarr; Subject</code>.</li>
+                            </ul>
+                            <div class="table-wrapper">
+                                <table>
+                                    <thead><tr><th>Student_ID [CK]</th><th>Subject [CK]</th><th>Advisor</th></tr></thead>
+                                    <tbody>
+                                        <tr><td>101</td><td>DBMS</td><td>Prof. Sharma</td></tr>
+                                        <tr><td>102</td><td>DBMS</td><td>Prof. Sharma</td></tr>
+                                        <tr><td>101</td><td>OS</td><td>Prof. Gupta</td></tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <p><em>Analysis:</em> Candidate Keys are <code>{Student_ID, Subject}</code> and <code>{Student_ID, Advisor}</code>. The dependency <code>Advisor &rarr; Subject</code> satisfies 3NF because <code>Subject</code> is a prime attribute. However, it <strong>violates BCNF</strong> because <code>Advisor</code> is NOT a superkey!</p>
+                            <p><strong>BCNF Decomposition:</strong></p>
+                            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:16px;">
+                                <div class="table-wrapper">
+                                    <p><strong>Table 1: ADVISOR_SUBJECT (BCNF &check;)</strong></p>
+                                    <table>
+                                        <thead><tr><th>Advisor [PK]</th><th>Subject</th></tr></thead>
+                                        <tbody>
+                                            <tr><td>Prof. Sharma</td><td>DBMS</td></tr>
+                                            <tr><td>Prof. Gupta</td><td>OS</td></tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="table-wrapper">
+                                    <p><strong>Table 2: STUDENT_ADVISOR (BCNF &check;)</strong></p>
+                                    <table>
+                                        <thead><tr><th>Student_ID [PK]</th><th>Advisor [PK]</th></tr></thead>
+                                        <tbody>
+                                            <tr><td>101</td><td>Prof. Sharma</td></tr>
+                                            <tr><td>102</td><td>Prof. Sharma</td></tr>
+                                            <tr><td>101</td><td>Prof. Gupta</td></tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Section 3.9 -->
+                        <div class="topic-section" id="sec3-9">
+                            <h2><i class="fas fa-indent"></i> 3.9 Inclusion Dependencies</h2>
+                            <p>An <strong>Inclusion Dependency</strong> <code>R1.X &sube; R2.Y</code> specifies that the values appearing in columns X of table R1 must also appear in columns Y of table R2. This is the mathematical formalization of foreign key referential integrity constraints.</p>
+                        </div>
+
+                        <!-- Section 3.10 -->
+                        <div class="topic-section" id="sec3-10">
+                            <h2><i class="fas fa-table-tennis"></i> 3.10 Lossless Join &amp; Matrix Chase Test</h2>
+                            <p>A decomposition <code>D = {R1, R2}</code> of R is <strong>lossless</strong> if natural join reconstructs the exact original relation without spurious tuples:</p>
+                            <div style="background: var(--code-bg); color: #93c5fd; padding: 12px 18px; border-radius: 6px; font-family: var(--font-mono); margin: 12px 0;">
+                                R1 &#10781; R2 = R &nbsp;&hArr;&nbsp; (R1 &cap; R2) &rarr; (R1 - R2) &nbsp;&or;&nbsp; (R1 &cap; R2) &rarr; (R2 - R1)
+                            </div>
+                            <p>The common attribute set must be a superkey of at least one of the decomposed tables.</p>
+                        </div>
+
+                        <!-- Section 3.11 -->
+                        <div class="topic-section" id="sec3-11">
+                            <h2><i class="fas fa-link"></i> 3.11 Dependency Preservation</h2>
+                            <p>A decomposition is <strong>dependency preserving</strong> if enforcing projected FDs locally on each decomposed table is sufficient to enforce all original functional dependencies:</p>
+                            <div style="font-family: var(--font-mono); font-weight: bold; color: var(--primary-color); margin: 8px 0;">
+                                (F1 &cup; F2 &cup; ... &cup; Fk)+ = F+
+                            </div>
+                            <p>While 3NF guarantees both lossless join and dependency preservation, BCNF can sometimes lose dependencies that span multiple tables.</p>
+                        </div>
+
+                        <!-- Section 3.12 -->
+                        <div class="topic-section" id="sec3-12">
+                            <h2><i class="fas fa-code-branch"></i> 3.12 Multi-Valued Dependencies (MVD) &amp; Fourth Normal Form (4NF)</h2>
+                            <p>A <strong>Multi-Valued Dependency (MVD)</strong> <code>X &#8608; Y</code> specifies that the presence of certain tuples in relation R implies the presence of other tuples. In essence, attribute set Y is independent of the remaining attributes in relation R given attribute set X.</p>
+                            <div class="info-box note">
+                                <h4><i class="fas fa-shield-alt"></i> 4NF Condition</h4>
+                                <p>A relation schema R is in <strong>4NF</strong> if it is in BCNF and, for every non-trivial MVD <code>X &#8608; Y</code> holding in R, <strong>X is a Superkey</strong> of R.</p>
+                            </div>
+
+                            <h4><i class="fas fa-table"></i> 4NF Concrete Example: Cartesian Product Anomaly</h4>
+                            <p>Consider <code>INSTRUCTOR_INFO(Instructor, Course, Hobby)</code> where an instructor teaches multiple courses and pursues multiple independent hobbies:</p>
+                            <div class="table-wrapper">
+                                <table>
+                                    <thead><tr><th>Instructor</th><th>Course</th><th>Hobby</th></tr></thead>
+                                    <tbody>
+                                        <tr><td>Dr. Rajesh</td><td>DBMS</td><td>Photography</td></tr>
+                                        <tr><td>Dr. Rajesh</td><td>DBMS</td><td>Cricket</td></tr>
+                                        <tr><td>Dr. Rajesh</td><td>Algorithms</td><td>Photography</td></tr>
+                                        <tr><td>Dr. Rajesh</td><td>Algorithms</td><td>Cricket</td></tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <p><em>The Anomaly:</em> Because <code>Course</code> and <code>Hobby</code> are mutually independent, adding a 3rd hobby requires inserting 2 additional tuples (one for each course). This Cartesian explosion is resolved by 4NF decomposition:</p>
+                            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:16px;">
+                                <div class="table-wrapper">
+                                    <p><strong>Table 1: INSTRUCTOR_COURSE (4NF &check;)</strong></p>
+                                    <table>
+                                        <thead><tr><th>Instructor [PK]</th><th>Course [PK]</th></tr></thead>
+                                        <tbody>
+                                            <tr><td>Dr. Rajesh</td><td>DBMS</td></tr>
+                                            <tr><td>Dr. Rajesh</td><td>Algorithms</td></tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="table-wrapper">
+                                    <p><strong>Table 2: INSTRUCTOR_HOBBY (4NF &check;)</strong></p>
+                                    <table>
+                                        <thead><tr><th>Instructor [PK]</th><th>Hobby [PK]</th></tr></thead>
+                                        <tbody>
+                                            <tr><td>Dr. Rajesh</td><td>Photography</td></tr>
+                                            <tr><td>Dr. Rajesh</td><td>Cricket</td></tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Section 3.13 -->
+                        <div class="topic-section" id="sec3-13">
+                            <h2><i class="fas fa-puzzle-piece"></i> 3.13 Join Dependencies &amp; Fifth Normal Form (5NF)</h2>
+                            <p>A relation schema is in <strong>5NF (Project-Join Normal Form / PJNF)</strong> if every non-trivial Join Dependency <code>&#10781;[R1, R2, ... Rn]</code> is implied by the candidate keys of R. 5NF eliminates cyclic join redundancy.</p>
+                        </div>
+
+                        <!-- Section 3.14 -->
+                        <div class="topic-section" id="sec3-14">
+                            <h2><i class="fas fa-cubes"></i> 3.14 3NF Synthesis Algorithm (Bernstein's Algorithm)</h2>
+                            <div class="info-box tip">
+                                <h4><i class="fas fa-cogs"></i> 3NF Synthesis Steps (Guarantees Lossless + Dependency Preservation)</h4>
+                                <ol>
+                                    <li>Find a Minimal Cover <code>Fc</code> of F.</li>
+                                    <li>For each FD <code>X &rarr; Y &isin; Fc</code>, create relation schema <code>Ri = X &cup; Y</code>.</li>
+                                    <li>If none of the schemas contains a candidate key of R, add schema <code>Rk = K</code> where K is any candidate key.</li>
+                                    <li>Eliminate redundant sub-schemas (if <code>Rj &sube; Ri</code>, drop Rj).</li>
+                                </ol>
+                            </div>
+                        </div>
+
+                        <!-- Section 3.15 -->
+                        <div class="topic-section" id="sec3-15">
+                            <h2><i class="fas fa-sitemap"></i> 3.15 Lossless BCNF Decomposition Algorithm</h2>
+                            <div class="info-box warning">
+                                <h4><i class="fas fa-code"></i> Recursive BCNF Decomposition</h4>
+                                <ol>
+                                    <li>Initialize <code>D = {R}</code>.</li>
+                                    <li>While there exists a relation <code>Ri &isin; D</code> not in BCNF:
+                                        <ul>
+                                            <li>Find non-trivial FD <code>X &rarr; Y</code> on Ri violating BCNF (X is not superkey).</li>
+                                            <li>Decompose Ri into <code>R1 = X &cup; Y</code> and <code>R2 = Ri - (Y - X)</code>.</li>
+                                            <li>Replace Ri with R1 and R2 in D.</li>
+                                        </ul>
+                                    </li>
+                                </ol>
+                            </div>
+                        </div>
+
+                        <!-- Section 3.16 -->
+                        <div class="topic-section" id="sec3-16">
+                            <h2><i class="fas fa-pen-fancy"></i> 3.16 Solved Exam Numerical Problems</h2>
+                            
+                            <h3>Problem 1: Minimal Cover Computation</h3>
+                            <p><strong>Given FD Set:</strong> <code>F = { A &rarr; BC, B &rarr; C, A &rarr; B, AB &rarr; C }</code></p>
+                            <ol>
+                                <li><strong>RHS Decomposition:</strong> <code>F1 = { A &rarr; B, A &rarr; C, B &rarr; C, AB &rarr; C }</code></li>
+                                <li><strong>Extraneous Attribute:</strong> In <code>AB &rarr; C</code>, test B: <code>A+ = {A, B, C}</code> under F1. Since C &isin; A+, B is extraneous &rarr; becomes <code>A &rarr; C</code>.</li>
+                                <li><strong>Redundant FD:</strong> In <code>{ A &rarr; B, A &rarr; C, B &rarr; C }</code>, test <code>A &rarr; C</code>: without it, <code>A+ = {A, B, C}</code> via Transitivity. Thus <code>A &rarr; C</code> is redundant.</li>
+                                <li><strong>Final Minimal Cover:</strong> <code>Fc = { A &rarr; B, B &rarr; C }</code></li>
+                            </ol>
+
+                            <h3>Problem 2: Complete Multi-Candidate Key Determination</h3>
+                            <div class="info-box note">
+                                <h4><i class="fas fa-key"></i> Systematic Candidate Key Algorithm</h4>
+                                <p><strong>Relation Schema:</strong> $R(A, B, C, D, E)$ with functional dependencies:
+                                $$F = \{ AB \to C, \; C \to D, \; D \to E, \; E \to A \}$$</p>
+                                <ol>
+                                    <li><strong>Essential Attribute Identification:</strong> Inspect the right-hand side of all FDs: $\{C, D, E, A\}$. Attribute $B$ <em>never</em> appears on any RHS. Therefore, $B$ <strong>must belong to every candidate key</strong>.</li>
+                                    <li><strong>Closure of $AB$:</strong>
+                                        $$(AB)^+ = \{A, B\} \xrightarrow{AB \to C} \{A, B, C\} \xrightarrow{C \to D} \{A, B, C, D\} \xrightarrow{D \to E} \{A, B, C, D, E\} = R$$
+                                        Since no proper subset of $\{AB\}$ determines all attributes, <strong>$K_1 = \{A, B\}$</strong> is a Candidate Key.
+                                    </li>
+                                    <li><strong>Substitution via Dependencies:</strong>
+                                        <ul>
+                                            <li>Since $E \to A$, replace $A$ with $E$: $$(EB)^+ = \{A, B, C, D, E\} \implies \mathbf{K_2 = \{E, B\}}$$</li>
+                                            <li>Since $D \to E$, replace $E$ with $D$: $$(DB)^+ = \{A, B, C, D, E\} \implies \mathbf{K_3 = \{D, B\}}$$</li>
+                                            <li>Since $C \to D$, replace $D$ with $C$: $$(CB)^+ = \{A, B, C, D, E\} \implies \mathbf{K_4 = \{C, B\}}$$</li>
+                                        </ul>
+                                    </li>
+                                    <li><strong>Candidate Keys of R:</strong> $\{AB\}, \{EB\}, \{DB\}, \{CB\}$.</li>
+                                    <li><strong>Prime Attributes:</strong> $\{A, B, C, D, E\}$ (All attributes are prime!).</li>
+                                    <li><strong>Normal Form Determination:</strong> Since every attribute in $R$ is prime, condition (ii) of 3NF ($A$ is a prime attribute) holds for all FDs. Therefore, $R$ is <strong>guaranteed to be in 3NF</strong>.</li>
+                                </ol>
+                            </div>
+
+                            <h3>Problem 3: Lossless Join &amp; Dependency Preservation Test</h3>
+                            <div class="info-box tip">
+                                <h4><i class="fas fa-check-circle"></i> Complete Decomposition Verification</h4>
+                                <p><strong>Relation:</strong> $R(A, B, C, D)$ with $F = \{ A \to B, \; B \to C, \; C \to D, \; D \to A \}$. Decomposed into $R_1(A, B, C)$ and $R_2(C, D)$.</p>
+                                <ol>
+                                    <li><strong>Lossless Join Verification:</strong>
+                                        $$R_1 \cap R_2 = \{C\}$$
+                                        Compute closure of the common attribute set under $F$:
+                                        $$C^+ = \{C\} \xrightarrow{C \to D} \{C, D\} \xrightarrow{D \to A} \{C, D, A\} \xrightarrow{A \to B} \{A, B, C, D\} = R$$
+                                        Since $(R_1 \cap R_2)^+ \supseteq R_2$, the common attribute set is a <strong>Superkey</strong> of $R_2$. Therefore, the decomposition is <strong>strictly Lossless Join</strong>.
+                                    </li>
+                                    <li><strong>Dependency Preservation Verification:</strong>
+                                        <ul>
+                                            <li>$A \to B$ and $B \to C$ only contain attributes in $R_1$, so they are preserved in $F_1$.</li>
+                                            <li>$C \to D$ only contains attributes in $R_2$, so it is preserved in $F_2$.</li>
+                                            <li>To check $D \to A$: $(D)^+$ under $F_1 \cup F_2$: $D$ in $R_2$ doesn't produce $A$ directly, but since $D \to A$ is logically implied via $D \to A$ if joined, let's verify if $(F_1 \cup F_2)^+ = F^+$. Here $F_1 = \{A \to B, B \to C, A \to C\}$, $F_2 = \{C \to D\}$. Without $D \to A$, closure of $D$ under $F_1 \cup F_2$ is only $\{D\}$. Thus $D \to A$ is <strong>NOT preserved</strong>.</li>
+                                        </ul>
+                                    </li>
+                                </ol>
+                            </div>
+                        </div>
+
+                        <!-- Unit Navigation Buttons -->
+                        <div class="unit-navigation">
+                            <a href="unit2.html" class="nav-btn prev">
+                                <i class="fas fa-arrow-left"></i> Unit II: Relational &amp; SQL
+                            </a>
+                            <a href="unit4.html" class="nav-btn next">
+                                Unit IV: Transactions &amp; Recovery <i class="fas fa-arrow-right"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Interactive Quiz Section -->
+        <section class="quiz-section">
+            <div class="container">
+                <h2 class="section-title">Test Your Knowledge — Unit III</h2>
+                <div class="quiz-container" id="quiz-container">
+                    <!-- Quiz dynamically rendered by QuizManager -->
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3><i class="fas fa-database"></i> DBMS Hub</h3>
+                    <p>Complete academic courseware for BCS501 Database Management Systems.</p>
+                </div>
+                <div class="footer-section">
+                    <h3>Course Units</h3>
+                    <ul>
+                        <li><a href="unit1.html">Unit I - ER &amp; Architecture</a></li>
+                        <li><a href="unit2.html">Unit II - Relational &amp; SQL</a></li>
+                        <li><a href="unit3.html">Unit III - Normalization</a></li>
+                        <li><a href="unit4.html">Unit IV - Transactions</a></li>
+                        <li><a href="unit5.html">Unit V - Concurrency</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>Resources</h3>
+                    <ul>
+                        <li><a href="mcq.html">MCQ Question Bank</a></li>
+                        <li><a href="cheatsheet.html">Cheat Sheet</a></li>
+                        <li><a href="previousyear.html">Solved PYQs</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 DBMS Learning Hub &bull; BCS501 Academic Guide.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-sql.min.js"></script>
+    <script src="js/script.js"></script>
+    <script>
+        const unit3Questions = [
+            {
+                question: "An attribute is classified as a 'Prime Attribute' if:",
+                options: ["It is the first column in the table", "It is a member of at least one Candidate Key", "It has no NULL values", "It has a foreign key constraint"],
+                correct: 1,
+                explanation: "A prime attribute is defined as any attribute that is part of any candidate key of the relation schema."
+            },
+            {
+                question: "Which normal form requires the complete absence of Partial Dependencies on candidate keys?",
+                options: ["First Normal Form (1NF)", "Second Normal Form (2NF)", "Third Normal Form (3NF)", "Boyce-Codd Normal Form (BCNF)"],
+                correct: 1,
+                explanation: "Second Normal Form (2NF) enforces that no non-prime attribute is partially dependent on any candidate key (it must depend on the whole key)."
+            },
+            {
+                question: "A relation R is in Third Normal Form (3NF) if for every non-trivial FD X → Y, either X is a superkey OR:",
+                options: ["Y is a candidate key", "Y is a prime attribute", "X is a prime attribute", "Y contains no NULLs"],
+                correct: 1,
+                explanation: "3NF allows non-superkey determinants as long as every attribute on the RHS (Y) is a prime attribute, which prevents transitive dependencies."
+            },
+            {
+                question: "What makes Boyce-Codd Normal Form (BCNF) stricter than 3NF?",
+                options: ["BCNF requires 4NF compliance", "BCNF eliminates the 'Y is a prime attribute' exception: every determinant must be a superkey", "BCNF does not allow composite primary keys", "BCNF requires lossy decomposition"],
+                correct: 1,
+                explanation: "In BCNF, for every non-trivial FD X → Y, X MUST be a superkey. There is no exception for prime attributes."
+            },
+            {
+                question: "Armstrong's Augmentation Axiom states that if X → Y holds, then for any attribute set Z:",
+                options: ["XZ → YZ", "Z → Y", "XZ → Y", "X → YZ"],
+                correct: 0,
+                explanation: "Augmentation states that if X → Y holds, then adding attribute set Z to both sides preserves the dependency: XZ → YZ."
+            },
+            {
+                question: "A binary decomposition of relation R into R1 and R2 is guaranteed to be Lossless if and only if:",
+                options: ["R1 and R2 have no common attributes", "The common attribute set (R1 ∩ R2) is a superkey of R1 or R2", "R1 and R2 have equal number of rows", "Both R1 and R2 are in 5NF"],
+                correct: 1,
+                explanation: "A binary decomposition is lossless if the intersection of their attributes (R1 ∩ R2) functionally determines either (R1 − R2) or (R2 − R1)."
+            },
+            {
+                question: "Which decomposition property is always guaranteed by the 3NF Synthesis (Bernstein's) algorithm?",
+                options: ["Lossless join and dependency preservation", "Only lossless join, dependencies may be lost", "Only dependency preservation, join may be lossy", "BCNF compliance"],
+                correct: 0,
+                explanation: "Bernstein's 3NF synthesis algorithm guarantees that the decomposed schemas are both Lossless-Join and Dependency-Preserving."
+            },
+            {
+                question: "Fourth Normal Form (4NF) is designed specifically to eliminate anomalies caused by:",
+                options: ["Transitive functional dependencies", "Multi-Valued Dependencies (MVD)", "Join Dependencies (JD)", "Partial dependencies"],
+                correct: 1,
+                explanation: "4NF extends normalization beyond functional dependencies to eliminate multi-valued dependencies (X ↠ Y) where X is not a superkey."
+            },
+            {
+                question: "What is an Extraneous Attribute in a functional dependency set?",
+                options: ["An attribute that appears in every table", "An attribute that can be removed from an FD without changing the closure F+", "An attribute with foreign key reference", "A NULL attribute"],
+                correct: 1,
+                explanation: "An attribute in an FD is extraneous if its removal leaves the closure of the functional dependency set unchanged."
+            },
+            {
+                question: "Fifth Normal Form (5NF / PJNF) deals with which kind of dependency?",
+                options: ["Inclusion dependencies", "Join dependencies", "Transitive dependencies", "Derived dependencies"],
+                correct: 1,
+                explanation: "5NF (Project-Join Normal Form) deals with join dependencies, ensuring relations cannot be losslessly decomposed into smaller projections without candidate key constraints."
+            }
+        ];
+
+        // Initialize Unit 3 Quiz
+        document.addEventListener('DOMContentLoaded', () => {
+            window.currentQuiz = new QuizManager('quiz-container', unit3Questions);
+        });
+    </script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            if (typeof renderMathInElement === 'function') {
+                renderMathInElement(document.body, {
+                    delimiters: [
+                        {left: '$$', right: '$$', display: true},
+                        {left: '$', right: '$', display: false}
+                    ],
+                    throwOnError: false
+                });
+            }
+            if (typeof mermaid !== 'undefined') {
+                mermaid.initialize({ startOnLoad: true, theme: 'neutral', securityLevel: 'loose' });
+            }
+        });
+    </script>
+</body>
+</html>

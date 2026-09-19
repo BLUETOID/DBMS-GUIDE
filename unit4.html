@@ -1,0 +1,797 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Unit IV: Transaction Processing, ACID Properties, Serializability, Precedence Graphs, Recoverability, Log-Based Recovery, Checkpoints, Deadlocks, Distributed Databases, and 2PC. Complete BCS501 guide.">
+    <title>Unit IV: Transaction Processing &amp; Crash Recovery — DBMS Learning Hub</title>
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+</head>
+<body>
+    <!-- Top Navigation Bar -->
+    <nav class="navbar" role="navigation" aria-label="Main navigation">
+        <div class="nav-container">
+            <a href="index.html" class="logo" aria-label="DBMS Hub Home">
+                <i class="fas fa-database" aria-hidden="true"></i> DBMS Hub
+            </a>
+            <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation menu" aria-expanded="false" aria-controls="navMenu">
+                <i class="fas fa-bars" aria-hidden="true"></i>
+            </button>
+            <ul class="nav-menu" id="navMenu">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="unit1.html">Unit I</a></li>
+                <li><a href="unit2.html">Unit II</a></li>
+                <li><a href="unit3.html">Unit III</a></li>
+                <li><a href="unit4.html" class="active">Unit IV</a></li>
+                <li><a href="unit5.html">Unit V</a></li>
+                <li><a href="theory.html">Theory</a></li>
+                <li><a href="mcq.html">MCQ Bank</a></li>
+                <li><a href="cheatsheet.html">Cheat Sheet</a></li>
+                <li class="nav-divider"></li>
+                <li><a href="previousyear.html">Solved PYQs</a></li>
+            </ul>
+            <button class="theme-toggle-btn" id="darkModeToggle" onclick="toggleDarkMode()" aria-label="Toggle Dark Mode">
+                <i class="fas fa-moon"></i>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Main Content Container -->
+    <main id="main-content">
+        <!-- Unit Header Banner -->
+        <header class="unit-header">
+            <div class="container">
+                <h1>UNIT 4</h1>
+            </div>
+        </header>
+
+        <!-- Two-Column Layout Section -->
+        <section class="unit-content">
+            <div class="container">
+                <div class="page-layout">
+                    <!-- Sticky Sidebar Navigation -->
+                    <aside class="sidebar">
+                        <h3><i class="fas fa-list-ul"></i> Unit IV Topics</h3>
+                        <nav class="sidebar-nav">
+                            <a href="#sec4-1" class="active">4.1 ACID Properties</a>
+                            <a href="#sec4-2">4.2 State Transitions</a>
+                            <a href="#sec4-3">4.3 Schedules &amp; Conflicts</a>
+                            <a href="#sec4-4">4.4 Precedence Graphs</a>
+                            <a href="#sec4-5">4.5 View Serializability</a>
+                            <a href="#sec4-6">4.6 Recoverability Hierarchy</a>
+                            <a href="#sec4-7">4.7 Log Recovery &amp; WAL</a>
+                            <a href="#sec4-8">4.8 Checkpoints Timeline</a>
+                            <a href="#sec4-9">4.9 Deadlock Handling</a>
+                            <a href="#sec4-10">4.10 Distributed Storage</a>
+                            <a href="#sec4-11">4.11 Two-Phase Commit (2PC)</a>
+                            <a href="#sec4-12">4.12 Distributed Directories</a>
+                            <a href="#sec4-13">4.13 Solved Crash Replay</a>
+                        </nav>
+                    </aside>
+
+                    <!-- Main Reading Content -->
+                    <div class="main-content">
+                        <!-- Section 4.1 -->
+                        <div class="topic-section" id="sec4-1">
+                            <h2><i class="fas fa-shield-alt"></i> 4.1 Transaction Concept &amp; ACID Properties</h2>
+                            <p>A <strong>Transaction</strong> is a logical unit of database processing consisting of one or more database access operations (read, write, update, delete). It forms the fundamental abstraction for multi-user concurrency and crash reliability.</p>
+
+                            <div class="table-container">
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th style="width: 18%;">Property</th>
+                                            <th style="width: 42%;">Definition &amp; Operational Invariant</th>
+                                            <th style="width: 40%;">Underlying DBMS Subsystem</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td><strong>Atomicity</strong><br>(All-or-Nothing)</td>
+                                            <td>A transaction is an indivisible unit of work; either all its operations execute permanently, or none are reflected in the database.</td>
+                                            <td><strong>Recovery Manager:</strong> Log-based recovery (Write-Ahead Logging / UNDO logs) and shadow paging.</td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Consistency</strong><br>(Correctness)</td>
+                                            <td>Execution of a transaction in isolation preserves database invariants, taking the database from one valid state to another.</td>
+                                            <td><strong>Integrity Subsystem:</strong> Schema DDL constraints, foreign key assertions, and triggers.</td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Isolation</strong><br>(Independence)</td>
+                                            <td>Each concurrent transaction executes as if it were the sole program running, preventing intermediate dirty state visibility.</td>
+                                            <td><strong>Concurrency Control Manager:</strong> Strict 2-Phase Locking (2PL), Timestamp Ordering, and MVCC.</td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Durability</strong><br>(Survivability)</td>
+                                            <td>Once committed, updates survive all subsequent hardware failures, operating system crashes, and power losses.</td>
+                                            <td><strong>Storage &amp; Log Engine:</strong> Force-flushing REDO log buffers to non-volatile disk/SSD prior to commit ack.</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <!-- Section 4.2 -->
+                        <div class="topic-section" id="sec4-2">
+                            <h2><i class="fas fa-project-diagram"></i> 4.2 Transaction State Machine</h2>
+                            <p>During its lifetime, a transaction moves through distinct states governed by the transaction subsystem:</p>
+
+                            <div class="diagram-container">
+                                <svg viewBox="0 0 760 300" width="100%" height="260" xmlns="http://www.w3.org/2000/svg">
+                                    <rect x="50" y="110" width="130" height="50" rx="6" fill="#eff6ff" stroke="#2563eb" stroke-width="2"/>
+                                    <text x="115" y="140" font-family="-apple-system, sans-serif" font-size="13" font-weight="700" text-anchor="middle" fill="#1e3a8a">ACTIVE</text>
+
+                                    <rect x="290" y="30" width="180" height="50" rx="6" fill="#f0fdf4" stroke="#10b981" stroke-width="2"/>
+                                    <text x="380" y="60" font-family="-apple-system, sans-serif" font-size="12" font-weight="700" text-anchor="middle" fill="#047857">PARTIALLY COMMITTED</text>
+
+                                    <rect x="580" y="30" width="140" height="50" rx="6" fill="#dcfce7" stroke="#10b981" stroke-width="2"/>
+                                    <text x="650" y="60" font-family="-apple-system, sans-serif" font-size="13" font-weight="700" text-anchor="middle" fill="#065f46">COMMITTED</text>
+
+                                    <rect x="290" y="190" width="180" height="50" rx="6" fill="#fef2f2" stroke="#ef4444" stroke-width="2"/>
+                                    <text x="380" y="220" font-family="-apple-system, sans-serif" font-size="13" font-weight="700" text-anchor="middle" fill="#991b1b">FAILED</text>
+
+                                    <rect x="580" y="190" width="140" height="50" rx="6" fill="#fee2e2" stroke="#ef4444" stroke-width="2"/>
+                                    <text x="650" y="220" font-family="-apple-system, sans-serif" font-size="13" font-weight="700" text-anchor="middle" fill="#991b1b">ABORTED</text>
+
+                                    <path d="M 180 125 L 290 65" fill="none" stroke="#334155" stroke-width="1.5"/>
+                                    <text x="220" y="85" font-family="-apple-system, sans-serif" font-size="10" fill="#475569">End operations</text>
+
+                                    <path d="M 180 145 L 290 205" fill="none" stroke="#ef4444" stroke-width="1.5"/>
+                                    <text x="215" y="190" font-family="-apple-system, sans-serif" font-size="10" fill="#ef4444">Exception / Fault</text>
+
+                                    <line x1="470" y1="55" x2="580" y2="55" stroke="#10b981" stroke-width="2"/>
+                                    <text x="525" y="45" font-family="-apple-system, sans-serif" font-size="10" fill="#047857" text-anchor="middle">Log Flushed</text>
+
+                                    <line x1="380" y1="80" x2="380" y2="190" stroke="#ef4444" stroke-width="1.5"/>
+                                    <text x="390" y="140" font-family="-apple-system, sans-serif" font-size="10" fill="#ef4444">Flush Fails</text>
+
+                                    <line x1="470" y1="215" x2="580" y2="215" stroke="#ef4444" stroke-width="2"/>
+                                    <text x="525" y="205" font-family="-apple-system, sans-serif" font-size="10" fill="#991b1b" text-anchor="middle">Rollback &amp; Undo</text>
+                                </svg>
+                                <p style="font-size: 0.85rem; color: var(--text-light); margin-top: 6px;">Figure 4.1: Complete Transaction Lifecycle &amp; State Transition Automaton</p>
+                            </div>
+                        </div>
+
+                        <!-- Section 4.3 -->
+                        <div class="topic-section" id="sec4-3">
+                            <h2><i class="fas fa-history"></i> 4.3 Schedules &amp; Conflicting Operations</h2>
+                            <p>A <strong>Schedule (History)</strong> S is the chronological sequence of interleaved operations across concurrent transactions.</p>
+
+                            <div class="info-box note">
+                                <h4><i class="fas fa-info-circle"></i> Conditions for Conflicting Operations</h4>
+                                <p>Two operations <code>I_i</code> and <code>I_j</code> in schedule S belonging to transactions Ti and Tj (i &ne; j) are in <strong>conflict</strong> if and only if:</p>
+                                <ol>
+                                    <li>They belong to different transactions (<code>Ti &ne; Tj</code>).</li>
+                                    <li>They access the <strong>same data item</strong> (Q).</li>
+                                    <li><strong>At least one</strong> of the operations is a <strong>WRITE</strong> (<code>W(Q)</code>).</li>
+                                </ol>
+                            </div>
+
+                            <div class="table-container">
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th>Op in Ti</th>
+                                            <th>Op in Tj</th>
+                                            <th>Status</th>
+                                            <th>Technical Implication</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>Read(Q)</td>
+                                            <td>Read(Q)</td>
+                                            <td><strong>No Conflict</strong></td>
+                                            <td>Concurrent reads are commutative and cannot modify state.</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Read(Q)</td>
+                                            <td>Write(Q)</td>
+                                            <td><strong>CONFLICT</strong></td>
+                                            <td>Order determines whether Ti sees pre- or post-update value.</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Write(Q)</td>
+                                            <td>Read(Q)</td>
+                                            <td><strong>CONFLICT</strong></td>
+                                            <td>Order determines whether Tj reads dirty or updated value.</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Write(Q)</td>
+                                            <td>Write(Q)</td>
+                                            <td><strong>CONFLICT</strong></td>
+                                            <td>Order determines which write persists in storage (Lost Update risk).</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <!-- Section 4.4 -->
+                        <div class="topic-section" id="sec4-4">
+                            <h2><i class="fas fa-bezier-curve"></i> 4.4 Precedence Graphs &amp; Cycle Detection</h2>
+                            <p>Conflict serializability is verified by constructing a <strong>Precedence Graph (Serialization Graph)</strong> <code>G = (V, E)</code>:</p>
+                            <ul>
+                                <li><strong>Vertices (V):</strong> All transactions participating in the schedule.</li>
+                                <li><strong>Edges (E):</strong> A directed edge <code>Ti &rarr; Tj</code> is added if an operation of Ti conflicts with and precedes an operation of Tj.</li>
+                            </ul>
+
+                            <div class="info-box tip">
+                                <h4><i class="fas fa-check-circle"></i> Serializability Theorem</h4>
+                                <p>A schedule S is <strong>Conflict Serializable</strong> if and only if its precedence graph <code>G</code> contains <strong>NO CYCLES</strong> (i.e., G is a Directed Acyclic Graph / DAG). Topological sorting of G gives the equivalent serial schedule order.</p>
+                            </div>
+
+                            <!-- Worked Example 4.1 -->
+                            <div class="info-box example">
+                                <h4><i class="fas fa-calculator"></i> Worked Example 4.1: Precedence Graph &amp; Conflict Serializability Trace</h4>
+                                <p><strong>Problem Statement:</strong> Consider concurrent schedule $S_1$ executed by transactions $T_1$, $T_2$, and $T_3$ operating on data items $X$, $Y$, and $Z$:</p>
+                                <p style="font-family: var(--font-mono); background: var(--card-bg); padding: 10px 14px; border-radius: 6px; border-left: 3px solid var(--primary-color);">
+                                    S<sub>1</sub>: R<sub>1</sub>(X) &rarr; R<sub>2</sub>(Z) &rarr; R<sub>1</sub>(Z) &rarr; R<sub>3</sub>(X) &rarr; R<sub>3</sub>(Y) &rarr; W<sub>1</sub>(X) &rarr; W<sub>3</sub>(Y) &rarr; R<sub>2</sub>(Y) &rarr; W<sub>2</sub>(Z) &rarr; W<sub>2</sub>(Y)
+                                </p>
+                                <p>Determine whether $S_1$ is conflict serializable. If yes, find its equivalent serial schedule order.</p>
+
+                                <h5 style="margin-top: 14px; color: var(--primary-color);">Step 1: Chronological Conflict Pair Analysis</h5>
+                                <div class="table-container">
+                                    <table>
+                                        <thead>
+                                            <tr>
+                                                <th>Data Item</th>
+                                                <th>Prior Operation</th>
+                                                <th>Later Conflicting Operation</th>
+                                                <th>Conflicting Pair</th>
+                                                <th>Derived Directed Edge</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td><strong>X</strong></td>
+                                                <td>R<sub>3</sub>(X) (step 4)</td>
+                                                <td>W<sub>1</sub>(X) (step 6)</td>
+                                                <td>Read-Write (R<sub>3</sub>-W<sub>1</sub>)</td>
+                                                <td><strong style="color: var(--primary-color);">T<sub>3</sub> &rarr; T<sub>1</sub></strong></td>
+                                            </tr>
+                                            <tr>
+                                                <td><strong>Y</strong></td>
+                                                <td>W<sub>3</sub>(Y) (step 7)</td>
+                                                <td>R<sub>2</sub>(Y) (step 8)</td>
+                                                <td>Write-Read (W<sub>3</sub>-R<sub>2</sub>)</td>
+                                                <td><strong style="color: var(--primary-color);">T<sub>3</sub> &rarr; T<sub>2</sub></strong></td>
+                                            </tr>
+                                            <tr>
+                                                <td><strong>Y</strong></td>
+                                                <td>W<sub>3</sub>(Y) (step 7)</td>
+                                                <td>W<sub>2</sub>(Y) (step 10)</td>
+                                                <td>Write-Write (W<sub>3</sub>-W<sub>2</sub>)</td>
+                                                <td><strong style="color: var(--primary-color);">T<sub>3</sub> &rarr; T<sub>2</sub></strong> (parallel edge)</td>
+                                            </tr>
+                                            <tr>
+                                                <td><strong>Z</strong></td>
+                                                <td>R<sub>1</sub>(Z) (step 3)</td>
+                                                <td>W<sub>2</sub>(Z) (step 9)</td>
+                                                <td>Read-Write (R<sub>1</sub>-W<sub>2</sub>)</td>
+                                                <td><strong style="color: var(--primary-color);">T<sub>1</sub> &rarr; T<sub>2</sub></strong></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                                <h5 style="margin-top: 14px; color: var(--primary-color);">Step 2: Precedence Graph Edge Set &amp; Cycle Check</h5>
+                                <p>The set of directed edges in precedence graph $G = (V, E)$ is:</p>
+                                <p style="font-family: var(--font-mono); font-weight: bold; margin-left: 10px;">
+                                    V = {T<sub>1</sub>, T<sub>2</sub>, T<sub>3</sub>}<br>
+                                    E = { (T<sub>3</sub> &rarr; T<sub>1</sub>), (T<sub>3</sub> &rarr; T<sub>2</sub>), (T<sub>1</sub> &rarr; T<sub>2</sub>) }
+                                </p>
+                                
+                                <div class="mermaid">
+graph LR
+    T3["<b>T3</b>"] -->|"on X and Y"| T1["<b>T1</b>"]
+    T3 -->|on Y| T2["<b>T2</b>"]
+    T1 -->|on Z| T2
+    style T3 fill:#ecfdf5,stroke:#059669,stroke-width:2px
+    style T1 fill:#eff6ff,stroke:#2563eb,stroke-width:2px
+    style T2 fill:#fef3c7,stroke:#d97706,stroke-width:2px
+</div>
+                                </div>
+
+                                <h5 style="margin-top: 12px; color: var(--primary-color);">Step 3: Topological Sort &amp; Conclusion</h5>
+                                <ul>
+                                    <li>In-degree of T<sub>3</sub> = 0 (No incoming edges) &rarr; Execute <strong>T<sub>3</sub></strong> first.</li>
+                                    <li>Remove T<sub>3</sub>; in-degree of T<sub>1</sub> becomes 0 &rarr; Execute <strong>T<sub>1</sub></strong> second.</li>
+                                    <li>Remove T<sub>1</sub>; in-degree of T<sub>2</sub> becomes 0 &rarr; Execute <strong>T<sub>2</sub></strong> third.</li>
+                                </ul>
+                                <p><strong>Conclusion:</strong> Precedence graph contains <strong>NO CYCLES</strong>. Therefore, Schedule $S_1$ is <strong>Conflict Serializable</strong> with equivalent serial schedule order: <code>T3 &rarr; T1 &rarr; T2</code>.</p>
+                            </div>
+                        </div>
+
+                        <!-- Section 4.5 -->
+                        <div class="topic-section" id="sec4-5">
+                            <h2><i class="fas fa-eye"></i> 4.5 View Serializability &amp; Blind Writes</h2>
+                            <p>View serializability is a broader definition of correctness. Two schedules S and S' are <strong>View Equivalent</strong> if:</p>
+                            <ol>
+                                <li>For each data item Q, if Ti reads initial value of Q in S, Ti must read initial value of Q in S'.</li>
+                                <li>For each data item Q, if Ti reads the value written by Tj in S, Ti must read the value written by Tj in S'.</li>
+                                <li>For each data item Q, the transaction that performs the final write on Q in S must perform the final write in S'.</li>
+                            </ol>
+                            <div class="info-box warning">
+                                <h4><i class="fas fa-exclamation-triangle"></i> Conflict vs View Serializability</h4>
+                                <p>Every Conflict Serializable schedule is View Serializable. A schedule that is View Serializable but NOT Conflict Serializable must contain <strong>Blind Writes</strong> (a write operation on Q without prior read).</p>
+                            </div>
+
+                            <!-- Worked Example 4.2 -->
+                            <div class="info-box example">
+                                <h4><i class="fas fa-calculator"></i> Worked Example 4.2: View Serializability with Blind Writes</h4>
+                                <p><strong>Problem Statement:</strong> Consider schedule $S_2$ with 3 transactions accessing variable $A$:</p>
+                                <p style="font-family: var(--font-mono); background: var(--card-bg); padding: 10px 14px; border-radius: 6px; border-left: 3px solid var(--secondary-color);">
+                                    S<sub>2</sub>: R<sub>1</sub>(A) &rarr; W<sub>2</sub>(A) &rarr; W<sub>1</sub>(A) &rarr; W<sub>3</sub>(A)
+                                </p>
+                                <p>Prove that $S_2$ is NOT conflict serializable, but IS view serializable.</p>
+
+                                <h5 style="margin-top: 12px; color: var(--primary-color);">Part A: Conflict Serializability Analysis</h5>
+                                <ol>
+                                    <li>Operation R<sub>1</sub>(A) precedes W<sub>2</sub>(A) &rarr; Edge <strong>T<sub>1</sub> &rarr; T<sub>2</sub></strong>.</li>
+                                    <li>Operation W<sub>2</sub>(A) precedes W<sub>1</sub>(A) &rarr; Edge <strong>T<sub>2</sub> &rarr; T<sub>1</sub></strong>.</li>
+                                </ol>
+                                <p>Since there is a bidirectional cycle <code>T1 &rightleftharpoons; T2</code>, $S_2$ is <strong>NOT Conflict Serializable</strong>.</p>
+
+                                <h5 style="margin-top: 12px; color: var(--primary-color);">Part B: View Serializability Test against Serial Schedule S' = T1 &rarr; T2 &rarr; T3</h5>
+                                <div class="table-container">
+                                    <table>
+                                        <thead>
+                                            <tr>
+                                                <th>View Equivalence Condition</th>
+                                                <th>In Schedule S<sub>2</sub></th>
+                                                <th>In Serial S' (T<sub>1</sub> &rarr; T<sub>2</sub> &rarr; T<sub>3</sub>)</th>
+                                                <th>Evaluation</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td><strong>1. Initial Read of A</strong></td>
+                                                <td>T<sub>1</sub> reads initial value from DB</td>
+                                                <td>T<sub>1</sub> reads initial value from DB</td>
+                                                <td><span style="color: #10b981; font-weight: bold;">Matched &check;</span></td>
+                                            </tr>
+                                            <tr>
+                                                <td><strong>2. Write-Read Dependencies</strong></td>
+                                                <td>Neither T<sub>2</sub> nor T<sub>3</sub> reads A</td>
+                                                <td>Neither T<sub>2</sub> nor T<sub>3</sub> reads A</td>
+                                                <td><span style="color: #10b981; font-weight: bold;">Matched &check; (Trivially true)</span></td>
+                                            </tr>
+                                            <tr>
+                                                <td><strong>3. Final Write on A</strong></td>
+                                                <td>T<sub>3</sub> executes the final write W<sub>3</sub>(A)</td>
+                                                <td>T<sub>3</sub> executes the final write W<sub>3</sub>(A)</td>
+                                                <td><span style="color: #10b981; font-weight: bold;">Matched &check;</span></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <p><strong>Conclusion:</strong> $S_2$ satisfies all 3 view equivalence conditions with serial schedule <code>T1 &rarr; T2 &rarr; T3</code>. Thus, $S_2$ is <strong>View Serializable</strong>! The conflict cycle was benign because $W_2(A)$ was a <em>Blind Write</em> whose value was immediately overwritten by $W_1(A)$ without ever being read by any transaction.</p>
+                            </div>
+                        </div>
+
+                        <!-- Section 4.6 -->
+                        <div class="topic-section" id="sec4-6">
+                            <h2><i class="fas fa-undo"></i> 4.6 Recoverability Hierarchy</h2>
+                            <p>In addition to serializability, a schedule must be recoverable to handle runtime transaction aborts:</p>
+                            <ul>
+                                <li><strong>Recoverable Schedule:</strong> If Ti writes Q and Tj subsequently reads Q, then <strong>Ti must commit before Tj commits</strong>. Prevents dirty read commit anomalies.</li>
+                                <li><strong>Cascadeless (Avoids Cascading Aborts - ACA):</strong> Every transaction reads ONLY values written by <strong>already committed</strong> transactions. Eliminates chained rollbacks.</li>
+                                <li><strong>Strict Schedule:</strong> No transaction can read OR overwrite an item Q until the transaction that previously wrote Q has <strong>committed or aborted</strong>. Simplifies recovery using simple before-image restoration.</li>
+                            </ul>
+                            <p style="font-family: var(--font-mono); font-weight: bold; color: var(--primary-color);">
+                                Strict &sube; Cascadeless &sube; Recoverable &sube; All Schedules
+                            </p>
+
+                            <!-- Worked Example 4.3 -->
+                            <div class="info-box example">
+                                <h4><i class="fas fa-balance-scale"></i> Worked Example 4.3: Comparative Trace of Recoverable, Cascadeless, and Non-Recoverable Schedules</h4>
+                                <div class="table-container">
+                                    <table>
+                                        <thead>
+                                            <tr>
+                                                <th style="width: 20%;">Schedule Classification</th>
+                                                <th style="width: 40%;">Interleaved Execution Sequence</th>
+                                                <th style="width: 40%;">Engine Behavior &amp; Failure Consequence</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td><strong style="color: #ef4444;">Non-Recoverable Schedule</strong></td>
+                                                <td><code>W<sub>1</sub>(A) &rarr; R<sub>2</sub>(A) &rarr; Commit<sub>2</sub> &rarr; Abort<sub>1</sub></code></td>
+                                                <td><strong>Fatal Inconsistency:</strong> T<sub>2</sub> reads dirty data from T<sub>1</sub> and commits. When T<sub>1</sub> subsequently aborts, T<sub>1</sub>'s changes must be rolled back, but ACID Durability strictly prohibits undoing committed T<sub>2</sub>! The database becomes irrecoverably corrupt.</td>
+                                            </tr>
+                                            <tr>
+                                                <td><strong style="color: var(--secondary-color);">Recoverable, but Cascading</strong></td>
+                                                <td><code>W<sub>1</sub>(A) &rarr; R<sub>2</sub>(A) &rarr; W<sub>2</sub>(B) &rarr; R<sub>3</sub>(B) &rarr; Abort<sub>1</sub></code></td>
+                                                <td><strong>Cascading Abort:</strong> T<sub>2</sub> does not commit before T<sub>1</sub>, so the schedule is recoverable. However, when T<sub>1</sub> aborts, T<sub>2</sub> (which read uncommitted A) must abort. This in turn forces T<sub>3</sub> (which read B from T<sub>2</sub>) to abort, triggering a catastrophic cascading rollback.</td>
+                                            </tr>
+                                            <tr>
+                                                <td><strong style="color: #10b981;">Cascadeless (ACA) Schedule</strong></td>
+                                                <td><code>W<sub>1</sub>(A) &rarr; Commit<sub>1</sub> &rarr; R<sub>2</sub>(A) &rarr; Commit<sub>2</sub></code></td>
+                                                <td><strong>Zero Cascading:</strong> T<sub>2</sub> is suspended until T<sub>1</sub> commits. If T<sub>1</sub> aborts prior to commit, T<sub>2</sub> simply reads the previous clean consistent database state. No chained aborts can ever occur.</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Section 4.7 -->
+                        <div class="topic-section" id="sec4-7">
+                            <h2><i class="fas fa-file-alt"></i> 4.7 Log Recovery &amp; Write-Ahead Logging (WAL)</h2>
+                            <p>The <strong>Write-Ahead Logging (WAL)</strong> protocol guarantees atomicity and durability:</p>
+                            <div class="info-box tip">
+                                <h4><i class="fas fa-rules"></i> Core Rules of Write-Ahead Logging</h4>
+                                <ol>
+                                    <li><strong>Undo Logging Rule:</strong> The before-image (old value) log record must be force-flushed to non-volatile disk storage <strong>BEFORE</strong> the modified data block is written to disk.</li>
+                                    <li><strong>Redo Logging Rule:</strong> All log records up to the <code>&lt;commit T&gt;</code> marker must be force-written to disk <strong>BEFORE</strong> the commit acknowledgment is returned to the user.</li>
+                                </ol>
+                            </div>
+                        </div>
+
+                        <!-- Section 4.8 -->
+                        <div class="topic-section" id="sec4-8">
+                            <h2><i class="fas fa-stopwatch"></i> 4.8 Checkpoint Timeline &amp; Crash Replay</h2>
+                            <p>Checkpoints prevent the recovery manager from scanning the entire transaction log from the beginning of database creation:</p>
+                            <div class="mermaid">
+graph LR
+    CP["<b>[ CHECKPOINT RECORD ]</b><br>Dirty RAM Pages Flushed<br>Active List recorded in Log"] --> COM["<b>Committed Transactions (T_c)</b><br>&lt;COMMIT&gt; Log record present<br>✅ REDO Action Required"]
+    CP --> UNCOM["<b>Uncommitted Transactions (T_u)</b><br>Active at Crash / No Commit<br>❌ UNDO Action Required"]
+    COM --> CRASH["<b>⚡ CRASH ⚡</b>"]
+    UNCOM --> CRASH
+</div>
+
+                            <ol>
+                                <li>Flush all modified database buffer pages in RAM to disk.</li>
+                                <li>Output a checkpoint record <code>&lt;CHECKPOINT {Active_Transactions}&gt;</code> to the log on disk.</li>
+                                <li>During crash recovery, only transactions active during or starting after the most recent checkpoint need to be inspected.</li>
+                            </ol>
+                        </div>
+
+                        <!-- Section 4.9 -->
+                        <div class="topic-section" id="sec4-9">
+                            <h2><i class="fas fa-skull-crossbones"></i> 4.9 Deadlock Handling &amp; Wait-For Graphs (WFG)</h2>
+                            <p>Deadlocks occur when two or more transactions are in a cyclic wait state, each holding a lock that another needs:</p>
+                            <div class="mermaid">
+graph LR
+    T1["<b>T1</b><br>Holds Lock on X<br>Waits for Y"] -->|Waits for Y| T2["<b>T2</b><br>Holds Lock on Y<br>Waits for Z"]
+    T2 -->|Waits for Z| T3["<b>T3</b><br>Holds Lock on Z<br>Waits for X"]
+    T3 -->|"Waits for X (CYCLE DETECTED)"| T1
+    style T1 fill:#fee2e2,stroke:#dc2626,stroke-width:2px
+    style T2 fill:#fee2e2,stroke:#dc2626,stroke-width:2px
+    style T3 fill:#fee2e2,stroke:#dc2626,stroke-width:2px
+</div>
+
+                            <ul>
+                                <li><strong>Deadlock Prevention (Timestamp based):</strong>
+                                    <ul>
+                                        <li><strong>Wait-Die (Non-preemptive):</strong> Older transaction waits for younger; younger transaction dies (aborts) immediately if requesting from older.</li>
+                                        <li><strong>Wound-Wait (Preemptive):</strong> Older transaction wounds (preempts/aborts) younger transaction holding lock; younger waits for older.</li>
+                                    </ul>
+                                </li>
+                                <li><strong>Deadlock Detection:</strong> Construct a directed <strong>Wait-For Graph (WFG)</strong> where vertices are active transactions and edge <code>Ti &rarr; Tj</code> means Ti waits for a lock held by Tj. <em>A cycle signifies a deadlock</em>, resolved by selecting a victim transaction to abort.</li>
+                            </ul>
+                        </div>
+
+                        <!-- Section 4.10 -->
+                        <div class="topic-section" id="sec4-10">
+                            <h2><i class="fas fa-network-wired"></i> 4.10 Distributed Storage &amp; Data Fragmentation</h2>
+                            <p>In distributed database systems (DDBMS), relations are split across geographically separated network sites:</p>
+                            <ul>
+                                <li><strong>Horizontal Fragmentation:</strong> Relation is partitioned into row subsets using selection conditions (&sigma;). Reconstructed using <code>UNION</code>.</li>
+                                <li><strong>Vertical Fragmentation:</strong> Relation is partitioned into column subsets using projection (&pi;). Every fragment must retain the Primary Key. Reconstructed using <code>NATURAL JOIN</code>.</li>
+                                <li><strong>Mixed / Hybrid Fragmentation:</strong> Combining horizontal and vertical splitting.</li>
+                            </ul>
+                        </div>
+
+                        <!-- Section 4.11 -->
+                        <div class="topic-section" id="sec4-11">
+                            <h2><i class="fas fa-handshake"></i> 4.11 Two-Phase Commit Protocol (2PC)</h2>
+                            <p>2PC guarantees atomic commits across multiple autonomous nodes in a distributed database system:</p>
+
+                            <div class="mermaid">
+sequenceDiagram
+    autonumber
+    actor C as Coordinator Node
+    actor P1 as Cohort Participant 1
+    actor P2 as Cohort Participant 2
+    Note over C,P2: Phase 1: Prepare (Voting) Phase
+    C->>P1: PREPARE Message
+    C->>P2: PREPARE Message
+    P1-->>C: VOTE_COMMIT
+    P2-->>C: VOTE_COMMIT
+    Note over C,P2: Phase 2: Commit Phase
+    C->>P1: GLOBAL_COMMIT Broadcast
+    C->>P2: GLOBAL_COMMIT Broadcast
+    P1-->>C: ACK
+    P2-->>C: ACK
+    Note over C: Transaction Successfully Committed Globally
+</div>
+
+                            <div class="table-container">
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th>Phase</th>
+                                            <th>Coordinator Actions</th>
+                                            <th>Participant Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td><strong>Phase 1: Prepare / Voting</strong></td>
+                                            <td>Writes <code>&lt;prepare T&gt;</code> to log and broadcasts <code>PREPARE</code> message to all sites.</td>
+                                            <td>Executes up to commit. Writes undo/redo logs. Votes <code>VOTE_COMMIT</code> or <code>VOTE_ABORT</code>.</td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Phase 2: Decision</strong></td>
+                                            <td>If all voted commit &rarr; writes <code>&lt;commit T&gt;</code>, broadcasts <code>GLOBAL_COMMIT</code>. If any aborted &rarr; <code>GLOBAL_ABORT</code>.</td>
+                                            <td>Applies decision, writes commit/abort to local log, flushes, and returns <code>ACK</code> to coordinator.</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <!-- Section 4.12 -->
+                        <div class="topic-section" id="sec4-12">
+                            <h2><i class="fas fa-folder-tree"></i> 4.12 Distributed Directory Systems</h2>
+                            <ul>
+                                <li><strong>Centralized Directory:</strong> A single master server holds catalog mappings for all sites. Single point of failure.</li>
+                                <li><strong>Fully Replicated Directory:</strong> Entire catalog is cloned at every node, optimizing local query reads at the cost of broadcast updates.</li>
+                                <li><strong>Distributed Partitioned Directory:</strong> Each site maintains directory entries only for locally resident fragments.</li>
+                            </ul>
+                        </div>
+
+                        <!-- Section 4.13 -->
+                        <div class="topic-section" id="sec4-13">
+                            <h2><i class="fas fa-bug"></i> 4.13 Solved Exam Crash Recovery Replay</h2>
+                            
+                            <!-- Worked Example 4.4 -->
+                            <div class="info-box example">
+                                <h4><i class="fas fa-calculator"></i> Worked Example 4.4: Step-by-Step WAL Log Crash Recovery Trace</h4>
+                                <p><strong>Problem Statement:</strong> A DBMS uses Write-Ahead Logging (WAL) with immediate database modification and checkpointing. Consider the persistent log file on non-volatile disk shown below up to the point of an unexpected system power failure:</p>
+
+                                <div class="table-container">
+                                    <table>
+                                        <thead>
+                                            <tr>
+                                                <th>LSN</th>
+                                                <th>Log Record Format</th>
+                                                <th>Description / Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr><td>101</td><td><code>&lt;T<sub>1</sub>, START&gt;</code></td><td>T<sub>1</sub> begins execution</td></tr>
+                                            <tr><td>102</td><td><code>&lt;T<sub>1</sub>, A, 500, 450&gt;</code></td><td>T<sub>1</sub> updates A from 500 to 450</td></tr>
+                                            <tr><td>103</td><td><code>&lt;T<sub>2</sub>, START&gt;</code></td><td>T<sub>2</sub> begins execution</td></tr>
+                                            <tr><td>104</td><td><code>&lt;T<sub>1</sub>, COMMIT&gt;</code></td><td>T<sub>1</sub> commits successfully</td></tr>
+                                            <tr style="background: rgba(55, 118, 171, 0.08); font-weight: bold;">
+                                                <td>105</td><td><code>&lt;CHECKPOINT {T<sub>2</sub>}&gt;</code></td><td>Checkpoint: T<sub>2</sub> is currently active in memory</td>
+                                            </tr>
+                                            <tr><td>106</td><td><code>&lt;T<sub>3</sub>, START&gt;</code></td><td>T<sub>3</sub> begins execution</td></tr>
+                                            <tr><td>107</td><td><code>&lt;T<sub>2</sub>, B, 1000, 1200&gt;</code></td><td>T<sub>2</sub> updates B from 1000 to 1200</td></tr>
+                                            <tr><td>108</td><td><code>&lt;T<sub>2</sub>, COMMIT&gt;</code></td><td>T<sub>2</sub> commits successfully</td></tr>
+                                            <tr><td>109</td><td><code>&lt;T<sub>4</sub>, START&gt;</code></td><td>T<sub>4</sub> begins execution</td></tr>
+                                            <tr><td>110</td><td><code>&lt;T<sub>3</sub>, C, 200, 350&gt;</code></td><td>T<sub>3</sub> updates C from 200 to 350</td></tr>
+                                            <tr style="background: rgba(239, 68, 68, 0.12); color: #ef4444; font-weight: bold;">
+                                                <td colspan="3"><i class="fas fa-bolt"></i> SYSTEM CRASH OCCURS IMMEDIATELY AFTER LSN 110</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                                <h5 style="margin-top: 14px; color: var(--primary-color);">Step 1: Construct the REDO and UNDO Transaction Lists</h5>
+                                <ul>
+                                    <li><strong>Active Transactions at Checkpoint (LSN 105):</strong> <code>{T2}</code></li>
+                                    <li><strong>Transactions Starting after Checkpoint:</strong> <code>{T3, T4}</code></li>
+                                    <li><strong>Committed Transactions:</strong>
+                                        <ul>
+                                            <li>T<sub>1</sub> committed at LSN 104 (prior to checkpoint). Its modified buffer pages were flushed to disk at checkpoint; hence, <strong>no action needed for T<sub>1</sub></strong>.</li>
+                                            <li>T<sub>2</sub> committed at LSN 108 (after checkpoint) &rarr; Must be redone to satisfy durability! <strong style="color: #10b981;">REDO_LIST = {T<sub>2</sub>}</strong>.</li>
+                                        </ul>
+                                    </li>
+                                    <li><strong>Uncommitted / In-flight Transactions at Crash:</strong>
+                                        <ul>
+                                            <li>T<sub>3</sub> started at LSN 106, made changes at LSN 110, but never reached commit before the crash.</li>
+                                            <li>T<sub>4</sub> started at LSN 109, never reached commit.</li>
+                                            <li>Hence, all uncommitted transactions must be aborted &rarr; <strong style="color: #ef4444;">UNDO_LIST = {T<sub>3</sub>, T<sub>4</sub>}</strong>.</li>
+                                        </ul>
+                                    </li>
+                                </ul>
+
+                                <h5 style="margin-top: 14px; color: var(--primary-color);">Step 2: Recovery Execution Protocol</h5>
+                                <div class="table-container">
+                                    <table>
+                                        <thead>
+                                            <tr>
+                                                <th>Phase</th>
+                                                <th>Scan Direction</th>
+                                                <th>Operations Performed</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td><strong style="color: #10b981;">1. REDO Phase</strong></td>
+                                                <td>Forward (LSN 105 &rarr; LSN 110)</td>
+                                                <td>Re-applies all modifications for transactions in <code>REDO_LIST = {T2}</code>:<br>
+                                                &bull; At LSN 107: Set <code>B = 1200</code> (New Value). Guarantees durability of committed transactions.</td>
+                                            </tr>
+                                            <tr>
+                                                <td><strong style="color: #ef4444;">2. UNDO Phase</strong></td>
+                                                <td>Backward (LSN 110 &rarr; LSN 101)</td>
+                                                <td>Reverts all modifications for transactions in <code>UNDO_LIST = {T3, T4}</code>:<br>
+                                                &bull; At LSN 110: Restore <code>C = 200</code> (Old Value / Before-Image).<br>
+                                                &bull; Write compensation log records (CLR) and append <code>&lt;T3, ABORT&gt;</code> and <code>&lt;T4, ABORT&gt;</code> to persistent log.</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                                <h5 style="margin-top: 14px; color: var(--primary-color);">Step 3: Final Post-Recovery Database Values</h5>
+                                <p style="font-family: var(--font-mono); background: var(--card-bg); padding: 10px 14px; border-radius: 6px; border-left: 3px solid #10b981;">
+                                    A = 450 (Committed by T<sub>1</sub>) | B = 1200 (Re-applied from T<sub>2</sub>) | C = 200 (Reverted to old value)
+                                </p>
+                                <p><strong>Summary:</strong> Atomicity is preserved by rolling back uncommitted transactions <code>T3</code> and <code>T4</code>, and Durability is preserved by redoing committed transaction <code>T2</code>.</p>
+                            </div>
+                        </div>
+
+                        <!-- Unit Navigation Buttons -->
+                        <div class="unit-navigation">
+                            <a href="unit3.html" class="nav-btn prev">
+                                <i class="fas fa-arrow-left"></i> Unit III: Normalization
+                            </a>
+                            <a href="unit5.html" class="nav-btn next">
+                                Unit V: Concurrency Control <i class="fas fa-arrow-right"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Interactive Quiz Section -->
+        <section class="quiz-section">
+            <div class="container">
+                <h2 class="section-title">Test Your Knowledge — Unit IV</h2>
+                <div class="quiz-container" id="quiz-container">
+                    <!-- Quiz dynamically rendered by QuizManager -->
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3><i class="fas fa-database"></i> DBMS Hub</h3>
+                    <p>Complete academic courseware for BCS501 Database Management Systems.</p>
+                </div>
+                <div class="footer-section">
+                    <h3>Course Units</h3>
+                    <ul>
+                        <li><a href="unit1.html">Unit I - ER &amp; Architecture</a></li>
+                        <li><a href="unit2.html">Unit II - Relational &amp; SQL</a></li>
+                        <li><a href="unit3.html">Unit III - Normalization</a></li>
+                        <li><a href="unit4.html">Unit IV - Transactions</a></li>
+                        <li><a href="unit5.html">Unit V - Concurrency</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>Resources</h3>
+                    <ul>
+                        <li><a href="mcq.html">MCQ Question Bank</a></li>
+                        <li><a href="cheatsheet.html">Cheat Sheet</a></li>
+                        <li><a href="previousyear.html">Solved PYQs</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 DBMS Learning Hub &bull; BCS501 Academic Guide.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-sql.min.js"></script>
+    <script src="js/script.js"></script>
+    <script>
+        const unit4Questions = [
+            {
+                question: "Which ACID property guarantees that all operations of a transaction execute completely or none do?",
+                options: ["Consistency", "Atomicity", "Isolation", "Durability"],
+                correct: 1,
+                explanation: "Atomicity ('All-or-Nothing') ensures that a transaction cannot be partially executed; any failure causes a complete rollback."
+            },
+            {
+                question: "What state does a transaction enter immediately after its final operational statement has executed, but before commit log records are flushed to disk?",
+                options: ["Active", "Partially Committed", "Committed", "Terminated"],
+                correct: 1,
+                explanation: "A transaction enters the Partially Committed state after its last operation executes; it only becomes Committed once its commit log record is safely written to disk."
+            },
+            {
+                question: "Two operations in a concurrent schedule conflict if they belong to different transactions, access the same data item, and:",
+                options: ["Both are read operations", "At least one is a write operation", "Both are commit operations", "Both are abort operations"],
+                correct: 1,
+                explanation: "Conflicts occur only when at least one operation is a write on the shared data item, as concurrent writes and read-write pairs are order-dependent."
+            },
+            {
+                question: "A schedule S is Conflict Serializable if and only if its Precedence Graph (Serialization Graph):",
+                options: ["Is fully connected", "Contains no cycles (is a DAG)", "Has a single source vertex", "Contains an even number of vertices"],
+                correct: 1,
+                explanation: "By the Serializability Theorem, a schedule is conflict serializable if and only if its precedence graph contains no cycles."
+            },
+            {
+                question: "A schedule that is View Serializable but NOT Conflict Serializable must necessarily contain:",
+                options: ["Cascading aborts", "Blind Writes (write without prior read)", "Uncommitted reads", "Strict 2PL locks"],
+                correct: 1,
+                explanation: "Blind writes (performing a write on a data item without first reading it) allow schedules to be view equivalent to a serial schedule even when precedence graphs have cycles."
+            },
+            {
+                question: "What is the key requirement of a Cascadeless (Avoids Cascading Aborts) schedule?",
+                options: ["Transactions can only read data written by already committed transactions", "Transactions must execute strictly in serial order", "No transaction can hold exclusive locks", "Transactions can never abort"],
+                correct: 0,
+                explanation: "A schedule avoids cascading aborts if transactions read data only from transactions that have already committed."
+            },
+            {
+                question: "The Write-Ahead Logging (WAL) protocol requires that the before-image (undo log record) of a data item must be written to disk:",
+                options: ["After the modified page is written to disk", "Before the modified data page is written to persistent disk", "Only when the transaction commits", "During checkpoint creation"],
+                correct: 1,
+                explanation: "WAL dictates that the log record must reach non-volatile storage before the corresponding dirty data block is written to disk, ensuring atomicity during crashes."
+            },
+            {
+                question: "In the Two-Phase Commit (2PC) protocol, what occurs if any participant site votes VOTE_ABORT during Phase 1?",
+                options: ["Coordinator retries voting three times", "Coordinator broadcasts GLOBAL_ABORT to all participant sites", "Coordinator commits the remaining nodes", "Coordinator pauses execution indefinitely"],
+                correct: 1,
+                explanation: "2PC requires unanimous consensus: if even one participant votes abort (or times out), the coordinator must issue a GLOBAL_ABORT."
+            },
+            {
+                question: "In deadlock prevention, the 'Wait-Die' scheme is classified as:",
+                options: ["Preemptive (older kills younger)", "Non-preemptive (older waits, younger dies)", "Optimistic validation", "Multiversioning"],
+                correct: 1,
+                explanation: "In Wait-Die, if an older transaction requests a lock held by a younger one, it is allowed to wait. If a younger requests from older, the younger dies (aborts)."
+            },
+            {
+                question: "Which condition is required for the Vertical Fragmentation of a relation in a distributed database to be reconstructed losslessly?",
+                options: ["Each fragment must contain all foreign keys", "Every vertical fragment must include the relation's Primary Key", "Fragments must contain equal number of columns", "Fragments cannot contain numeric attributes"],
+                correct: 1,
+                explanation: "Vertical fragments are reconstructed using Natural Join; therefore, every fragment must contain the relation's Primary Key to link tuples together."
+            }
+        ];
+
+        // Initialize Unit 4 Quiz
+        document.addEventListener('DOMContentLoaded', () => {
+            window.currentQuiz = new QuizManager('quiz-container', unit4Questions);
+        });
+    </script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            if (typeof renderMathInElement === 'function') {
+                renderMathInElement(document.body, {
+                    delimiters: [
+                        {left: '$$', right: '$$', display: true},
+                        {left: '$', right: '$', display: false}
+                    ],
+                    throwOnError: false
+                });
+            }
+            if (typeof mermaid !== 'undefined') {
+                mermaid.initialize({ startOnLoad: true, theme: 'neutral', securityLevel: 'loose' });
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,903 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Unit I: Exhaustive Study Guide for BCS501 Database Management System. Introduction, 3-Schema Architecture, Data Independence, DBMS Structure, ER Model, Mapping Constraints, Keys, EER, and Reduction to Relational Tables.">
+    <title>Unit I: Introduction &amp; ER Modeling — DBMS Learning Hub</title>
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+</head>
+<body>
+    <!-- Top Navigation Bar -->
+    <nav class="navbar" role="navigation" aria-label="Main navigation">
+        <div class="nav-container">
+            <a href="index.html" class="logo" aria-label="DBMS Hub Home">
+                <i class="fas fa-database" aria-hidden="true"></i> DBMS Hub
+            </a>
+            <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation menu" aria-expanded="false" aria-controls="navMenu">
+                <i class="fas fa-bars" aria-hidden="true"></i>
+            </button>
+            <ul class="nav-menu" id="navMenu">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="unit1.html" class="active">Unit I</a></li>
+                <li><a href="unit2.html">Unit II</a></li>
+                <li><a href="unit3.html">Unit III</a></li>
+                <li><a href="unit4.html">Unit IV</a></li>
+                <li><a href="unit5.html">Unit V</a></li>
+                <li><a href="theory.html">Theory</a></li>
+                <li><a href="mcq.html">MCQ Bank</a></li>
+                <li><a href="cheatsheet.html">Cheat Sheet</a></li>
+                <li class="nav-divider"></li>
+                <li><a href="previousyear.html">Solved PYQs</a></li>
+            </ul>
+            <button class="theme-toggle-btn" id="darkModeToggle" onclick="toggleDarkMode()" aria-label="Toggle Dark Mode">
+                <i class="fas fa-moon"></i>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Main Content Container -->
+    <main id="main-content">
+        <!-- Unit Header Banner -->
+        <header class="unit-header">
+            <div class="container">
+                <h1>UNIT 1</h1>
+            </div>
+        </header>
+
+        <!-- Two-Column Layout Section -->
+        <section class="unit-content">
+            <div class="container">
+                <div class="page-layout">
+                    <!-- Sticky Sidebar Navigation -->
+                    <aside class="sidebar">
+                        <h3><i class="fas fa-list-ul"></i> Unit I Topics</h3>
+                        <nav class="sidebar-nav">
+                            <a href="#sec1-1" class="active">1.1 Overview &amp; Fundamentals</a>
+                            <a href="#sec1-2">1.2 DBMS vs File Systems</a>
+                            <a href="#sec1-3">1.3 3-Schema Architecture</a>
+                            <a href="#sec1-4">1.4 Schemas &amp; Instances</a>
+                            <a href="#sec1-5">1.5 Data Independence</a>
+                            <a href="#sec1-6">1.6 Languages &amp; Interfaces</a>
+                            <a href="#sec1-7">1.7 Overall System Structure</a>
+                            <a href="#sec1-8">1.8 ER Model Concepts</a>
+                            <a href="#sec1-9">1.9 Attribute Taxonomy</a>
+                            <a href="#sec1-10">1.10 ER Diagram Notations</a>
+                            <a href="#sec1-11">1.11 Mapping Constraints</a>
+                            <a href="#sec1-12">1.12 Weak Entity Sets</a>
+                            <a href="#sec1-13">1.13 Database Keys Hierarchy</a>
+                            <a href="#sec1-14">1.14 EER Specialization</a>
+                            <a href="#sec1-15">1.15 EER Aggregation</a>
+                            <a href="#sec1-16">1.16 Higher Degree Relationships</a>
+                            <a href="#sec1-17">1.17 ER to Relational Reduction</a>
+                            <a href="#sec1-18">1.18 Solved University Problems</a>
+                        </nav>
+                    </aside>
+
+                    <!-- Main Reading Content -->
+                    <div class="main-content">
+                        <!-- Section 1.1 -->
+                        <div class="topic-section" id="sec1-1">
+                            <h2><i class="fas fa-database"></i> 1.1 Overview &amp; DBMS Fundamentals</h2>
+                            <p>A <strong>Database</strong> is an organized, logically coherent collection of related data representing some aspect of the real world (often termed the <em>mini-world</em> or <em>Universe of Discourse (UoD)</em>). A database is designed, built, and populated with data for a specific enterprise purpose.</p>
+                            <p>A <strong>Database Management System (DBMS)</strong> is a complex software system that facilitates the processes of defining, constructing, manipulating, and sharing databases among various users and application programs:</p>
+                            <ul>
+                                <li><strong>Defining:</strong> Specifying data types, structures, and business constraints for data to be stored (Metadata definition in Data Dictionary).</li>
+                                <li><strong>Constructing:</strong> The process of storing data on persistent secondary storage media managed by the DBMS buffer engine.</li>
+                                <li><strong>Manipulating:</strong> Querying the database to retrieve specific datasets, updating records to reflect state transitions, and generating operational reports.</li>
+                                <li><strong>Sharing:</strong> Enabling multiple concurrent transactions to access and mutate data concurrently while guaranteeing serializability and isolation.</li>
+                            </ul>
+
+                            <div class="info-box note">
+                                <h4><i class="fas fa-info-circle"></i> Technical Note</h4>
+                                <p>A database possesses an inherent structure defined by its schema. Unlike arbitrary text documents, every data value in an RDBMS is governed by a strict data type, domain restriction, and integrity rule.</p>
+                            </div>
+                        </div>
+
+                        <!-- Section 1.2 -->
+                        <div class="topic-section" id="sec1-2">
+                            <h2><i class="fas fa-exchange-alt"></i> 1.2 Database System vs Traditional File Processing System</h2>
+                            <p>Prior to DBMS, organizations stored business records in conventional flat files (e.g., CSV, text files, custom binary files) managed directly by the Operating System file system. Application programs written in languages like C, COBOL, or Java manipulated these files directly, introducing severe structural limitations.</p>
+
+                            <div class="table-container">
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th style="width: 20%;">Dimension</th>
+                                            <th style="width: 40%;">File Processing System</th>
+                                            <th style="width: 40%;">Database Management System (DBMS)</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td><strong>1. Data Redundancy &amp; Inconsistency</strong></td>
+                                            <td>Different application programs create and maintain duplicate files. The same information is stored in multiple formats, causing divergence when updates are made partially.</td>
+                                            <td>Centralized control eliminates uncontrolled redundancy. Data is stored in normalized relations, providing a single source of truth across all enterprise applications.</td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>2. Ad-Hoc Data Access</strong></td>
+                                            <td>Answering a new, unanticipated query requires writing, compiling, and testing a brand-new application program from scratch.</td>
+                                            <td>High-level declarative SQL allows technical and non-technical users to write ad-hoc analytical queries interactively in seconds.</td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>3. Data Isolation &amp; Formats</strong></td>
+                                            <td>Data is scattered across heterogeneous files with disparate binary and text layouts, making joins across systems arduous.</td>
+                                            <td>All relations are modeled under a unified conceptual schema. The DBMS engine handles record traversal and cross-table joins automatically.</td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>4. Integrity Constraints</strong></td>
+                                            <td>Constraints are hardcoded manually inside application code. Adding a business constraint requires patching dozens of programs.</td>
+                                            <td>Integrity constraints (<code>NOT NULL</code>, <code>UNIQUE</code>, <code>CHECK</code>, <code>FOREIGN KEY</code>) are declared directly in DDL and validated automatically.</td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>5. Atomicity &amp; Failures</strong></td>
+                                            <td>System crashes during file writes leave records corrupt, half-written, or in an inconsistent intermediate state with missing funds.</td>
+                                            <td>The Write-Ahead Logging (WAL) and ACID subsystem guarantee All-or-Nothing atomicity with automated undo/redo recovery.</td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>6. Concurrent Access Anomalies</strong></td>
+                                            <td>Concurrent writes produce race conditions, dirty reads, and lost updates. Operating system file locks are too coarse-grained.</td>
+                                            <td>Fine-grained concurrency protocols (Strict 2PL, MVCC, row-level locking) ensure serializable transaction execution.</td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>7. Granular Security</strong></td>
+                                            <td>OS security permissions are coarse-grained (granting read/write access to the entire file), unable to hide specific columns or rows.</td>
+                                            <td>Granular Role-Based Access Control (RBAC) allows column-level, row-level, and view-level authorization via <code>GRANT</code>/<code>REVOKE</code>.</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <!-- Section 1.3 -->
+                        <div class="topic-section" id="sec1-3">
+                            <h2><i class="fas fa-layer-group"></i> 1.3 ANSI/SPARC Three-Schema Architecture</h2>
+                            <p>The ANSI/SPARC Three-Schema Architecture was proposed in 1975 to establish a clean separation between physical storage implementations and end-user applications. Its primary goal is to achieve <strong>Data Independence</strong>.</p>
+
+                            <div class="diagram-container">
+                                <svg viewBox="0 0 760 420" width="100%" height="320" xmlns="http://www.w3.org/2000/svg">
+                                    <rect x="50" y="30" width="180" height="50" fill="#f8fafc" stroke="#2563eb" stroke-width="2" rx="4"/>
+                                    <text x="140" y="60" font-family="-apple-system, sans-serif" font-size="13" font-weight="600" text-anchor="middle" fill="#0f172a">External View 1 (Student)</text>
+
+                                    <rect x="290" y="30" width="180" height="50" fill="#f8fafc" stroke="#2563eb" stroke-width="2" rx="4"/>
+                                    <text x="380" y="60" font-family="-apple-system, sans-serif" font-size="13" font-weight="600" text-anchor="middle" fill="#0f172a">External View 2 (Faculty)</text>
+
+                                    <rect x="530" y="30" width="180" height="50" fill="#f8fafc" stroke="#2563eb" stroke-width="2" rx="4"/>
+                                    <text x="620" y="60" font-family="-apple-system, sans-serif" font-size="13" font-weight="600" text-anchor="middle" fill="#0f172a">External View 3 (Finance)</text>
+
+                                    <line x1="140" y1="80" x2="380" y2="150" stroke="#64748b" stroke-width="1.5" stroke-dasharray="4"/>
+                                    <line x1="380" y1="80" x2="380" y2="150" stroke="#64748b" stroke-width="1.5" stroke-dasharray="4"/>
+                                    <line x1="620" y1="80" x2="380" y2="150" stroke="#64748b" stroke-width="1.5" stroke-dasharray="4"/>
+                                    <rect x="250" y="105" width="260" height="24" fill="#ffffff" stroke="#cbd5e1" stroke-width="1" rx="4"/>
+                                    <text x="380" y="121" font-family="-apple-system, sans-serif" font-size="11" fill="#475569" text-anchor="middle">External / Conceptual Mapping</text>
+
+                                    <rect x="180" y="150" width="400" height="65" fill="#eff6ff" stroke="#2563eb" stroke-width="2" rx="6"/>
+                                    <text x="380" y="178" font-family="-apple-system, sans-serif" font-size="14" font-weight="700" text-anchor="middle" fill="#1e3a8a">CONCEPTUAL LEVEL (Global Logical Schema)</text>
+                                    <text x="380" y="198" font-family="-apple-system, sans-serif" font-size="12" fill="#334155" text-anchor="middle">Entities, Data Types, Relationships &amp; Integrity Constraints</text>
+
+                                    <line x1="380" y1="215" x2="380" y2="285" stroke="#64748b" stroke-width="1.5" stroke-dasharray="4"/>
+                                    <rect x="250" y="240" width="260" height="24" fill="#ffffff" stroke="#cbd5e1" stroke-width="1" rx="4"/>
+                                    <text x="380" y="256" font-family="-apple-system, sans-serif" font-size="11" fill="#475569" text-anchor="middle">Conceptual / Internal Mapping</text>
+
+                                    <rect x="180" y="285" width="400" height="65" fill="#f8fafc" stroke="#f59e0b" stroke-width="2" rx="6"/>
+                                    <text x="380" y="313" font-family="-apple-system, sans-serif" font-size="14" font-weight="700" text-anchor="middle" fill="#d97706">INTERNAL LEVEL (Physical Storage Schema)</text>
+                                    <text x="380" y="333" font-family="-apple-system, sans-serif" font-size="12" fill="#334155" text-anchor="middle">Record Formats, Indexing, B-Trees, Hashing, Block Allocation</text>
+
+                                    <line x1="380" y1="350" x2="380" y2="380" stroke="#334155" stroke-width="2"/>
+                                    <ellipse cx="380" cy="395" rx="140" ry="18" fill="#e2e8f0" stroke="#334155" stroke-width="1.5"/>
+                                    <text x="380" y="400" font-family="-apple-system, sans-serif" font-size="12" font-weight="600" text-anchor="middle" fill="#0f172a">Physical Disk Storage (OS File System)</text>
+                                </svg>
+                                <p style="font-size: 0.85rem; color: var(--text-light); margin-top: 8px;">Figure 1.1: ANSI/SPARC 3-Schema Abstraction Architecture and Mappings</p>
+                            </div>
+
+                            <h3>The Three Levels of Abstraction:</h3>
+                            <ol>
+                                <li><strong>External Level (View Level / Subschemas):</strong> The highest level of abstraction. Describes the customized portion of the database that a specific user group requires, hiding the remaining data for security and simplicity. Multiple external views can coexist over a single conceptual schema.</li>
+                                <li><strong>Conceptual Level (Logical Level / Community Schema):</strong> Describes what data is stored in the database and the relationships among those data. It specifies all entity sets, attributes, data types, constraints, and business logic. Managed by the Database Administrator (DBA). Physical storage mechanisms are hidden.</li>
+                                <li><strong>Internal Level (Physical Level / Storage Schema):</strong> The lowest level of abstraction. Describes how data is physically laid out on secondary storage (block sizes, byte offsets, indexing trees, hash buckets, record clustering, compression).</li>
+                            </ol>
+                        </div>
+
+                        <!-- Section 1.4 -->
+                        <div class="topic-section" id="sec1-4">
+                            <h2><i class="fas fa-cube"></i> 1.4 Schemas, Instances and Database States</h2>
+                            <div class="info-box tip">
+                                <h4><i class="fas fa-lightbulb"></i> Formal Distinction: Intension vs Extension</h4>
+                                <p><strong>Database Schema (Intension):</strong> The overall logical blueprint and structure of the database, specified during the initial design phase. It includes relation names, attribute definitions, and constraints. Changes very infrequently.</p>
+                                <p style="margin-top: 8px;"><strong>Database Instance / State (Extension):</strong> The collection of actual data tuples populated in the database at a specific snapshot in time. Every insertion, update, or deletion transitions the database from one valid state to another, while the schema remains invariant.</p>
+                            </div>
+                        </div>
+
+                        <!-- Section 1.5 -->
+                        <div class="topic-section" id="sec1-5">
+                            <h2><i class="fas fa-shield-virus"></i> 1.5 Physical &amp; Logical Data Independence</h2>
+                            <p><strong>Data Independence</strong> is the ability to modify a schema definition at one level of the database system without requiring alterations to the schema definition at the next higher level.</p>
+
+                            <div class="table-container">
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th style="width: 22%;">Dimension</th>
+                                            <th style="width: 42%;">Formal Mechanism</th>
+                                            <th style="width: 36%;">Practical Engineering Example</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td><strong>Logical Data Independence</strong></td>
+                                            <td>The capacity to modify the <strong>conceptual schema</strong> without needing to rewrite <strong>external schemas</strong> or existing application programs. Changes are absorbed by updating the <em>External/Conceptual Mapping</em>.</td>
+                                            <td>Adding a new attribute (e.g., <code>Passport_No</code>) or decomposing an <code>EMPLOYEE</code> table into <code>EMP_DETAILS</code> and <code>EMP_SALARY</code> without breaking legacy apps querying employee names.</td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Physical Data Independence</strong></td>
+                                            <td>The capacity to modify the <strong>internal schema</strong> without altering the <strong>conceptual schema</strong>. Changes to storage structures are absorbed by updating the <em>Conceptual/Internal Mapping</em>.</td>
+                                            <td>Creating a secondary B+ Tree index on <code>Account_Number</code>, altering block sizes, or migrating storage from HDD to NVMe SSD without touching SQL queries or schemas.</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <!-- Section 1.6 -->
+                        <div class="topic-section" id="sec1-6">
+                            <h2><i class="fas fa-code"></i> 1.6 Database Languages &amp; User Interfaces</h2>
+                            <h3>1. Functional Classification of DBMS Languages</h3>
+                            <ul>
+                                <li><strong>Data Definition Language (DDL):</strong> Used by designers and DBAs to specify schemas. The DDL compiler parses statements and records table metadata inside the <strong>Data Dictionary / System Catalog</strong> (<code>CREATE</code>, <code>ALTER</code>, <code>DROP</code>, <code>TRUNCATE</code>).</li>
+                                <li><strong>Data Manipulation Language (DML):</strong> Used to query, insert, update, and delete stored tuples:
+                                    <ul>
+                                        <li><strong>Declarative / Non-Procedural DML (SQL):</strong> The user states <em>what data is needed</em> without prescribing navigation algorithms. The optimizer chooses the plan.</li>
+                                        <li><strong>Procedural DML (Relational Algebra):</strong> The user instructs the system to perform a specific sequence of procedural operations to compute results.</li>
+                                    </ul>
+                                </li>
+                                <li><strong>Data Control Language (DCL):</strong> Manages security authorization and permission grants (<code>GRANT</code>, <code>REVOKE</code>).</li>
+                                <li><strong>Transaction Control Language (TCL):</strong> Regulates transactional commit boundaries and rollback saves (<code>COMMIT</code>, <code>ROLLBACK</code>, <code>SAVEPOINT</code>).</li>
+                            </ul>
+
+                            <div class="code-example">
+                                <div class="code-header">
+                                    <span>schema_definition.sql</span>
+                                    <button class="copy-btn"><i class="fas fa-copy"></i> Copy</button>
+                                </div>
+                                <pre><code class="language-sql">-- Example DDL with Domain &amp; Foreign Key Constraints
+CREATE TABLE departments (
+    dept_id INT PRIMARY KEY,
+    dept_name VARCHAR(50) NOT NULL UNIQUE
+);
+
+CREATE TABLE employees (
+    emp_id INT PRIMARY KEY,
+    emp_name VARCHAR(100) NOT NULL,
+    salary NUMERIC(10, 2) CHECK (salary > 0),
+    dept_id INT,
+    FOREIGN KEY (dept_id) REFERENCES departments(dept_id) 
+        ON DELETE SET NULL ON UPDATE CASCADE
+);</code></pre>
+                            </div>
+                        </div>
+
+                        <!-- Section 1.7 -->
+                        <div class="topic-section" id="sec1-7">
+                            <h2><i class="fas fa-microchip"></i> 1.7 Overall Database System Structure</h2>
+                            <p>A relational DBMS engine is partitioned into two major functional subsystems: the <strong>Query Processor</strong> and the <strong>Storage Manager</strong>.</p>
+
+                            <div class="diagram-container">
+                                <svg viewBox="0 0 760 520" width="100%" height="450" xmlns="http://www.w3.org/2000/svg">
+                                    <rect x="20" y="20" width="160" height="40" fill="#f8fafc" stroke="#64748b" stroke-width="1.5" rx="4"/>
+                                    <text x="100" y="45" font-family="-apple-system, sans-serif" font-size="12" text-anchor="middle" fill="#0f172a">Naive Users</text>
+
+                                    <rect x="205" y="20" width="160" height="40" fill="#f8fafc" stroke="#64748b" stroke-width="1.5" rx="4"/>
+                                    <text x="285" y="45" font-family="-apple-system, sans-serif" font-size="12" text-anchor="middle" fill="#0f172a">Application Programmers</text>
+
+                                    <rect x="390" y="20" width="160" height="40" fill="#f8fafc" stroke="#64748b" stroke-width="1.5" rx="4"/>
+                                    <text x="470" y="45" font-family="-apple-system, sans-serif" font-size="12" text-anchor="middle" fill="#0f172a">Sophisticated Users</text>
+
+                                    <rect x="575" y="20" width="165" height="40" fill="#f8fafc" stroke="#64748b" stroke-width="1.5" rx="4"/>
+                                    <text x="657" y="45" font-family="-apple-system, sans-serif" font-size="12" text-anchor="middle" fill="#0f172a">DBA</text>
+
+                                    <line x1="100" y1="60" x2="100" y2="100" stroke="#334155" stroke-width="1.5"/>
+                                    <line x1="285" y1="60" x2="285" y2="100" stroke="#334155" stroke-width="1.5"/>
+                                    <line x1="470" y1="60" x2="470" y2="100" stroke="#334155" stroke-width="1.5"/>
+                                    <line x1="657" y1="60" x2="657" y2="100" stroke="#334155" stroke-width="1.5"/>
+
+                                    <rect x="20" y="100" width="720" height="150" fill="#eff6ff" stroke="#2563eb" stroke-width="2" rx="6"/>
+                                    <text x="35" y="125" font-family="-apple-system, sans-serif" font-size="13" font-weight="700" fill="#1e3a8a">QUERY PROCESSOR</text>
+
+                                    <rect x="40" y="145" width="150" height="85" fill="#ffffff" stroke="#cbd5e1" stroke-width="1" rx="4"/>
+                                    <text x="115" y="180" font-family="-apple-system, sans-serif" font-size="12" font-weight="600" text-anchor="middle" fill="#0f172a">App Program</text>
+                                    <text x="115" y="200" font-family="-apple-system, sans-serif" font-size="11" text-anchor="middle" fill="#64748b">Object Code</text>
+
+                                    <rect x="210" y="145" width="160" height="85" fill="#ffffff" stroke="#cbd5e1" stroke-width="1" rx="4"/>
+                                    <text x="290" y="180" font-family="-apple-system, sans-serif" font-size="12" font-weight="600" text-anchor="middle" fill="#0f172a">DML Compiler &amp;</text>
+                                    <text x="290" y="200" font-family="-apple-system, sans-serif" font-size="11" text-anchor="middle" fill="#64748b">Query Optimizer</text>
+
+                                    <rect x="390" y="145" width="150" height="85" fill="#ffffff" stroke="#cbd5e1" stroke-width="1" rx="4"/>
+                                    <text x="465" y="180" font-family="-apple-system, sans-serif" font-size="12" font-weight="600" text-anchor="middle" fill="#0f172a">DDL Interpreter</text>
+                                    <text x="465" y="200" font-family="-apple-system, sans-serif" font-size="11" text-anchor="middle" fill="#64748b">Updates Catalog</text>
+
+                                    <rect x="560" y="145" width="160" height="85" fill="#ffffff" stroke="#cbd5e1" stroke-width="1" rx="4"/>
+                                    <text x="640" y="180" font-family="-apple-system, sans-serif" font-size="12" font-weight="600" text-anchor="middle" fill="#0f172a">Query Evaluation</text>
+                                    <text x="640" y="200" font-family="-apple-system, sans-serif" font-size="11" text-anchor="middle" fill="#64748b">Engine</text>
+
+                                    <line x1="380" y1="250" x2="380" y2="280" stroke="#334155" stroke-width="2"/>
+
+                                    <rect x="20" y="280" width="720" height="130" fill="#f0fdf4" stroke="#10b981" stroke-width="2" rx="6"/>
+                                    <text x="35" y="305" font-family="-apple-system, sans-serif" font-size="13" font-weight="700" fill="#047857">STORAGE MANAGER</text>
+
+                                    <rect x="40" y="325" width="150" height="65" fill="#ffffff" stroke="#cbd5e1" stroke-width="1" rx="4"/>
+                                    <text x="115" y="352" font-family="-apple-system, sans-serif" font-size="11" font-weight="600" text-anchor="middle" fill="#0f172a">Authorization &amp;</text>
+                                    <text x="115" y="370" font-family="-apple-system, sans-serif" font-size="11" text-anchor="middle" fill="#64748b">Integrity Manager</text>
+
+                                    <rect x="210" y="325" width="150" height="65" fill="#ffffff" stroke="#cbd5e1" stroke-width="1" rx="4"/>
+                                    <text x="285" y="352" font-family="-apple-system, sans-serif" font-size="11" font-weight="600" text-anchor="middle" fill="#0f172a">Transaction</text>
+                                    <text x="285" y="370" font-family="-apple-system, sans-serif" font-size="11" text-anchor="middle" fill="#64748b">Manager</text>
+
+                                    <rect x="380" y="325" width="150" height="65" fill="#ffffff" stroke="#cbd5e1" stroke-width="1" rx="4"/>
+                                    <text x="455" y="352" font-family="-apple-system, sans-serif" font-size="11" font-weight="600" text-anchor="middle" fill="#0f172a">File &amp; Record</text>
+                                    <text x="455" y="370" font-family="-apple-system, sans-serif" font-size="11" text-anchor="middle" fill="#64748b">Manager</text>
+
+                                    <rect x="550" y="325" width="170" height="65" fill="#ffffff" stroke="#cbd5e1" stroke-width="1" rx="4"/>
+                                    <text x="635" y="352" font-family="-apple-system, sans-serif" font-size="11" font-weight="600" text-anchor="middle" fill="#0f172a">Buffer Manager &amp;</text>
+                                    <text x="635" y="370" font-family="-apple-system, sans-serif" font-size="11" text-anchor="middle" fill="#64748b">Page Replacement</text>
+
+                                    <line x1="380" y1="410" x2="380" y2="440" stroke="#334155" stroke-width="2"/>
+
+                                    <rect x="20" y="440" width="720" height="60" fill="#e2e8f0" stroke="#334155" stroke-width="1.5" rx="4"/>
+                                    <text x="380" y="465" font-family="-apple-system, sans-serif" font-size="13" font-weight="700" text-anchor="middle" fill="#0f172a">PHYSICAL DISK STORAGE LAYER</text>
+                                    <text x="380" y="485" font-family="-apple-system, sans-serif" font-size="11" text-anchor="middle" fill="#475569">Data Files &bull; System Catalog &bull; Primary &amp; Secondary Indices &bull; WAL Redo Logs</text>
+                                </svg>
+                                <p style="font-size: 0.85rem; color: var(--text-light); margin-top: 8px;">Figure 1.2: Complete Database Engine Architecture: Query Processor &amp; Storage Manager Subsystems</p>
+                            </div>
+                        </div>
+
+                        <!-- Section 1.8 -->
+                        <div class="topic-section" id="sec1-8">
+                            <h2><i class="fas fa-project-diagram"></i> 1.8 Data Modeling &amp; ER Model Concepts</h2>
+                            <p>The <strong>Entity-Relationship (ER) Model</strong> was proposed by Dr. Peter Chen in 1976. It is a conceptual model that represents the mini-world using entities, attributes, and relationships:</p>
+                            <ul>
+                                <li><strong>Entity:</strong> A "thing" or "object" in the real world with an independent existence distinguishable from other objects (e.g., student <em>"Alice"</em>, car with VIN <code>1HGCR2...</code>).</li>
+                                <li><strong>Entity Set:</strong> A collection of all entities that share the same attributes (e.g., <code>STUDENT</code>, <code>COURSE</code>).</li>
+                                <li><strong>Relationship:</strong> An association among two or more entities (e.g., Student <em>Alice</em> <code>Enrolls_In</code> Course <em>DBMS</em>).</li>
+                                <li><strong>Relationship Set:</strong> A mathematical relation over entity sets: <code>R &sube; {(e1, e2, ... en) | e1 &isin; E1, ... en &isin; En}</code>.</li>
+                            </ul>
+                        </div>
+
+                        <!-- Section 1.9 -->
+                        <div class="topic-section" id="sec1-9">
+                            <h2><i class="fas fa-tags"></i> 1.9 Complete Attribute Taxonomy</h2>
+                            <p>Attributes describe entity sets. In relational modeling, attributes are categorized across three fundamental axes:</p>
+
+                            <div class="table-container">
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th>Attribute Type</th>
+                                            <th>Definition &amp; Characteristics</th>
+                                            <th>Practical Example</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td><strong>Simple (Atomic)</strong></td>
+                                            <td>Cannot be divided into smaller subcomponents; stores an atomic value from domain.</td>
+                                            <td><code>Age</code>, <code>Salary</code>, <code>Gender</code></td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Composite</strong></td>
+                                            <td>Can be decomposed into sub-attributes with independent semantic meanings.</td>
+                                            <td><code>Address &rarr; {Street, City, Zip}</code>, <code>Name &rarr; {First, Last}</code></td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Single-Valued</strong></td>
+                                            <td>Contains exactly one value for each entity instance.</td>
+                                            <td><code>Date_Of_Birth</code>, <code>Aadhaar_No</code></td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Multi-Valued</strong></td>
+                                            <td>Can hold a set of multiple values for a single entity instance (double oval in Chen).</td>
+                                            <td><code>Phone_Numbers = {9876543210, 9123456780}</code></td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Derived</strong></td>
+                                            <td>Dynamically calculated from stored attributes or clock state (dashed oval in Chen).</td>
+                                            <td><code>Age = CURRENT_DATE - DOB</code></td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Key Attribute</strong></td>
+                                            <td>Values are distinct across all entities in the set (solid underline).</td>
+                                            <td><code>Roll_No</code> in <code>STUDENT</code></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <!-- Section 1.10 -->
+                        <div class="topic-section" id="sec1-10">
+                            <h2><i class="fas fa-draw-polygon"></i> 1.10 ER Diagram Notations (Chen vs Crow's Foot)</h2>
+                            <p>Chen's notation uses geometric shapes for conceptual design, while Crow's Foot is standard in relational database modeling tools:</p>
+                            <ul>
+                                <li><strong>Rectangle:</strong> Strong Entity Set.</li>
+                                <li><strong>Double Rectangle:</strong> Weak Entity Set.</li>
+                                <li><strong>Diamond:</strong> Relationship Set.</li>
+                                <li><strong>Double Diamond:</strong> Identifying Relationship for a Weak Entity.</li>
+                                <li><strong>Oval:</strong> Attribute. Double Oval: Multi-valued attribute. Dashed Oval: Derived attribute.</li>
+                                <li><strong>Underlined Text in Oval:</strong> Primary Key. Dashed underline: Partial Key (Discriminator).</li>
+                            </ul>
+                        </div>
+
+                        <!-- Section 1.11 -->
+                        <div class="topic-section" id="sec1-11">
+                            <h2><i class="fas fa-bezier-curve"></i> 1.11 Mapping Constraints &amp; Cardinality</h2>
+                            <h3>1. Cardinality Ratios for Binary Relationships</h3>
+                            <div class="mermaid">
+graph LR
+    subgraph OneToOne ["1:1 Relationship (One-to-One)"]
+        D1["Department"] ---|1| M1{Manages} ---|1| F1["Faculty_Head"]
+    end
+    subgraph OneToMany ["1:N Relationship (One-to-Many)"]
+        D2["Department"] ---|1| E2{Employs} ---|N| P2["Professor"]
+    end
+    subgraph ManyToMany ["M:N Relationship (Many-to-Many)"]
+        S3["Student"] ---|M| En3{Enrolls_In} ---|N| C3["Course"]
+    end
+</div>
+                            <ul>
+                                <li><strong>One-to-One (1:1):</strong> An entity in A associates with at most one entity in B, and vice versa (e.g., <code>DEPARTMENT &mdash; Manages &mdash; FACULTY_HEAD</code>). Foreign Key can be placed on either side (prefer the side with total participation).</li>
+                                <li><strong>One-to-Many (1:N):</strong> An entity in A associates with any number of entities in B, but B associates with at most one in A (e.g., <code>DEPARTMENT &mdash; Employs &mdash; PROFESSOR</code>). Foreign Key is placed in the <strong>N-side table</strong> (Professor).</li>
+                                <li><strong>Many-to-One (N:1):</strong> Multiple entities in A associate with a single entity in B (e.g., <code>STUDENT &mdash; Belongs_To &mdash; DEPARTMENT</code>).</li>
+                                <li><strong>Many-to-Many (M:N):</strong> Entities in A and B can associate with any number of each other (e.g., <code>STUDENT &mdash; Enrolls_In &mdash; COURSE</code>). Requires a separate <strong>Junction / Associative Table</strong> with composite primary key.</li>
+                            </ul>
+
+                            <h4><i class="fas fa-table"></i> Cardinality to Relational Schema Mapping Rules</h4>
+                            <div class="table-wrapper">
+                                <table>
+                                    <thead>
+                                        <tr><th>Relationship Type</th><th>ER Example</th><th>Relational Implementation Strategy</th><th>Resulting Tables</th></tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td><strong>1:1 Binary</strong></td>
+                                            <td><code>Department &mdash; Manages &mdash; Head</code></td>
+                                            <td>Embed PK of one relation as Foreign Key into the other (prefer side with Total Participation).</td>
+                                            <td><code>Dept(Dept_ID [PK], Name)</code><br><code>Head(Emp_ID [PK], Name, Dept_ID [FK, UNIQUE])</code></td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>1:N Binary</strong></td>
+                                            <td><code>Department &mdash; Employs &mdash; Professor</code></td>
+                                            <td>Embed PK of the 1-side into the <strong>N-side table</strong> as Foreign Key.</td>
+                                            <td><code>Dept(Dept_ID [PK], Name)</code><br><code>Professor(Prof_ID [PK], Name, Dept_ID [FK])</code></td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>M:N Binary</strong></td>
+                                            <td><code>Student &mdash; Enrolls &mdash; Course</code></td>
+                                            <td>Create a new <strong>Junction Table</strong> with composite PK consisting of both entities' primary keys.</td>
+                                            <td><code>Student(Roll_No [PK], Name)</code><br><code>Course(Course_ID [PK], Title)</code><br><code>Enroll(Roll_No [FK], Course_ID [FK], Semester) [PK: (Roll_No, Course_ID)]</code></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <h3>2. Participation Constraints</h3>
+                            <ul>
+                                <li><strong>Total Participation (Double Line):</strong> Every entity in the set must participate in the relationship (Existence Dependency).</li>
+                                <li><strong>Partial Participation (Single Line):</strong> Only some entities participate.</li>
+                            </ul>
+                        </div>
+
+                        <!-- Section 1.12 -->
+                        <div class="topic-section" id="sec1-12">
+                            <h2><i class="fas fa-link"></i> 1.12 Weak Entity Sets &amp; Identifying Relationships</h2>
+                            <p>A <strong>Weak Entity Set</strong> does not possess sufficient attributes to form a primary key on its own. It depends on an <strong>Identifying (Owner / Strong) Entity Set</strong>.</p>
+                            
+                            <div class="mermaid">
+graph LR
+    E["<b>EMPLOYEE (Strong Entity)</b><br><u>Emp_ID (PK)</u><br>Emp_Name, Salary"] ===|"1 (Identifying)"| Rel{{"<b>HAS_DEPENDENT</b><br>(Double Diamond)"}} ===|"N (Total)"| W[["<b>DEPENDENT (Weak Entity)</b><br>- - - - - - - - - - -<br><u>Dep_Name (Partial Key)</u><br>Relationship, Age"]]
+</div>
+
+                            <div class="info-box warning">
+                                <h4><i class="fas fa-exclamation-triangle"></i> Mandatory Weak Entity Rules</h4>
+                                <ol style="margin-left: 20px;">
+                                    <li>Possesses a <strong>Partial Key (Discriminator)</strong> (underlined with dashed lines).</li>
+                                    <li>Connected to owner via a <strong>Double Diamond</strong> (Identifying Relationship).</li>
+                                    <li>Participation of the weak entity in the identifying relationship is <strong>always TOTAL (Double Line)</strong>.</li>
+                                    <li>Primary Key of the reduced relational table is composite: <code>PK = (Owner_PK + Partial_Key)</code>.</li>
+                                </ol>
+                            </div>
+
+                            <h4><i class="fas fa-table"></i> Concrete Data Table Example</h4>
+                            <div style="display:grid; grid-template-columns: 1fr 1.3fr; gap:16px;">
+                                <div class="table-wrapper">
+                                    <p><strong>Strong Entity: EMPLOYEE</strong></p>
+                                    <table>
+                                        <thead><tr><th>Emp_ID [PK]</th><th>Emp_Name</th><th>Salary</th></tr></thead>
+                                        <tbody>
+                                            <tr><td>E101</td><td>Rajiv Sharma</td><td>85000</td></tr>
+                                            <tr><td>E102</td><td>Sunita Mehta</td><td>92000</td></tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="table-wrapper">
+                                    <p><strong>Weak Entity: DEPENDENT (PK: Emp_ID + Dep_Name)</strong></p>
+                                    <table>
+                                        <thead><tr><th>Emp_ID [FK]</th><th>Dep_Name [Partial]</th><th>Relationship</th><th>Age</th></tr></thead>
+                                        <tbody>
+                                            <tr><td>E101</td><td>Aarav</td><td>Son</td><td>12</td></tr>
+                                            <tr><td>E101</td><td>Ananya</td><td>Daughter</td><td>8</td></tr>
+                                            <tr><td>E102</td><td>Rohit</td><td>Spouse</td><td>36</td></tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Section 1.13 -->
+                        <div class="topic-section" id="sec1-13">
+                            <h2><i class="fas fa-key"></i> 1.13 Database Keys Hierarchy &amp; Mathematical Definitions</h2>
+                            <div class="info-box note">
+                                <h4><i class="fas fa-info-circle"></i> Mathematical Set Inclusion</h4>
+                                <p style="font-family: var(--font-mono); font-size: 1.05rem; font-weight: bold; color: var(--primary-color);">
+                                    Primary Key &sube; Candidate Keys &sube; Super Keys
+                                </p>
+                                <ul>
+                                    <li><strong>Super Key (SK):</strong> A set of attributes that uniquely identifies tuples in a relation. Any superset of a superkey is also a superkey.</li>
+                                    <li><strong>Candidate Key (CK):</strong> A <strong>minimal superkey</strong> from which no attribute can be removed without losing uniqueness.</li>
+                                    <li><strong>Primary Key (PK):</strong> The designated candidate key chosen by the database designer. <em>Cannot contain NULL</em> (Entity Integrity).</li>
+                                    <li><strong>Foreign Key (FK):</strong> An attribute in child relation referencing the primary key of a parent relation (Referential Integrity).</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <!-- Section 1.14 -->
+                        <div class="topic-section" id="sec1-14">
+                            <h2><i class="fas fa-sitemap"></i> 1.14 Extended ER (EER): Specialization &amp; Generalization</h2>
+                            <p><strong>Specialization</strong> is top-down modeling where subclasses inherit superclass attributes. <strong>Generalization</strong> is bottom-up synthesis where common entity features are unified into a superclass.</p>
+
+                            <div class="mermaid">
+graph TD
+    Super["<b>EMPLOYEE (Superclass)</b><br><u>Emp_ID (PK)</u>, Name, Hire_Date"] --> ISA{"<b>IS-A</b><br>(Disjoint / Overlapping)"}
+    ISA --> Eng["<b>ENGINEER (Subclass)</b><br>Engineering_Discipline, Tool_Certification"]
+    ISA --> Mgr["<b>MANAGER (Subclass)</b><br>Bonus_Percentage, Budget_Limit"]
+    ISA --> Sec["<b>SECRETARY (Subclass)</b><br>Typing_Speed_WPM, Shorthand"]
+</div>
+
+                            <div class="table-container">
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th>Constraint Type</th>
+                                            <th>Disjoint [d]</th>
+                                            <th>Overlapping [o]</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td><strong>Total Completeness (Double Line)</strong></td>
+                                            <td>Every superclass entity MUST belong to <strong>exactly one</strong> subclass.<br><code>ACCOUNT &rarr; (d, total) {SAVINGS, CURRENT}</code></td>
+                                            <td>Every superclass entity MUST belong to <strong>at least one</strong> subclass.<br><code>PERSON &rarr; (o, total) {FACULTY, STUDENT}</code></td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Partial Completeness (Single Line)</strong></td>
+                                            <td>Superclass entity belongs to <strong>at most one</strong> subclass or none.<br><code>EMPLOYEE &rarr; (d, partial) {ENGINEER, MANAGER}</code></td>
+                                            <td>Superclass entity can belong to <strong>zero, one, or multiple</strong> subclasses.<br><code>PART &rarr; (o, partial) {MANUFACTURED, PURCHASED}</code></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <!-- Section 1.15 -->
+                        <div class="topic-section" id="sec1-15">
+                            <h2><i class="fas fa-cubes"></i> 1.15 EER Aggregation</h2>
+                            <p><strong>Aggregation</strong> is an abstraction where a relationship set is treated as a higher-level entity set. This allows relationships to participate in other relationships without creating ambiguous ternary structures.</p>
+
+                            <div class="mermaid">
+graph LR
+    subgraph Aggregated_Entity ["Aggregated Entity Container: Works_On"]
+        E["Employee"] --- W{Works_On} --- P["Project"]
+    end
+    Aggregated_Entity --- U{Requires} --- M["Machinery"]
+</div>
+                            <p><em>Example:</em> <code>(EMPLOYEE &mdash; Works_On &mdash; PROJECT)</code> is aggregated into a single entity which then associates with <code>MACHINERY</code> via the <em>Requires</em> relationship.</p>
+                        </div>
+
+                        <!-- Section 1.16 -->
+                        <div class="topic-section" id="sec1-16">
+                            <h2><i class="fas fa-code-branch"></i> 1.16 Higher Degree Relationships (Ternary vs Binary)</h2>
+                            <p>A relationship involving <span style="font-family: var(--font-mono);">n &ge; 3</span> entity sets simultaneously is an n-ary relationship. Decomposing a ternary relationship <code>SUPPLIES(Supplier, Part, Project)</code> into 3 binary relationships leads to spurious information loss, because binary links cannot capture the atomic ternary constraint that <em>Supplier S supplies Part P specifically for Project J</em>.</p>
+                        </div>
+
+                        <!-- Section 1.17 -->
+                        <div class="topic-section" id="sec1-17">
+                            <h2><i class="fas fa-table"></i> 1.17 Algorithmic Reduction of ER Diagrams to Relational Tables</h2>
+                            <div class="info-box tip">
+                                <h4><i class="fas fa-check-circle"></i> 7-Step Relational Reduction Protocol</h4>
+                                <ol>
+                                    <li><strong>Strong Entity Set:</strong> Create a table with all simple attributes. Flatten composite attributes. PK becomes table PK.</li>
+                                    <li><strong>Weak Entity Set:</strong> Table with all simple attributes + Foreign Key of owner entity. <code>PK = (Owner_PK + Partial_Key)</code>.</li>
+                                    <li><strong>1:1 Binary Relationship:</strong> Embed PK of one relation into the other as FK (prefer side with total participation).</li>
+                                    <li><strong>1:N Binary Relationship:</strong> Embed PK of 1-side into the <strong>N-side</strong> table as FK + relationship attributes.</li>
+                                    <li><strong>M:N Binary Relationship:</strong> Create a new associative table. <code>PK = (PK_A + PK_B)</code> as foreign keys.</li>
+                                    <li><strong>Multi-Valued Attribute:</strong> Create a separate table <code>(Parent_PK, Attribute_Value)</code> where both form composite PK.</li>
+                                    <li><strong>Specialization / Generalization:</strong> Create separate tables for superclass and subclasses linking via <code>PK/FK</code>.</li>
+                                </ol>
+                            </div>
+                        </div>
+
+                        <!-- Section 1.18 -->
+                        <div class="topic-section" id="sec1-18">
+                            <h2><i class="fas fa-file-invoice"></i> 1.18 Comprehensive Solved University Exam Problems</h2>
+                            
+                            <h3>Worked Example 1: Hospital Management Database Reduction</h3>
+                            <p>Entities: <code>DOCTOR(Doc_ID, Name)</code>, <code>PATIENT(Patient_ID, Name)</code> admitted by 1 Doctor (1:N), and undergo multiple <code>TREATMENT(Treatment_ID, Name)</code> (M:N).</p>
+                            
+                            <div class="table-container">
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th>Relational Table</th>
+                                            <th>Schema Attributes</th>
+                                            <th>Keys &amp; Constraints</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td><strong>DOCTOR</strong></td>
+                                            <td>(<code>Doc_ID</code>, Doc_Name, Specialization)</td>
+                                            <td>PK: <code>Doc_ID</code></td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>PATIENT</strong></td>
+                                            <td>(<code>Patient_ID</code>, Patient_Name, DOB, <code>Admitted_By_Doc_ID</code>)</td>
+                                            <td>PK: <code>Patient_ID</code>, FK: <code>Admitted_By_Doc_ID</code> &rarr; DOCTOR</td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>TREATMENT</strong></td>
+                                            <td>(<code>Treatment_ID</code>, Treatment_Name, Cost)</td>
+                                            <td>PK: <code>Treatment_ID</code></td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>PATIENT_TREATMENT</strong></td>
+                                            <td>(<code>Patient_ID</code>, <code>Treatment_ID</code>, <code>Doc_ID</code>, Treatment_Date, Dosage)</td>
+                                            <td>PK: (Patient_ID, Treatment_ID, Doc_ID, Treatment_Date)</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <h3>Worked Example 2: Standard Company Enterprise ER Reduction</h3>
+                            <p>A classic university exam scenario covering Strong Entities, Weak Entities, 1:1, 1:N, M:N, and Multivalued Attributes:</p>
+                            
+                            <div class="table-container">
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th>Generated Table</th>
+                                            <th>Attributes &amp; Constraints</th>
+                                            <th>Relational Reduction Rule Applied</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td><code>EMPLOYEE</code></td>
+                                            <td>(<u>SSN</u>, Fname, Lname, Bdate, Address, Salary, <em>Super_SSN</em>, <em>Dno</em>)<br>
+                                            FK <code>Super_SSN</code> &rarr; <code>EMPLOYEE(SSN)</code> (Recursive 1:N)<br>
+                                            FK <code>Dno</code> &rarr; <code>DEPARTMENT(Dnumber)</code> (1:N)</td>
+                                            <td>Strong Entity + 1:N foreign keys embedded on the N-side.</td>
+                                        </tr>
+                                        <tr>
+                                            <td><code>DEPARTMENT</code></td>
+                                            <td>(<u>Dnumber</u>, Dname, <em>Mgr_SSN</em>, Mgr_Start_Date)<br>
+                                            FK <code>Mgr_SSN</code> &rarr; <code>EMPLOYEE(SSN)</code> (1:1 Total on Dept)</td>
+                                            <td>Strong Entity with 1:1 Manages relationship key embedded.</td>
+                                        </tr>
+                                        <tr>
+                                            <td><code>DEPT_LOCATIONS</code></td>
+                                            <td>(<u><em>Dnumber</em>, Dlocation</u>)<br>
+                                            FK <code>Dnumber</code> &rarr; <code>DEPARTMENT(Dnumber)</code> ON DELETE CASCADE</td>
+                                            <td><strong>Multivalued Attribute:</strong> Decomposed into separate table with composite PK.</td>
+                                        </tr>
+                                        <tr>
+                                            <td><code>PROJECT</code></td>
+                                            <td>(<u>Pnumber</u>, Pname, Plocation, <em>Dnum</em>)<br>
+                                            FK <code>Dnum</code> &rarr; <code>DEPARTMENT(Dnumber)</code></td>
+                                            <td>Strong entity with 1:N Controls relationship FK embedded.</td>
+                                        </tr>
+                                        <tr>
+                                            <td><code>WORKS_ON</code></td>
+                                            <td>(<u><em>Essn</em>, <em>Pno</em></u>, Hours)<br>
+                                            FK <code>Essn</code> &rarr; <code>EMPLOYEE(SSN)</code><br>
+                                            FK <code>Pno</code> &rarr; <code>PROJECT(Pnumber)</code></td>
+                                            <td><strong>M:N Relationship:</strong> Dedicated cross-reference table with composite PK.</td>
+                                        </tr>
+                                        <tr>
+                                            <td><code>DEPENDENT</code></td>
+                                            <td>(<u><em>Essn</em>, Dependent_Name</u>, Sex, Bdate, Relationship)<br>
+                                            FK <code>Essn</code> &rarr; <code>EMPLOYEE(SSN)</code> ON DELETE CASCADE</td>
+                                            <td><strong>Weak Entity:</strong> Owner PK (<code>Essn</code>) + Partial Key (<code>Dependent_Name</code>) forms PK.</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <h3>Worked Example 3: Combinatorial Calculation of Superkeys</h3>
+                            <div class="info-box note">
+                                <h4><i class="fas fa-calculator"></i> Step-by-Step Calculation: Principle of Inclusion-Exclusion</h4>
+                                <p><strong>Problem:</strong> Given relation schema $R(A, B, C, D, E, F)$ with Candidate Keys $K_1 = \{A, B\}$ and $K_2 = \{C\}$. Calculate the total count of valid superkeys for relation $R$.</p>
+                                <p><strong>Analytical Solution:</strong></p>
+                                <ol>
+                                    <li>Total attributes $n = 6$.</li>
+                                    <li>Any superkey derived from $K_1 = \{A, B\}$ must contain both $A$ and $B$. The remaining $n - |K_1| = 6 - 2 = 4$ attributes can each be either included or excluded ($2^4 = 16$ combinations):
+                                        $$\text{Count}(SK_{AB}) = 2^4 = 16$$
+                                    </li>
+                                    <li>Any superkey derived from $K_2 = \{C\}$ must contain $C$. The remaining $n - |K_2| = 6 - 1 = 5$ attributes give:
+                                        $$\text{Count}(SK_C) = 2^5 = 32$$
+                                    </li>
+                                    <li>Superkeys containing <strong>both</strong> $\{A, B\}$ and $\{C\}$ contain $\{A, B, C\}$. The remaining $6 - 3 = 3$ attributes give:
+                                        $$\text{Count}(SK_{AB} \cap SK_C) = 2^3 = 8$$
+                                    </li>
+                                    <li>By the <strong>Principle of Inclusion-Exclusion</strong>:
+                                        $$\text{Total Superkeys} = |SK_{AB}| + |SK_C| - |SK_{AB} \cap SK_C| = 16 + 32 - 8 = \mathbf{40}$$
+                                    </li>
+                                </ol>
+                            </div>
+                        </div>
+
+                        <!-- Unit Navigation Buttons -->
+                        <div class="unit-navigation">
+                            <a href="index.html" class="nav-btn prev">
+                                <i class="fas fa-arrow-left"></i> Home Overview
+                            </a>
+                            <a href="unit2.html" class="nav-btn next">
+                                Unit II: Relational Model &amp; SQL <i class="fas fa-arrow-right"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Interactive Quiz Section -->
+        <section class="quiz-section">
+            <div class="container">
+                <h2 class="section-title">Test Your Knowledge — Unit I</h2>
+                <div class="quiz-container" id="quiz-container">
+                    <!-- Quiz dynamically rendered by QuizManager -->
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3><i class="fas fa-database"></i> DBMS Hub</h3>
+                    <p>Complete academic courseware for BCS501 Database Management Systems.</p>
+                </div>
+                <div class="footer-section">
+                    <h3>Course Units</h3>
+                    <ul>
+                        <li><a href="unit1.html">Unit I - ER &amp; Architecture</a></li>
+                        <li><a href="unit2.html">Unit II - Relational &amp; SQL</a></li>
+                        <li><a href="unit3.html">Unit III - Normalization</a></li>
+                        <li><a href="unit4.html">Unit IV - Transactions</a></li>
+                        <li><a href="unit5.html">Unit V - Concurrency</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>Resources</h3>
+                    <ul>
+                        <li><a href="mcq.html">MCQ Question Bank</a></li>
+                        <li><a href="cheatsheet.html">Cheat Sheet</a></li>
+                        <li><a href="previousyear.html">Solved PYQs</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 DBMS Learning Hub &bull; BCS501 Academic Guide.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-sql.min.js"></script>
+    <script src="js/script.js"></script>
+    <script>
+        const unit1Questions = [
+            {
+                question: "Which schema level in the ANSI/SPARC 3-Schema Architecture directly describes how data is stored on disk blocks and indices?",
+                options: ["External Level", "Conceptual Level", "Internal Level", "Physical Application Level"],
+                correct: 2,
+                explanation: "The Internal Level (physical schema) specifies record formats, block sizes, index structures (B+ trees, hash tables), and data compression techniques."
+            },
+            {
+                question: "Logical Data Independence refers to the capacity to modify which schema without altering external schemas?",
+                options: ["Physical Schema", "Conceptual Schema", "Internal Schema", "Application Program Schema"],
+                correct: 1,
+                explanation: "Logical data independence is the ability to change the conceptual schema (e.g., adding a column or table) without changing external views or user queries."
+            },
+            {
+                question: "In Peter Chen's ER notation, what geometric shape represents a Weak Entity Set?",
+                options: ["Single Rectangle", "Double Rectangle", "Dashed Oval", "Double Diamond"],
+                correct: 1,
+                explanation: "Weak entity sets are depicted using double rectangles, while identifying relationships use double diamonds."
+            },
+            {
+                question: "What is the mathematical definition of a Candidate Key?",
+                options: ["Any set containing primary key", "A minimal superkey", "An attribute with foreign reference", "A non-prime attribute set"],
+                correct: 1,
+                explanation: "A candidate key is a minimal superkey: a set of attributes that uniquely identifies each tuple, from which no attribute can be removed without destroying uniqueness."
+            },
+            {
+                question: "When reducing an M:N binary relationship to relational tables, how is the relationship represented?",
+                options: ["As a foreign key on the M-side", "As a foreign key on the N-side", "As a brand-new table whose primary key is composite of both entity PKs", "By merging both entity tables into one"],
+                correct: 2,
+                explanation: "An M:N relationship requires a new junction table containing the primary keys of both participating entity sets as foreign keys, forming a composite primary key."
+            },
+            {
+                question: "What is the primary key of a table derived from a Weak Entity Set?",
+                options: ["Only the partial key (discriminator)", "Only the owner entity primary key", "The composite of owner primary key and weak entity partial key", "An auto-generated surrogate key"],
+                correct: 2,
+                explanation: "In relational reduction, a weak entity table primary key is formed by combining the Primary Key of its owner entity with the weak entity's Partial Key."
+            },
+            {
+                question: "Which component of the DBMS Storage Manager is responsible for caching disk blocks into RAM using LRU/Clock algorithms?",
+                options: ["File Manager", "Buffer Manager", "Transaction Manager", "DML Compiler"],
+                correct: 1,
+                explanation: "The Buffer Manager allocates and manages memory page buffers in RAM to minimize physical disk I/O operations."
+            },
+            {
+                question: "In Extended ER (EER), what does a Disjoint [d] constraint specify?",
+                options: ["An entity can belong to multiple subclasses", "An entity can belong to at most one subclass", "Every entity must belong to a subclass", "Subclasses do not inherit superclass attributes"],
+                correct: 1,
+                explanation: "Disjointness [d] mandates that subclasses are mutually exclusive; an entity can belong to at most one subclass."
+            },
+            {
+                question: "Which attribute type is represented by a dashed oval in Chen's ER notation?",
+                options: ["Multi-valued attribute", "Composite attribute", "Derived attribute", "Partial key attribute"],
+                correct: 2,
+                explanation: "Derived attributes (such as Age computed from Date_Of_Birth) are represented by dashed ovals."
+            },
+            {
+                question: "The Entity Integrity constraint mandates that:",
+                options: ["Foreign keys cannot reference non-existent records", "Primary key attributes cannot contain NULL values", "Domain types must match table definitions", "Every relationship must be 1:N"],
+                correct: 1,
+                explanation: "Entity Integrity mandates that no primary key attribute value may be NULL, ensuring every tuple can be uniquely identified."
+            }
+        ];
+
+        // Initialize Unit 1 Quiz
+        document.addEventListener('DOMContentLoaded', () => {
+            window.currentQuiz = new QuizManager('quiz-container', unit1Questions);
+        });
+    </script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            if (typeof renderMathInElement === 'function') {
+                renderMathInElement(document.body, {
+                    delimiters: [
+                        {left: '$$', right: '$$', display: true},
+                        {left: '$', right: '$', display: false}
+                    ],
+                    throwOnError: false
+                });
+            }
+            if (typeof mermaid !== 'undefined') {
+                mermaid.initialize({ startOnLoad: true, theme: 'neutral', securityLevel: 'loose' });
+            }
+        });
+    </script>
+</body>
+</html>

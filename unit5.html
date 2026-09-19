@@ -1,0 +1,710 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Unit V: Concurrency Control Techniques, 2PL Variants, Timestamp Ordering, Thomas Write Rule, Optimistic OCC, Multiple Granularity, MVCC, and Oracle Concurrency Case Study. Complete BCS501 guide.">
+    <title>Unit V: Concurrency Control &amp; Engine Internals — DBMS Learning Hub</title>
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+</head>
+<body>
+    <!-- Top Navigation Bar -->
+    <nav class="navbar" role="navigation" aria-label="Main navigation">
+        <div class="nav-container">
+            <a href="index.html" class="logo" aria-label="DBMS Hub Home">
+                <i class="fas fa-database" aria-hidden="true"></i> DBMS Hub
+            </a>
+            <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation menu" aria-expanded="false" aria-controls="navMenu">
+                <i class="fas fa-bars" aria-hidden="true"></i>
+            </button>
+            <ul class="nav-menu" id="navMenu">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="unit1.html">Unit I</a></li>
+                <li><a href="unit2.html">Unit II</a></li>
+                <li><a href="unit3.html">Unit III</a></li>
+                <li><a href="unit4.html">Unit IV</a></li>
+                <li><a href="unit5.html" class="active">Unit V</a></li>
+                <li><a href="theory.html">Theory</a></li>
+                <li><a href="mcq.html">MCQ Bank</a></li>
+                <li><a href="cheatsheet.html">Cheat Sheet</a></li>
+                <li class="nav-divider"></li>
+                <li><a href="previousyear.html">Solved PYQs</a></li>
+            </ul>
+            <button class="theme-toggle-btn" id="darkModeToggle" onclick="toggleDarkMode()" aria-label="Toggle Dark Mode">
+                <i class="fas fa-moon"></i>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Main Content Container -->
+    <main id="main-content">
+        <!-- Unit Header Banner -->
+        <header class="unit-header">
+            <div class="container">
+                <h1>UNIT 5</h1>
+            </div>
+        </header>
+
+        <!-- Two-Column Layout Section -->
+        <section class="unit-content">
+            <div class="container">
+                <div class="page-layout">
+                    <!-- Sticky Sidebar Navigation -->
+                    <aside class="sidebar">
+                        <h3><i class="fas fa-list-ul"></i> Unit V Topics</h3>
+                        <nav class="sidebar-nav">
+                            <a href="#sec5-1" class="active">5.1 Concurrency Anomalies</a>
+                            <a href="#sec5-2">5.2 Locking &amp; 2PL Protocol</a>
+                            <a href="#sec5-3">5.3 2PL Variants &amp; Timelines</a>
+                            <a href="#sec5-4">5.4 Lock Conversions</a>
+                            <a href="#sec5-5">5.5 Timestamp Ordering (TO)</a>
+                            <a href="#sec5-6">5.6 Thomas' Write Rule</a>
+                            <a href="#sec5-7">5.7 Validation (OCC) Protocol</a>
+                            <a href="#sec5-8">5.8 Multiple Granularity (MGL)</a>
+                            <a href="#sec5-9">5.9 Multiversion (MVCC)</a>
+                            <a href="#sec5-10">5.10 Buffer Storage Policies</a>
+                            <a href="#sec5-11">5.11 Case Study: Oracle Engine</a>
+                            <a href="#sec5-12">5.12 Solved Protocol Traces</a>
+                        </nav>
+                    </aside>
+
+                    <!-- Main Reading Content -->
+                    <div class="main-content">
+                        <!-- Section 5.1 -->
+                        <div class="topic-section" id="sec5-1">
+                            <h2><i class="fas fa-exclamation-circle"></i> 5.1 The 4 Classic Concurrency Anomalies</h2>
+                            <p>Uncontrolled concurrent execution of transactions without synchronization leads to 4 severe data corruption anomalies:</p>
+
+                            <div class="table-container">
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th>Anomaly</th>
+                                            <th>Interleaved Scenario</th>
+                                            <th>Engine Consequence</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td><strong>1. Dirty Read</strong><br>(Temporary Update)</td>
+                                            <td>T1 updates item X. T2 reads the uncommitted value of X. T1 encounters an error and aborts.</td>
+                                            <td>T2 continues calculations on phantom data that was rolled back and never existed.</td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>2. Lost Update</strong><br>(Blind Overwrite)</td>
+                                            <td>T1 and T2 read X simultaneously. T1 updates and writes X. T2 updates based on old value and overwrites X.</td>
+                                            <td>T1's update is completely erased by T2's overwrite without synchronization.</td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>3. Non-Repeatable Read</strong><br>(Fuzzy Read)</td>
+                                            <td>T1 reads X. T2 updates or deletes X and commits. T1 re-reads X within the same transaction.</td>
+                                            <td>T1 observes two different values for the exact same record during its execution.</td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>4. Phantom Read</strong><br>(Predicate Shift)</td>
+                                            <td>T1 scans tuples satisfying predicate P. T2 inserts a new row satisfying P and commits. T1 scans again.</td>
+                                            <td>T1 discovers a new "phantom" row appearing midway through transaction execution.</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <!-- Worked Example 5.1 -->
+                            <div class="info-box example">
+                                <h4><i class="fas fa-calculator"></i> Worked Example 5.1: Mathematical Demonstration of Concurrency Anomalies</h4>
+                                <p><strong>Scenario Setup:</strong> Bank account $A$ has initial balance <strong>$1,000</strong>; account $B$ has <strong>$2,000</strong>.</p>
+                                
+                                <h5 style="color: var(--primary-color); margin-top: 10px;">Anomaly 1: Dirty Read (Temporary Update) Numerical Trace</h5>
+                                <div class="table-container">
+                                    <table>
+                                        <thead>
+                                            <tr>
+                                                <th>Time</th>
+                                                <th>Transaction T<sub>1</sub> (Transfer $200 from A to B)</th>
+                                                <th>Transaction T<sub>2</sub> (Audit Balance A)</th>
+                                                <th>RAM Buffer A</th>
+                                                <th>Disk DB A</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr><td>t<sub>1</sub></td><td>Read(A) [A = 1000]</td><td>-</td><td>1000</td><td>1000</td></tr>
+                                            <tr><td>t<sub>2</sub></td><td>A = A - 200; Write(A) [A = 800]</td><td>-</td><td>800</td><td>1000</td></tr>
+                                            <tr><td>t<sub>3</sub></td><td>-</td><td>Read(A) [Observes <strong>800</strong>]</td><td>800</td><td>1000</td></tr>
+                                            <tr><td>t<sub>4</sub></td><td>-</td><td>T<sub>2</sub> calculates tax based on $800 &amp; Commits!</td><td>800</td><td>1000</td></tr>
+                                            <tr><td>t<sub>5</sub></td><td><strong style="color: #ef4444;">SYSTEM ERROR &rarr; T<sub>1</sub> Aborts &amp; Rolls Back!</strong></td><td>-</td><td>1000</td><td>1000</td></tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <p><strong style="color: #ef4444;">Outcome:</strong> T<sub>2</sub> committed using phantom value $800 that was rolled back and never officially existed in persistent storage.</p>
+
+                                <h5 style="color: var(--primary-color); margin-top: 14px;">Anomaly 2: Lost Update (Blind Overwrite) Numerical Trace</h5>
+                                <div class="table-container">
+                                    <table>
+                                        <thead>
+                                            <tr>
+                                                <th>Time</th>
+                                                <th>T<sub>1</sub> (Deposit $100)</th>
+                                                <th>T<sub>2</sub> (Deposit $200)</th>
+                                                <th>Local T<sub>1</sub></th>
+                                                <th>Local T<sub>2</sub></th>
+                                                <th>Database A</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr><td>t<sub>1</sub></td><td>Read(A) [A = 1000]</td><td>-</td><td>1000</td><td>-</td><td>1000</td></tr>
+                                            <tr><td>t<sub>2</sub></td><td>-</td><td>Read(A) [A = 1000]</td><td>1000</td><td>1000</td><td>1000</td></tr>
+                                            <tr><td>t<sub>3</sub></td><td>A = A + 100; Write(A)</td><td>-</td><td>1100</td><td>1000</td><td>1100</td></tr>
+                                            <tr><td>t<sub>4</sub></td><td>Commit</td><td>-</td><td>-</td><td>1000</td><td>1100</td></tr>
+                                            <tr><td>t<sub>5</sub></td><td>-</td><td>A = A + 200; Write(A)</td><td>-</td><td>1200</td><td><strong style="color: #ef4444;">1200 (Lost Update!)</strong></td></tr>
+                                            <tr><td>t<sub>6</sub></td><td>-</td><td>Commit</td><td>-</td><td>-</td><td>1200</td></tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <p><strong style="color: #ef4444;">Outcome:</strong> Expected final balance was $1,000 + $100 + $200 = <strong>$1,300</strong>. Because T<sub>2</sub> overwrote based on stale data, T<sub>1</sub>'s $100 deposit was completely destroyed!</p>
+                            </div>
+                        </div>
+
+                        <!-- Section 5.2 -->
+                        <div class="topic-section" id="sec5-2">
+                            <h2><i class="fas fa-lock"></i> 5.2 Locking &amp; The Two-Phase Locking (2PL) Protocol</h2>
+                            <p>A <strong>Lock</strong> is a concurrency variable that regulates access to data items. The two primary lock modes are:</p>
+                            <ul>
+                                <li><strong>Shared Lock (S-lock):</strong> Acquired for reading. Multiple transactions can hold shared locks on the same data item concurrently.</li>
+                                <li><strong>Exclusive Lock (X-lock):</strong> Acquired for writing. Only ONE transaction can hold an exclusive lock; no other transaction can read or write.</li>
+                            </ul>
+
+                            <div class="info-box note">
+                                <h4><i class="fas fa-table"></i> Lock Compatibility Matrix</h4>
+                                <table style="margin-top: 10px;">
+                                    <thead>
+                                        <tr><th>Existing Lock \ Requested Lock</th><th>Shared (S)</th><th>Exclusive (X)</th></tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr><td><strong>Shared (S)</strong></td><td style="color: #10b981; font-weight: bold;">Compatible (Granted)</td><td style="color: #ef4444; font-weight: bold;">Conflict (Waits)</td></tr>
+                                        <tr><td><strong>Exclusive (X)</strong></td><td style="color: #ef4444; font-weight: bold;">Conflict (Waits)</td><td style="color: #ef4444; font-weight: bold;">Conflict (Waits)</td></tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <!-- Section 5.3 -->
+                        <div class="topic-section" id="sec5-3">
+                            <h2><i class="fas fa-chart-line"></i> 5.3 2PL Protocol Variants &amp; Timelines</h2>
+                            <p>The <strong>Two-Phase Locking (2PL)</strong> protocol guarantees Conflict Serializability by requiring transactions to lock and unlock in two distinct phases:</p>
+                            <ol>
+                                <li><strong>Growing (Expanding) Phase:</strong> The transaction may acquire new locks, but cannot release any locks.</li>
+                                <li><strong>Shrinking (Contracting) Phase:</strong> The transaction may release locks, but cannot acquire any new locks. The point where the last lock is acquired is the <em>Lock Point</em>.</li>
+                            </ol>
+
+                            <div class="table-container">
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th>2PL Protocol Variant</th>
+                                            <th>Operational Invariant</th>
+                                            <th>Guaranteed Properties</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td><strong>Basic 2PL</strong></td>
+                                            <td>Locks acquired in growing phase, released in shrinking phase.</td>
+                                            <td>Guarantees Serializability; subject to cascading aborts and deadlocks.</td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Strict 2PL</strong></td>
+                                            <td>All <strong>Exclusive (X)</strong> locks must be held until transaction commits or aborts.</td>
+                                            <td>Guarantees Serializability + Cascadeless / Strict recovery. Industry standard.</td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Rigorous 2PL</strong></td>
+                                            <td>All <strong>Shared (S)</strong> AND <strong>Exclusive (X)</strong> locks held until commit/abort.</td>
+                                            <td>Guarantees Serializability + Strict recovery. Serial order matches commit order.</td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Conservative 2PL</strong></td>
+                                            <td>Acquires all needed locks simultaneously before starting execution.</td>
+                                            <td>Guarantees Deadlock-Free execution; requires prior knowledge of read/write sets.</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <!-- Worked Example 5.2 -->
+                            <div class="info-box example">
+                                <h4><i class="fas fa-stopwatch"></i> Worked Example 5.2: 2PL Execution Timeline &amp; Lock Point Identification</h4>
+                                <p>Consider transaction $T_1$ modifying records $A$ and $B$. Let us analyze its step-by-step locking lifecycle under Basic 2PL vs Strict 2PL:</p>
+                                
+                                <div class="table-container">
+                                    <table>
+                                        <thead>
+                                            <tr>
+                                                <th>Step</th>
+                                                <th>Operation</th>
+                                                <th>Basic 2PL State</th>
+                                                <th>Strict 2PL State</th>
+                                                <th>Phase Transition</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr><td>1</td><td><code>Lock-X(A)</code></td><td>Lock A granted</td><td>Lock A granted</td><td><strong style="color: #10b981;">Growing Phase</strong></td></tr>
+                                            <tr><td>2</td><td><code>Read(A), Write(A)</code></td><td>Updates A</td><td>Updates A</td><td>Growing Phase</td></tr>
+                                            <tr><td>3</td><td><code>Lock-S(B)</code></td><td>Lock B granted</td><td>Lock B granted</td><td><strong style="color: #10b981;">LOCK POINT (All locks held)</strong></td></tr>
+                                            <tr><td>4</td><td><code>Read(B)</code></td><td>Reads B</td><td>Reads B</td><td>Execution continues</td></tr>
+                                            <tr><td>5</td><td><code>Unlock(A)</code></td><td><strong style="color: var(--secondary-color);">Shrinking Phase Starts</strong></td><td><strong style="color: #ef4444;">FORBIDDEN!</strong> (Must hold X-lock till commit)</td><td>Basic 2PL enters Shrinking phase early</td></tr>
+                                            <tr><td>6</td><td><code>Unlock(B)</code></td><td>Releases B</td><td><strong style="color: #ef4444;">FORBIDDEN!</strong></td><td>Basic 2PL releases all locks</td></tr>
+                                            <tr><td>7</td><td><code>Commit</code></td><td>T<sub>1</sub> commits</td><td><strong style="color: #10b981;">Releases Lock-X(A) &amp; Lock-S(B) AT COMMIT</strong></td><td>Strict 2PL atomic release at commit</td></tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <p><strong>Key Insight:</strong> In Basic 2PL, if $T_1$ released Lock(A) at step 5 and later crashed before step 7, any transaction $T_2$ that read $A$ between step 5 and step 7 would suffer a <em>Cascading Rollback</em>. Strict 2PL guarantees no transaction can read dirty $A$ because Lock-X(A) is held until step 7 Commit.</p>
+                            </div>
+                        </div>
+
+                        <!-- Section 5.4 -->
+                        <div class="topic-section" id="sec5-4">
+                            <h2><i class="fas fa-exchange-alt"></i> 5.4 Lock Conversions &amp; Lock Manager</h2>
+                            <ul>
+                                <li><strong>Lock Upgrade:</strong> Converting a Shared Lock (S) into an Exclusive Lock (X). Permissible only during the Growing Phase.</li>
+                                <li><strong>Lock Downgrade:</strong> Converting an Exclusive Lock (X) into a Shared Lock (S). Permissible only during the Shrinking Phase.</li>
+                                <li><strong>Lock Manager:</strong> In-memory hash table indexed by data item ID containing granted lock modes and linked queues of waiting transactions.</li>
+                            </ul>
+                        </div>
+
+                        <!-- Section 5.5 -->
+                        <div class="topic-section" id="sec5-5">
+                            <h2><i class="fas fa-clock"></i> 5.5 Timestamp Ordering (TO) Protocol</h2>
+                            <p>Every transaction Ti is assigned a unique, monotonically increasing timestamp <code>TS(Ti)</code> at creation. Each data item Q maintains two timestamps:</p>
+                            <ul>
+                                <li><strong>R-TS(Q):</strong> The largest timestamp of any transaction that successfully executed <code>Read(Q)</code>.</li>
+                                <li><strong>W-TS(Q):</strong> The largest timestamp of any transaction that successfully executed <code>Write(Q)</code>.</li>
+                            </ul>
+
+                            <div class="mermaid">
+graph LR
+    G["<b>1. Growing Phase (Expanding)</b><br>• Acquire Shared / Exclusive Locks<br>• Lock Upgrades Allowed (S → X)<br>• ❌ No Locks can be Released"] --> LP(("<b>LOCK POINT</b><br>Max locks held"))
+    LP --> S["<b>2. Shrinking Phase (Contracting)</b><br>• Release acquired locks<br>• Lock Downgrades Allowed (X → S)<br>• ❌ No Locks can be Acquired"]
+</div>
+
+                            <div class="info-box tip">
+                                <h4><i class="fas fa-check-circle"></i> Basic Timestamp Ordering Rules</h4>
+                                <ul>
+                                    <li><strong>When Ti issues Read(Q):</strong>
+                                        <br>If <code>TS(Ti) &lt; W-TS(Q)</code> &rarr; Ti is trying to read an overwritten value. <em>Reject and Abort Ti</em>.
+                                        <br>If <code>TS(Ti) &ge; W-TS(Q)</code> &rarr; Execute read, set <code>R-TS(Q) = max(R-TS(Q), TS(Ti))</code>.</li>
+                                    <li><strong>When Ti issues Write(Q):</strong>
+                                        <br>If <code>TS(Ti) &lt; R-TS(Q)</code> &rarr; A younger transaction already read Q. <em>Reject and Abort Ti</em>.
+                                        <br>If <code>TS(Ti) &lt; W-TS(Q)</code> &rarr; An obsolete write. <em>Reject and Abort Ti</em>.
+                                        <br>Otherwise &rarr; Execute write, set <code>W-TS(Q) = TS(Ti)</code>.</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <!-- Section 5.6 -->
+                        <div class="topic-section" id="sec5-6">
+                            <h2><i class="fas fa-forward"></i> 5.6 Thomas' Write Rule</h2>
+                            <p>Thomas' Write Rule is an optimization to Basic Timestamp Ordering for handling obsolete writes:</p>
+                            <div class="info-box note">
+                                <h4><i class="fas fa-magic"></i> Modification to Write Rule</h4>
+                                <p>If <code>TS(Ti) &lt; W-TS(Q)</code>, instead of aborting Ti, <strong>IGNORE the obsolete write</strong> and let Ti continue execution!</p>
+                                <p><em>Result:</em> Can generate schedules that are View Serializable but NOT Conflict Serializable, significantly reducing unnecessary transaction aborts.</p>
+                            </div>
+                        </div>
+
+                        <!-- Section 5.7 -->
+                        <div class="topic-section" id="sec5-7">
+                            <h2><i class="fas fa-tasks"></i> 5.7 Validation Protocol (Optimistic Concurrency Control - OCC)</h2>
+                            <p>Optimistic protocols assume data conflicts are rare, delaying checking until the end of transaction execution:</p>
+                            <div class="mermaid">
+graph LR
+    R["<b>1. Read and Execution Phase</b><br>Reads from DB<br>Writes held in private workspace"] --> V["<b>2. Validation Phase</b><br>Test conflicting RW/WW overlaps<br>against active transactions"]
+    V -->|Validation Succeeded| W["<b>3. Write Phase</b><br>Commit updates permanently<br>to database disk"]
+    V -.->|Validation Failed| A["<b>Rollback and Restart</b><br>Discard private workspace"]
+</div>
+
+                            <ol>
+                                <li><strong>Read &amp; Execution Phase:</strong> Transaction reads values from the database and writes updates to private local workspace variables.</li>
+                                <li><strong>Validation Phase:</strong> Before writing to disk, the DBMS tests if local updates conflict with concurrent transactions.</li>
+                                <li><strong>Write Phase:</strong> If validation passes, local changes are committed and written permanently to disk; otherwise, the transaction aborts and restarts.</li>
+                            </ol>
+                        </div>
+
+                        <!-- Section 5.8 -->
+                        <div class="topic-section" id="sec5-8">
+                            <h2><i class="fas fa-sitemap"></i> 5.8 Multiple Granularity Locking (MGL)</h2>
+                            <p>Hierarchical locking allows transactions to lock data at different granularities (Database &rarr; Area &rarr; File &rarr; Record):</p>
+
+                            <div class="mermaid">
+graph TD
+    DB["<b>Database Node</b><br>(IS / IX Intent Locks)"] --> A1["Area / Tablespace 1"]
+    DB --> A2["Area / Tablespace 2"]
+    A1 --> F1["File / Table 1"]
+    A1 --> F2["File / Table 2"]
+    F1 --> P1["Disk Page 1"]
+    F1 --> P2["Disk Page 2"]
+    P1 --> R1["Record / Row 1 (S / X)"]
+    P1 --> R2["Record / Row 2 (S / X)"]
+</div>
+                            <ul>
+                                <li><strong>Intention-Shared (IS):</strong> Explicit shared lock will be placed at a finer granularity level below.</li>
+                                <li><strong>Intention-Exclusive (IX):</strong> Explicit exclusive lock will be placed at a finer level below.</li>
+                                <li><strong>Shared with Intention-Exclusive (SIX):</strong> Locks current node in Shared mode, with intention to acquire Exclusive locks below.</li>
+                            </ul>
+
+                            <div class="table-container">
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th>Existing \ Requested</th>
+                                            <th>IS</th>
+                                            <th>IX</th>
+                                            <th>S</th>
+                                            <th>SIX</th>
+                                            <th>X</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr><td><strong>IS</strong></td><td style="color:#10b981;">OK</td><td style="color:#10b981;">OK</td><td style="color:#10b981;">OK</td><td style="color:#10b981;">OK</td><td style="color:#ef4444;">No</td></tr>
+                                        <tr><td><strong>IX</strong></td><td style="color:#10b981;">OK</td><td style="color:#10b981;">OK</td><td style="color:#ef4444;">No</td><td style="color:#ef4444;">No</td><td style="color:#ef4444;">No</td></tr>
+                                        <tr><td><strong>S</strong></td><td style="color:#10b981;">OK</td><td style="color:#ef4444;">No</td><td style="color:#10b981;">OK</td><td style="color:#ef4444;">No</td><td style="color:#ef4444;">No</td></tr>
+                                        <tr><td><strong>SIX</strong></td><td style="color:#10b981;">OK</td><td style="color:#ef4444;">No</td><td style="color:#ef4444;">No</td><td style="color:#ef4444;">No</td><td style="color:#ef4444;">No</td></tr>
+                                        <tr><td><strong>X</strong></td><td style="color:#ef4444;">No</td><td style="color:#ef4444;">No</td><td style="color:#ef4444;">No</td><td style="color:#ef4444;">No</td><td style="color:#ef4444;">No</td></tr>
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <!-- Worked Example 5.3 -->
+                            <div class="info-box example">
+                                <h4><i class="fas fa-tree"></i> Worked Example 5.3: Intention Lock Propagation Path</h4>
+                                <p><strong>Scenario:</strong> Transaction $T_1$ executes <code>UPDATE Employee SET Salary = 75000 WHERE EmpID = 101</code>. Concurrently, transaction $T_2$ executes <code>SELECT COUNT(*) FROM Employee</code>.</p>
+                                <ol>
+                                    <li><strong>T<sub>1</sub> Lock Path (Top-Down):</strong>
+                                        <ul>
+                                            <li>Acquires <strong>IX</strong> on Database <code>CorpDB</code></li>
+                                            <li>Acquires <strong>IX</strong> on Area <code>HR_Data</code></li>
+                                            <li>Acquires <strong>IX</strong> on Table <code>Employee</code></li>
+                                            <li>Acquires <strong>Exclusive (X)</strong> lock on Tuple <code>EmpID = 101</code></li>
+                                        </ul>
+                                    </li>
+                                    <li><strong>T<sub>2</sub> Lock Request:</strong>
+                                        <ul>
+                                            <li>Acquires <strong>IS</strong> on Database <code>CorpDB</code> (Compatible with IX &check;)</li>
+                                            <li>Acquires <strong>IS</strong> on Area <code>HR_Data</code> (Compatible with IX &check;)</li>
+                                            <li>T<sub>2</sub> requests <strong>Shared (S)</strong> lock on Table <code>Employee</code> to scan all records.</li>
+                                            <li><strong>Conflict Check at Table Node:</strong> Table has <code>IX</code> held by T<sub>1</sub>. Looking at compatibility matrix, <strong>IX and S CONFLICT!</strong></li>
+                                            <li><strong style="color: #ef4444;">Result:</strong> T<sub>2</sub> is suspended at the table root. The lock manager avoids inspecting thousands of individual records to discover the conflict!</li>
+                                        </ul>
+                                    </li>
+                                </ol>
+                            </div>
+                        </div>
+
+                        <!-- Section 5.9 -->
+                        <div class="topic-section" id="sec5-9">
+                            <h2><i class="fas fa-history"></i> 5.9 Multi-Version Concurrency Control (MVCC)</h2>
+                            <p>MVCC maintains multiple physical versions of each data item. When a transaction updates an item, a new timestamped version is created rather than overwriting in place:</p>
+                            <div class="info-box tip">
+                                <h4><i class="fas fa-bolt"></i> Key Advantage of MVCC</h4>
+                                <p><strong>READERS NEVER BLOCK WRITERS, AND WRITERS NEVER BLOCK READERS!</strong></p>
+                                <p>A read query always reads the latest committed version corresponding to its start timestamp (Snapshot Isolation), completely eliminating read locks.</p>
+                            </div>
+                        </div>
+
+                        <!-- Section 5.10 -->
+                        <div class="topic-section" id="sec5-10">
+                            <h2><i class="fas fa-hdd"></i> 5.10 Storage Buffer Policies (STEAL / NO-FORCE)</h2>
+                            <div class="table-container">
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th>Buffer Policy</th>
+                                            <th>STEAL Policy</th>
+                                            <th>NO-STEAL Policy</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td><strong>FORCE Policy</strong></td>
+                                            <td>Buffer manager flushes uncommitted pages (Needs <strong>UNDO</strong>). Pages flushed at commit (No REDO).</td>
+                                            <td>Uncommitted pages never flushed (No UNDO). Flushed at commit (No REDO). High RAM cost.</td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>NO-FORCE Policy</strong><br>(Standard in modern RDBMS)</td>
+                                            <td>Buffer manager flushes dirty pages before commit (<strong>Needs UNDO</strong>). Committed pages stay in RAM cache (<strong>Needs REDO</strong>).</td>
+                                            <td>Uncommitted pages never flushed (No UNDO). Committed pages flushed asynchronously (Needs REDO).</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <!-- Section 5.11 -->
+                        <div class="topic-section" id="sec5-11">
+                            <h2><i class="fas fa-server"></i> 5.11 Case Study: Oracle Concurrency Architecture</h2>
+                            <p>The Oracle database engine implements non-blocking multi-version concurrency control using the System Change Number (SCN) and Undo Tablespaces:</p>
+                            <ul>
+                                <li><strong>SGA (System Global Area):</strong> Shared memory hosting the Database Buffer Cache and Redo Log Buffer.</li>
+                                <li><strong>SCN (System Change Number):</strong> Logical clock counter incremented on every transaction commit.</li>
+                                <li><strong>Undo Segments:</strong> Reconstruct older data block images dynamically when long queries read across concurrent updates.</li>
+                            </ul>
+
+                            <div class="info-box warning">
+                                <h4><i class="fas fa-exclamation-triangle"></i> Root Cause: ORA-01555 Snapshot Too Old</h4>
+                                <p>Occurs when a long-running query needs to reconstruct past block images using undo segments, but concurrent transactions overwrite those undo blocks before the query finishes.</p>
+                                <p><em>Resolution:</em> Increase <code>UNDO_RETENTION</code> and expand <code>UNDO TABLESPACE</code> capacity.</p>
+                            </div>
+                        </div>
+
+                        <!-- Section 5.12 -->
+                        <div class="topic-section" id="sec5-12">
+                            <h2><i class="fas fa-vial"></i> 5.12 Solved Protocol Tracing Problems</h2>
+                            
+                            <!-- Worked Example 5.4 -->
+                            <div class="info-box example">
+                                <h4><i class="fas fa-calculator"></i> Worked Example 5.4: Timestamp Ordering with Thomas' Write Rule Trace</h4>
+                                <p><strong>Initial State:</strong> Variable $X$ has <code>R-TS(X) = 0</code>, <code>W-TS(X) = 0</code>. Three transactions arrive with timestamps: <code>TS(T1) = 100</code>, <code>TS(T2) = 150</code>, <code>TS(T3) = 200</code>.</p>
+
+                                <div class="table-container">
+                                    <table>
+                                        <thead>
+                                            <tr>
+                                                <th>Step</th>
+                                                <th>Operation</th>
+                                                <th>Condition Evaluated</th>
+                                                <th>Action / Status</th>
+                                                <th>Updated Item State</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>1</td>
+                                                <td>T<sub>1</sub> issues <code>Read(X)</code></td>
+                                                <td>TS(T<sub>1</sub>)=100 &ge; W-TS(X)=0</td>
+                                                <td><span style="color: #10b981; font-weight: bold;">Granted &check;</span></td>
+                                                <td>R-TS(X) = max(0, 100) = <strong>100</strong><br>W-TS(X) = 0</td>
+                                            </tr>
+                                            <tr>
+                                                <td>2</td>
+                                                <td>T<sub>3</sub> issues <code>Write(X)</code></td>
+                                                <td>TS(T<sub>3</sub>)=200 &ge; R-TS(X)=100<br>TS(T<sub>3</sub>)=200 &ge; W-TS(X)=0</td>
+                                                <td><span style="color: #10b981; font-weight: bold;">Granted &check;</span></td>
+                                                <td>R-TS(X) = 100<br>W-TS(X) = <strong>200</strong></td>
+                                            </tr>
+                                            <tr>
+                                                <td>3</td>
+                                                <td>T<sub>2</sub> issues <code>Read(X)</code></td>
+                                                <td>TS(T<sub>2</sub>)=150 &lt; W-TS(X)=200</td>
+                                                <td><span style="color: #ef4444; font-weight: bold;">REJECTED &times; (T<sub>2</sub> Aborted)</span><br>T<sub>2</sub> needed data that was already overwritten by younger T<sub>3</sub>.</td>
+                                                <td>Unchanged</td>
+                                            </tr>
+                                            <tr>
+                                                <td>4</td>
+                                                <td>T<sub>1</sub> issues <code>Write(X)</code></td>
+                                                <td>TS(T<sub>1</sub>)=100 &lt; W-TS(X)=200</td>
+                                                <td>
+                                                    <strong>Basic TO:</strong> <span style="color: #ef4444;">Aborts T<sub>1</sub></span>.<br>
+                                                    <strong>Thomas' Write Rule:</strong> <span style="color: #10b981; font-weight: bold;">IGNORE WRITE &amp; PROCEED!</span> T<sub>1</sub>'s write is obsolete since T<sub>3</sub> already wrote a newer value.
+                                                </td>
+                                                <td>R-TS(X) = 100<br>W-TS(X) = 200</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+
+                            <!-- Worked Example 5.5 -->
+                            <div class="info-box example" style="margin-top: 20px;">
+                                <h4><i class="fas fa-shield-virus"></i> Worked Example 5.5: Deadlock Prevention — Wait-Die vs Wound-Wait Decision Matrix</h4>
+                                <p>Suppose older transaction $T_{old}$ has timestamp $TS = 10$ and younger transaction $T_{young}$ has $TS = 50$:</p>
+
+                                <div class="table-container">
+                                    <table>
+                                        <thead>
+                                            <tr>
+                                                <th>Scenario</th>
+                                                <th>Requesting Tx</th>
+                                                <th>Holding Tx</th>
+                                                <th>Wait-Die Scheme (Non-preemptive)</th>
+                                                <th>Wound-Wait Scheme (Preemptive)</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td><strong>Case 1: Older requests from Younger</strong></td>
+                                                <td>T<sub>old</sub> (TS = 10)</td>
+                                                <td>T<sub>young</sub> (TS = 50)</td>
+                                                <td><strong style="color: #10b981;">T<sub>old</sub> is ALLOWED TO WAIT</strong>.<br>Older transaction can wait for younger.</td>
+                                                <td><strong style="color: #ef4444;">T<sub>old</sub> WOUNDS T<sub>young</sub>!</strong><br>Younger transaction is immediately preempted, aborted, and rolled back.</td>
+                                            </tr>
+                                            <tr>
+                                                <td><strong>Case 2: Younger requests from Older</strong></td>
+                                                <td>T<sub>young</sub> (TS = 50)</td>
+                                                <td>T<sub>old</sub> (TS = 10)</td>
+                                                <td><strong style="color: #ef4444;">T<sub>young</sub> DIES!</strong><br>Younger transaction is immediately aborted and restarted with original timestamp.</td>
+                                                <td><strong style="color: #10b981;">T<sub>young</sub> is ALLOWED TO WAIT</strong>.<br>Younger is permitted to wait for older to finish.</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <p><strong>Deadlock Freedom Proof:</strong> In both schemes, wait edges can only point in one monotonic timestamp direction (Older &rarr; Younger in Wait-Die, Younger &rarr; Older in Wound-Wait). Thus, a directed cycle can NEVER form!</p>
+                            </div>
+                        </div>
+
+                        <!-- Unit Navigation Buttons -->
+                        <div class="unit-navigation">
+                            <a href="unit4.html" class="nav-btn prev">
+                                <i class="fas fa-arrow-left"></i> Unit IV: Transactions
+                            </a>
+                            <a href="mcq.html" class="nav-btn next">
+                                MCQ Question Bank <i class="fas fa-arrow-right"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Interactive Quiz Section -->
+        <section class="quiz-section">
+            <div class="container">
+                <h2 class="section-title">Test Your Knowledge — Unit V</h2>
+                <div class="quiz-container" id="quiz-container">
+                    <!-- Quiz dynamically rendered by QuizManager -->
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3><i class="fas fa-database"></i> DBMS Hub</h3>
+                    <p>Complete academic courseware for BCS501 Database Management Systems.</p>
+                </div>
+                <div class="footer-section">
+                    <h3>Course Units</h3>
+                    <ul>
+                        <li><a href="unit1.html">Unit I - ER &amp; Architecture</a></li>
+                        <li><a href="unit2.html">Unit II - Relational &amp; SQL</a></li>
+                        <li><a href="unit3.html">Unit III - Normalization</a></li>
+                        <li><a href="unit4.html">Unit IV - Transactions</a></li>
+                        <li><a href="unit5.html">Unit V - Concurrency</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>Resources</h3>
+                    <ul>
+                        <li><a href="mcq.html">MCQ Question Bank</a></li>
+                        <li><a href="cheatsheet.html">Cheat Sheet</a></li>
+                        <li><a href="previousyear.html">Solved PYQs</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 DBMS Learning Hub &bull; BCS501 Academic Guide.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-sql.min.js"></script>
+    <script src="js/script.js"></script>
+    <script>
+        const unit5Questions = [
+            {
+                question: "Which concurrency anomaly occurs when a transaction reads an uncommitted value modified by another transaction that subsequently aborts?",
+                options: ["Lost Update", "Dirty Read (Temporary Update)", "Non-Repeatable Read", "Phantom Read"],
+                correct: 1,
+                explanation: "A Dirty Read occurs when transaction T2 reads data written by uncommitted transaction T1, which then fails and rolls back."
+            },
+            {
+                question: "In the Two-Phase Locking (2PL) protocol, what marks the boundary between the Growing Phase and the Shrinking Phase?",
+                options: ["The Lock Point (point where last lock is acquired)", "The first transaction commit", "The start of the checkpoint", "The first read operation"],
+                correct: 0,
+                explanation: "The Lock Point is the instant when a transaction acquires its final lock; after this point, the transaction enters the Shrinking Phase and can only release locks."
+            },
+            {
+                question: "What is the key requirement of the Strict Two-Phase Locking (Strict 2PL) protocol?",
+                options: ["All shared locks must be held until commit", "All Exclusive (X) locks must be held until the transaction commits or aborts", "No locks can be upgraded", "All locks must be acquired before start"],
+                correct: 1,
+                explanation: "Strict 2PL mandates holding all exclusive write locks until the transaction completes, preventing dirty reads and cascading aborts."
+            },
+            {
+                question: "Can two concurrent transactions hold Shared (S) locks on the exact same data item simultaneously?",
+                options: ["Yes, Shared locks are compatible with each other", "No, all locks are mutually exclusive", "Only if both transactions have identical timestamps", "Only during the shrinking phase"],
+                correct: 0,
+                explanation: "Shared (read) locks are mutually compatible, allowing unlimited concurrent readers as long as no exclusive write lock is held."
+            },
+            {
+                question: "Under the Basic Timestamp Ordering protocol, what happens if transaction Ti issues Write(Q) and TS(Ti) < R-TS(Q)?",
+                options: ["Write is executed normally", "Write is ignored", "Ti is aborted and restarted with a new timestamp", "Ti enters the growing phase"],
+                correct: 2,
+                explanation: "If TS(Ti) < R-TS(Q), a younger transaction has already read the data item Q, meaning Ti's write would corrupt the past read. Ti must be aborted and restarted."
+            },
+            {
+                question: "How does Thomas' Write Rule modify Basic Timestamp Ordering when an obsolete write (TS(Ti) < W-TS(Q)) is encountered?",
+                options: ["It aborts the transaction immediately", "It simply ignores the obsolete write and allows Ti to continue execution", "It converts the lock to exclusive", "It halts the database engine"],
+                correct: 1,
+                explanation: "Thomas' Write Rule recognizes that an obsolete write is safely overwritten by a younger write anyway, so it ignores the write without aborting Ti."
+            },
+            {
+                question: "In Optimistic Concurrency Control (OCC / Validation Protocol), updates are written to private workspace memory during which phase?",
+                options: ["Validation Phase", "Read and Execution Phase", "Commit Phase", "Analysis Phase"],
+                correct: 1,
+                explanation: "During the Read Phase, transactions read database items and perform all modifications on private local workspace variables without locking."
+            },
+            {
+                question: "In Multiple Granularity Locking, what does an Intention-Shared (IS) lock on a table signify?",
+                options: ["The entire table is locked exclusively", "Explicit Shared locks will be requested on individual rows inside that table", "No transaction can read the table", "All rows are locked in write mode"],
+                correct: 1,
+                explanation: "An IS lock at an ancestor node (table) indicates the intention to lock descendant nodes (rows or pages) in explicit Shared mode."
+            },
+            {
+                question: "Which buffer management policy combination is standard in modern high-performance relational database engines?",
+                options: ["NO-STEAL and FORCE", "STEAL and NO-FORCE", "NO-STEAL and NO-FORCE", "STEAL and FORCE"],
+                correct: 1,
+                explanation: "Modern RDBMS use STEAL (allowing uncommitted pages to be written to disk when RAM is full, requiring Undo logging) and NO-FORCE (allowing committed pages to stay in cache, requiring Redo logging)."
+            },
+            {
+                question: "What is the primary architectural cause of the Oracle error 'ORA-01555: Snapshot Too Old' in an MVCC engine?",
+                options: ["Deadlock between two exclusive locks", "Older undo blocks required by a long-running query were overwritten by newer transactions", "Log file disk is 100% full", "Redo log buffer overflow"],
+                correct: 1,
+                explanation: "ORA-01555 occurs in MVCC when a long query tries to read an older version from the Undo tablespace, but that undo segment was already recycled and overwritten."
+            }
+        ];
+
+        // Initialize Unit 5 Quiz
+        document.addEventListener('DOMContentLoaded', () => {
+            window.currentQuiz = new QuizManager('quiz-container', unit5Questions);
+        });
+    </script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            if (typeof renderMathInElement === 'function') {
+                renderMathInElement(document.body, {
+                    delimiters: [
+                        {left: '$$', right: '$$', display: true},
+                        {left: '$', right: '$', display: false}
+                    ],
+                    throwOnError: false
+                });
+            }
+            if (typeof mermaid !== 'undefined') {
+                mermaid.initialize({ startOnLoad: true, theme: 'neutral', securityLevel: 'loose' });
+            }
+        });
+    </script>
+</body>
+</html>

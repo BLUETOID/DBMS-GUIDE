@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Comprehensive Academic Study Guide for BCS501 Database Management System. University exam-oriented textbook notes, algorithms, relational algebra, normal forms, transaction processing, and concurrency control.">
+    <meta property="og:title" content="DBMS Learning Hub - Complete University Course Guide">
+    <meta property="og:description" content="Master DBMS across 5 units with interactive quizzes, 100+ MCQs, cheat sheets, and university solved questions.">
+    <meta property="og:type" content="website">
+    <title>DBMS Learning Hub — Complete Database Management Systems Course</title>
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+</head>
+<body>
+    <!-- Top Navigation Bar -->
+    <nav class="navbar" role="navigation" aria-label="Main navigation">
+        <div class="nav-container">
+            <a href="index.html" class="logo" aria-label="DBMS Hub Home">
+                <i class="fas fa-database" aria-hidden="true"></i> DBMS Hub
+            </a>
+            <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation menu" aria-expanded="false" aria-controls="navMenu">
+                <i class="fas fa-bars" aria-hidden="true"></i>
+            </button>
+            <ul class="nav-menu" id="navMenu">
+                <li><a href="index.html" class="active">Home</a></li>
+                <li><a href="unit1.html">Unit I</a></li>
+                <li><a href="unit2.html">Unit II</a></li>
+                <li><a href="unit3.html">Unit III</a></li>
+                <li><a href="unit4.html">Unit IV</a></li>
+                <li><a href="unit5.html">Unit V</a></li>
+                <li><a href="theory.html">Theory</a></li>
+                <li><a href="mcq.html">MCQ Bank</a></li>
+                <li><a href="cheatsheet.html">Cheat Sheet</a></li>
+                <li class="nav-divider"></li>
+                <li><a href="previousyear.html">Solved PYQs</a></li>
+            </ul>
+            <button class="theme-toggle-btn" onclick="toggleDarkMode()" aria-label="Toggle Dark Mode">
+                <i class="fas fa-moon"></i>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main id="main-content">
+        <!-- Hero Section -->
+        <header class="hero">
+            <div class="hero-content">
+                <div class="hero-badge">
+                    <i class="fas fa-graduation-cap"></i> BCS501 Academic Masterclass
+                </div>
+                <h1><i class="fas fa-database" aria-hidden="true"></i> DBMS Learning Hub</h1>
+                <p>Master Database Management Systems from foundational ER Modeling and Relational Algebra to mathematical Normalization, Serializability algorithms, and Concurrency Control.</p>
+                <div class="hero-cta">
+                    <a href="#units" class="btn btn-primary"><i class="fas fa-book-open"></i> Start Learning</a>
+                    <a href="previousyear.html" class="btn btn-outline"><i class="fas fa-tasks"></i> Solved PYQs</a>
+                    <div class="db-animation-wrap" title="Live Database Cluster Simulation">
+                        <div class="db-stack">
+                            <div class="db-cylinder"><span class="db-indicator"></span></div>
+                            <div class="db-cylinder"><span class="db-indicator"></span></div>
+                            <div class="db-cylinder"><span class="db-indicator"></span></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="hero-animation">
+                <div class="code-block">
+                    <div class="code-window-header">
+                        <div class="window-dots">
+                            <div class="window-dot red"></div>
+                            <div class="window-dot yellow"></div>
+                            <div class="window-dot green"></div>
+                        </div>
+                        <div class="window-title">analytics_pipeline.sql</div>
+                    </div>
+                    <pre><code class="language-sql">-- Advanced Analytical SQL &amp; Relational Synthesis
+SELECT 
+    d.dept_name,
+    s.student_name,
+    ROUND(AVG(e.score), 2) AS cumulative_gpa,
+    DENSE_RANK() OVER (
+        PARTITION BY d.dept_id 
+        ORDER BY AVG(e.score) DESC
+    ) AS ranking
+FROM students s
+JOIN enrollments e ON s.student_id = e.student_id
+JOIN departments d ON s.dept_id = d.dept_id
+WHERE e.semester = 'Fall-2025'
+GROUP BY d.dept_id, s.student_id
+HAVING AVG(e.score) >= 8.5
+ORDER BY d.dept_name ASC, ranking ASC;</code></pre>
+                </div>
+            </div>
+        </header>
+
+        <!-- Course Units Section -->
+        <section id="units" class="units-section">
+            <div class="container">
+                <h2 class="section-title">Core Course Units</h2>
+                <p class="section-subtitle">Exhaustive academic syllabus engineered for university semester exams (BCS501), GATE, and technical database interviews.</p>
+                
+                <div class="units-grid">
+                    <!-- Unit I Card -->
+                    <div class="unit-card" data-unit="1">
+                        <div class="unit-icon">
+                            <i class="fas fa-sitemap"></i>
+                        </div>
+                        <h3>Unit I</h3>
+                        <h4>Introduction, Architecture &amp; ER Modeling</h4>
+                        <ul>
+                            <li>ANSI/SPARC 3-Schema Architecture</li>
+                            <li>Logical vs Physical Data Independence</li>
+                            <li>Entity-Relationship (ER) &amp; EER Diagrams</li>
+                            <li>Keys Hierarchy &amp; Reduction to Relational Tables</li>
+                        </ul>
+                        <a href="unit1.html" class="btn btn-secondary"><i class="fas fa-arrow-right"></i> Explore Unit I</a>
+                    </div>
+
+                    <!-- Unit II Card -->
+                    <div class="unit-card" data-unit="2">
+                        <div class="unit-icon">
+                            <i class="fas fa-table"></i>
+                        </div>
+                        <h3>Unit II</h3>
+                        <h4>Relational Model &amp; SQL Query Engine</h4>
+                        <ul>
+                            <li>Relational Algebra Operators &amp; Calculus</li>
+                            <li>SQL DDL, DML, DCL, and TCL Commands</li>
+                            <li>Complex Joins, Subqueries &amp; Aggregations</li>
+                            <li>Views, Integrity Constraints, Triggers &amp; PL/SQL</li>
+                        </ul>
+                        <a href="unit2.html" class="btn btn-secondary"><i class="fas fa-arrow-right"></i> Explore Unit II</a>
+                    </div>
+
+                    <!-- Unit III Card -->
+                    <div class="unit-card" data-unit="3">
+                        <div class="unit-icon">
+                            <i class="fas fa-project-diagram"></i>
+                        </div>
+                        <h3>Unit III</h3>
+                        <h4>Database Design &amp; Normalization Theory</h4>
+                        <ul>
+                            <li>Functional Dependencies &amp; Armstrong's Axioms</li>
+                            <li>Attribute Closure &amp; Minimal Cover Algorithm</li>
+                            <li>1NF, 2NF, 3NF, BCNF, 4NF, and 5NF</li>
+                            <li>Lossless-Join &amp; Dependency Preservation Testing</li>
+                        </ul>
+                        <a href="unit3.html" class="btn btn-secondary"><i class="fas fa-arrow-right"></i> Explore Unit III</a>
+                    </div>
+
+                    <!-- Unit IV Card -->
+                    <div class="unit-card" data-unit="4">
+                        <div class="unit-icon">
+                            <i class="fas fa-exchange-alt"></i>
+                        </div>
+                        <h3>Unit IV</h3>
+                        <h4>Transaction Processing &amp; Recovery</h4>
+                        <ul>
+                            <li>ACID Properties &amp; Transaction State Transitions</li>
+                            <li>Schedules &amp; Conflict Serializability Testing</li>
+                            <li>View Serializability &amp; Precedence Graphs</li>
+                            <li>Log-Based Recovery (Undo/Redo) &amp; ARIES Checkpointing</li>
+                        </ul>
+                        <a href="unit4.html" class="btn btn-secondary"><i class="fas fa-arrow-right"></i> Explore Unit IV</a>
+                    </div>
+
+                    <!-- Unit V Card -->
+                    <div class="unit-card" data-unit="5">
+                        <div class="unit-icon">
+                            <i class="fas fa-lock"></i>
+                        </div>
+                        <h3>Unit V</h3>
+                        <h4>Concurrency Control &amp; Storage Architecture</h4>
+                        <ul>
+                            <li>Lock Protocols: Shared/Exclusive, 2PL, Strict 2PL</li>
+                            <li>Timestamp Ordering &amp; Thomas' Write Rule</li>
+                            <li>Multiversion Concurrency Control (MVCC)</li>
+                            <li>Deadlock Detection (WFG), Wait-Die &amp; Wound-Wait</li>
+                        </ul>
+                        <a href="unit5.html" class="btn btn-secondary"><i class="fas fa-arrow-right"></i> Explore Unit V</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Course Outcomes Section -->
+        <section class="outcomes-section">
+            <div class="container">
+                <h2 class="section-title">Course Outcomes &amp; Bloom's Taxonomy</h2>
+                <p class="section-subtitle">Every topic is mapped directly to official engineering program outcomes and Bloom's cognitive taxonomy levels (K1 to K6).</p>
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th style="width: 14%;">Course Outcome</th>
+                                <th>Outcome Competency Description</th>
+                                <th style="width: 28%;">Target Bloom's Level</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>CO 1</strong></td>
+                                <td>Apply knowledge of database systems and data modeling for complex enterprise applications.</td>
+                                <td><code>K3 (Apply)</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>CO 2</strong></td>
+                                <td>Apply query processing techniques, formal relational algebra, and SQL/PL-SQL to automate operations.</td>
+                                <td><code>K3 (Apply), K4 (Analyze)</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>CO 3</strong></td>
+                                <td>Identify and eliminate data redundancy and anomalies in relations using formal normalization algorithms.</td>
+                                <td><code>K2 (Understand), K3 (Apply)</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>CO 4</strong></td>
+                                <td>Analyze transaction isolation, schedule serializability, failure recovery, integrity, and distributed design.</td>
+                                <td><code>K2 (Understand), K4 (Analyze)</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>CO 5</strong></td>
+                                <td>Design, analyze, and implement concurrency protocols, multiversioning schemes, and deadlock solvers.</td>
+                                <td><code>K3 (Apply), K6 (Create)</code></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- Features Section -->
+        <section class="features-section">
+            <div class="container">
+                <h2 class="section-title">Why Master Database Systems?</h2>
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <i class="fas fa-shield-alt"></i>
+                        <h3>ACID Reliability</h3>
+                        <p>Database management systems guarantee zero data loss, strict transactional atomicity, and durable recovery even through sudden hardware failures.</p>
+                    </div>
+                    <div class="feature-card">
+                        <i class="fas fa-bolt"></i>
+                        <h3>High Concurrency &amp; Scale</h3>
+                        <p>Learn how modern relational and distributed engines handle millions of simultaneous queries without collisions or lost updates using 2PL and MVCC.</p>
+                    </div>
+                    <div class="feature-card">
+                        <i class="fas fa-project-diagram"></i>
+                        <h3>Relational Synthesis</h3>
+                        <p>Formulate mathematically proven relation structures that eliminate update, deletion, and insertion anomalies using 3NF and Boyce-Codd Normal Form.</p>
+                    </div>
+                    <div class="feature-card">
+                        <i class="fas fa-briefcase"></i>
+                        <h3>Industry Standard</h3>
+                        <p>SQL and database engineering form the foundational backbone for cloud architectures, data engineering, backend APIs, and enterprise software.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3><i class="fas fa-database"></i> DBMS Hub</h3>
+                    <p>Your complete, university-grade study guide to mastering Database Management Systems, university examinations, and competitive engineering assessments.</p>
+                </div>
+                <div class="footer-section">
+                    <h3>Quick Links</h3>
+                    <ul>
+                        <li><a href="unit1.html">Unit I - ER &amp; Architecture</a></li>
+                        <li><a href="unit2.html">Unit II - Relational &amp; SQL</a></li>
+                        <li><a href="unit3.html">Unit III - Normalization</a></li>
+                        <li><a href="unit4.html">Unit IV - Transactions &amp; Recovery</a></li>
+                        <li><a href="unit5.html">Unit V - Concurrency Control</a></li>
+                        <li><a href="mcq.html">MCQ Question Bank</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>Exam Resources</h3>
+                    <ul>
+                        <li><a href="cheatsheet.html">DBMS &amp; SQL Cheat Sheet</a></li>
+                        <li><a href="previousyear.html">Solved University PYQs</a></li>
+                        <li><a href="previousyear.html#unit1">Unit I Exam Numericals</a></li>
+                        <li><a href="previousyear.html#unit3">Normalization Problems</a></li>
+                        <li><a href="previousyear.html#unit4">Serializability Proofs</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 DBMS Learning Hub &bull; BCS501 Academic Courseware. Built with <i class="fas fa-heart"></i> for Computer Science Students.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Prism Syntax Highlighting Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-sql.min.js"></script>
+    <script src="js/script.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            if (typeof renderMathInElement === 'function') {
+                renderMathInElement(document.body, {
+                    delimiters: [
+                        {left: '$$', right: '$$', display: true},
+                        {left: '$', right: '$', display: false}
+                    ],
+                    throwOnError: false
+                });
+            }
+            if (typeof mermaid !== 'undefined') {
+                mermaid.initialize({ startOnLoad: true, theme: 'neutral', securityLevel: 'loose' });
+            }
+        });
+    </script>
+</body>
+</html>

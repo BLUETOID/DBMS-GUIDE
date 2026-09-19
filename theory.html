@@ -1,0 +1,1558 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Master 75 comprehensive university theory questions &amp; answers across all 5 units for DBMS (BCS501) with detailed academic depth, proofs, and examples.">
+    <title>Theory Questions | DBMS Learning Hub (BCS501)</title>
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .theory-pills {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin: 15px 0 25px 0;
+        }
+        .theory-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 16px;
+            background: var(--card-bg, #ffffff);
+            border: 1px solid var(--border-color, #e2e8f0);
+            border-radius: 20px;
+            font-size: 0.88rem;
+            font-weight: 600;
+            color: var(--primary-color, #3776ab);
+            text-decoration: none;
+            transition: all 0.2s ease;
+        }
+        .theory-pill:hover {
+            background: var(--primary-color, #3776ab);
+            color: #ffffff;
+            border-color: var(--primary-color, #3776ab);
+            transform: translateY(-2px);
+        }
+        .theory-badge-cnt {
+            background: rgba(55, 118, 171, 0.12);
+            color: var(--primary-color, #3776ab);
+            font-size: 0.75rem;
+            padding: 2px 7px;
+            border-radius: 10px;
+            margin-left: 2px;
+        }
+        .theory-pill:hover .theory-badge-cnt {
+            background: rgba(255, 255, 255, 0.25);
+            color: #ffffff;
+        }
+        body.dark-theme .theory-pill {
+            background: #1e293b;
+            border-color: #334155;
+            color: #93c5fd;
+        }
+        body.dark-theme .theory-pill:hover {
+            background: #2563eb;
+            color: #ffffff;
+            border-color: #2563eb;
+        }
+        body.dark-theme .theory-badge-cnt {
+            background: rgba(147, 197, 253, 0.15);
+            color: #93c5fd;
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+</head>
+<body>
+    <!-- Top Navigation Bar -->
+    <nav class="navbar" role="navigation" aria-label="Main navigation">
+        <div class="nav-container">
+            <a href="index.html" class="logo" aria-label="DBMS Hub Home">
+                <i class="fas fa-database" aria-hidden="true"></i> DBMS Hub
+            </a>
+            <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation menu" aria-expanded="false" aria-controls="navMenu">
+                <i class="fas fa-bars" aria-hidden="true"></i>
+            </button>
+            <ul class="nav-menu" id="navMenu">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="unit1.html">Unit I</a></li>
+                <li><a href="unit2.html">Unit II</a></li>
+                <li><a href="unit3.html">Unit III</a></li>
+                <li><a href="unit4.html">Unit IV</a></li>
+                <li><a href="unit5.html">Unit V</a></li>
+                <li><a href="theory.html" class="active">Theory</a></li>
+                <li><a href="mcq.html">MCQ Bank</a></li>
+                <li><a href="cheatsheet.html">Cheat Sheet</a></li>
+                <li class="nav-divider"></li>
+                <li><a href="previousyear.html">Solved PYQs</a></li>
+            </ul>
+            <button class="theme-toggle-btn" id="darkModeToggle" onclick="toggleDarkMode()" aria-label="Toggle Dark Mode">
+                <i class="fas fa-moon"></i>
+            </button>
+        </div>
+    </nav>
+
+    <main id="main-content">
+        <header class="unit-header">
+            <div class="container">
+                <h1>Theory Questions</h1>
+            </div>
+        </header>
+
+        <section class="unit-content">
+            <div class="container">
+                <!-- Search and Controls Toolbar -->
+                <div class="theory-controls">
+                    <div class="theory-search">
+                        <i class="fas fa-search"></i>
+                        <input type="text" id="theorySearch" placeholder="Search any question, formula, keyword (e.g. BCNF, 2PL, ACID, DDL, Foreign Key, Normalization)...">
+                    </div>
+                    <div class="theory-actions">
+                        <button onclick="expandAllTheory()"><i class="fas fa-expand-alt"></i> Expand All</button>
+                        <button onclick="collapseAllTheory()"><i class="fas fa-compress-alt"></i> Collapse All</button>
+                    </div>
+                </div>
+
+                <!-- Unit Navigation Quick Pills -->
+                <div class="theory-pills">
+                    <a href="#unit1-theory" class="theory-pill"><i class="fas fa-layer-group"></i> Unit I: Architecture &amp; ER <span class="theory-badge-cnt">15 Qs</span></a>
+                    <a href="#unit2-theory" class="theory-pill"><i class="fas fa-table"></i> Unit II: Relational &amp; SQL <span class="theory-badge-cnt">15 Qs</span></a>
+                    <a href="#unit3-theory" class="theory-pill"><i class="fas fa-filter"></i> Unit III: Normalization <span class="theory-badge-cnt">15 Qs</span></a>
+                    <a href="#unit4-theory" class="theory-pill"><i class="fas fa-exchange-alt"></i> Unit IV: Transactions <span class="theory-badge-cnt">15 Qs</span></a>
+                    <a href="#unit5-theory" class="theory-pill"><i class="fas fa-shield-alt"></i> Unit V: Concurrency &amp; Recovery <span class="theory-badge-cnt">15 Qs</span></a>
+                </div>
+
+                <!-- UNIT I: ARCHITECTURE, DATA INDEPENDENCE &AMP; ER MODELING -->
+                <div class="unit-section" id="unit1-theory">
+                    <h3><i class="fas fa-layer-group"></i> Unit I: Architecture, Data Independence &amp; ER Modeling</h3>
+
+                    <div class="theory-card">
+                        <h4 onclick="toggleTheory(this)">Q1. What is Data Independency in DBMS? Explain Logical vs Physical data independence. <i class="fas fa-chevron-down toggle-icon"></i></h4>
+                        <div class="answer">
+                            <p><strong>Data Independence</strong> is the capacity to alter a schema definition at one level of the three-schema database system without requiring alterations to the schema definition at the next higher level. It isolates applications from physical storage reorganizations and logical schema refactoring.</p>
+                            <ol class="step-list">
+                              <li><strong>Logical Data Independence:</strong> The ability to modify the conceptual schema (e.g., adding or removing attributes, creating new relationships, or splitting an entity table) without altering external schemas (user views) or existing application programs.
+                                <ul>
+                                  <li><em>Example:</em> Adding a new column <code>Aadhar_No</code> or splitting an <code>Employee</code> table into <code>Emp_Personal</code> and <code>Emp_Salary</code> can be shielded from users by defining a view that joins the two tables back together.</li>
+                                </ul>
+                              </li>
+                              <li><strong>Physical Data Independence:</strong> The ability to modify the internal/physical storage schema (e.g., creating B+ tree indexes, reorganizing sequential file clusters, migrating to SSD partitions) without altering the conceptual schema or application code.
+                                <ul>
+                                  <li><em>Example:</em> Building a hash cluster index on <code>Student(Roll_No)</code> accelerates query execution time from O(N) to O(1) without requiring any changes to user SQL queries.</li>
+                                </ul>
+                              </li>
+                            </ol>
+                            <p><em>Note:</em> Logical data independence is significantly harder to achieve than physical data independence because application logic is tightly coupled to the structure of conceptual relations.</p>
+                        </div>
+                    </div>
+
+                    <div class="theory-card">
+                        <h4 onclick="toggleTheory(this)">Q2. Define the evolution of database systems from file systems to modern architectures. <i class="fas fa-chevron-down toggle-icon"></i></h4>
+                        <div class="answer">
+                            <p>Database management architectures have evolved over several distinct historical generations:</p>
+                            <ol class="step-list">
+                              <li><strong>Flat-File Processing (1960s):</strong> Application-specific operating system files. Suffered from severe data redundancy, inconsistency, tight program-data coupling, and zero concurrent write isolation.</li>
+                              <li><strong>Hierarchical Data Model (Late 1960s, IBM IMS):</strong> Tree-structured hierarchy where records are organized as parent-child nodes (1:N relationships) navigated through rigid physical disk pointers.</li>
+                              <li><strong>Network Data Model (1970s, CODASYL DBTG):</strong> Graph-based network where child records can possess multiple parent records (M:N relationships), traversed via complex pointer arrays.</li>
+                              <li><strong>Relational Model (1970, Dr. E.F. Codd, IBM System R):</strong> Two-dimensional relations (tables) with rows (tuples) and columns (attributes), manipulated declaratively using relational algebra and standardized SQL without exposing physical access paths.</li>
+                              <li><strong>Object-Oriented &amp; Object-Relational (1990s):</strong> Supported encapsulation, complex inheritance, multimedia data types, and stored user-defined methods alongside relational tables.</li>
+                              <li><strong>NoSQL &amp; NewSQL (2000s–Present):</strong> Distributed document stores (MongoDB), key-value stores (Redis), columnar stores (Cassandra), and horizontally scalable ACID relational engines (Google Spanner, CockroachDB).</li>
+                            </ol>
+                        </div>
+                    </div>
+
+                    <div class="theory-card">
+                        <h4 onclick="toggleTheory(this)">Q3. Why are Network and Hierarchical Data models rarely used today compared to Relational models? <i class="fas fa-chevron-down toggle-icon"></i></h4>
+                        <div class="answer">
+                            <p>Hierarchical and Network systems have been largely superseded by the Relational Model (RDBMS) due to critical architectural limitations:</p>
+                            <div class="table-container">
+                            <table>
+                              <thead>
+                                <tr><th>Feature</th><th>Hierarchical &amp; Network Models</th><th>Relational Model (RDBMS)</th></tr>
+                              </thead>
+                              <tbody>
+                                <tr><td><strong>Data Independence</strong></td><td>Very low; queries require hardcoded physical pointer traversal and navigational cursors.</td><td>Extremely high; declarative SQL abstracts all indexing, clustering, and storage paths.</td></tr>
+                                <tr><td><strong>Schema Flexibility</strong></td><td>Rigid; modifying a pointer relationship requires rebuilding and recompiling entire database structures.</td><td>Dynamic; new tables, columns, and foreign keys are added via non-blocking DDL (<code>ALTER TABLE</code>).</td></tr>
+                                <tr><td><strong>M:N Modeling</strong></td><td>Extremely complex; requires synthetic pointer junction records and manual traversal logic.</td><td>Straightforward; handled elegantly via cross-reference junction tables with foreign keys.</td></tr>
+                                <tr><td><strong>Query Optimization</strong></td><td>Programmer must manually program the most efficient search algorithm and access path.</td><td>Built-in cost-based query optimizer selects optimal join orders and index scans automatically.</td></tr>
+                              </tbody>
+                            </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="theory-card">
+                        <h4 onclick="toggleTheory(this)">Q4. Define Aggregation in ER modeling with a concrete example. <i class="fas fa-chevron-down toggle-icon"></i></h4>
+                        <div class="answer">
+                            <p><strong>Aggregation</strong> is an ER abstraction that treats an entire relationship set (along with its participating entity sets) as a single higher-level composite entity set, enabling it to participate in further relationships with other entity sets.</p>
+                            <p><em>Why it is needed:</em> An ER relationship cannot directly connect to another relationship. Aggregation overcomes this limitation by wrapping a relationship into an entity container.</p>
+                            <p><strong>Concrete Example:</strong></p>
+                            <ul>
+                              <li>Consider entity sets <code>Employee</code>, <code>Project</code>, and the ternary or binary relationship <code>Works_On(Employee, Project)</code>.</li>
+                              <li>Suppose the enterprise requires specialized machinery for each specific project assignment. We cannot connect <code>Machinery</code> to the relationship <code>Works_On</code> directly.</li>
+                              <li><em>Solution:</em> Aggregate <code>Works_On(Employee, Project)</code> into a higher-level composite entity <code>[Assignment]</code>, which then participates in a binary relationship <code>Requires([Assignment], Machinery)</code>.</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="theory-card">
+                        <h4 onclick="toggleTheory(this)">Q5. Name any five widely-used database management systems and their architectural characteristics. <i class="fas fa-chevron-down toggle-icon"></i></h4>
+                        <div class="answer">
+                            <ol class="step-list">
+                              <li><strong>Oracle Database (Oracle Corp):</strong> Leading commercial enterprise RDBMS supporting multi-tenant pluggable databases (PDB), advanced PL/SQL engines, and Real Application Clusters (RAC).</li>
+                              <li><strong>PostgreSQL (PostgreSQL Global Dev Group):</strong> Leading open-source object-relational database renowned for strict SQL compliance, extensible types, foreign data wrappers (FDW), and MVCC.</li>
+                              <li><strong>MySQL (Oracle Corp):</strong> Popular open-source web RDBMS utilizing pluggable storage engines (InnoDB for ACID transactions, MyISAM for read-heavy workloads).</li>
+                              <li><strong>Microsoft SQL Server (Microsoft):</strong> Enterprise RDBMS integrated with Windows ecosystems, featuring T-SQL, columnstore indexing, and Always On availability groups.</li>
+                              <li><strong>SQLite (D. Richard Hipp / Public Domain):</strong> Zero-configuration, serverless, self-contained, transactional SQL engine embedded directly into mobile apps and embedded devices.</li>
+                            </ol>
+                        </div>
+                    </div>
+
+                    <div class="theory-card">
+                        <h4 onclick="toggleTheory(this)">Q6. What is the significance of Physical Data Independence? Give an example. <i class="fas fa-chevron-down toggle-icon"></i></h4>
+                        <div class="answer">
+                            <p><strong>Physical Data Independence</strong> permits database administrators to modify physical storage organizations, file clustering methods, and indexing structures to optimize I/O performance without forcing modifications to conceptual schemas, external views, or application queries.</p>
+                            <p><strong>Concrete Demonstration:</strong></p>
+                            <ul>
+                              <li>Consider an e-commerce relation <code>Orders(Order_ID, Customer_ID, Order_Date, Amount)</code>.</li>
+                              <li>Initially, records are stored as an unordered heap file. As query volume surges, the DBA builds a secondary B+ tree index on <code>Order_Date</code> and reorganizes table partitions by year across separate NVMe disks.</li>
+                              <li><strong>Significance:</strong> The application program <code>SELECT * FROM Orders WHERE Order_Date = '2025-01-01'</code> requires zero code rewrites, zero recompilations, and zero downtime. The query optimizer automatically leverages the new index transparently.</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="theory-card">
+                        <h4 onclick="toggleTheory(this)">Q7. List and explain the primary functions of a Database Administrator (DBA). <i class="fas fa-chevron-down toggle-icon"></i></h4>
+                        <div class="answer">
+                            <p>The <strong>Database Administrator (DBA)</strong> is the centralized authority responsible for the operational integrity, performance, and governance of the enterprise database:</p>
+                            <ol class="step-list">
+                              <li><strong>Schema Definition &amp; Storage Architecture:</strong> Translates conceptual business requirements into physical and logical DDL schemas, allocating disk storage spaces and table clusters.</li>
+                              <li><strong>Security &amp; Privilege Management:</strong> Regulates user authorization, manages authentication credentials, defines role-based access control (RBAC), and monitors audit logs to prevent data breaches.</li>
+                              <li><strong>Performance Monitoring &amp; Tuning:</strong> Analyzes query execution plans, configures RAM buffer pools, monitors disk I/O bottlenecks, and designs secondary indexes to ensure SLA compliance.</li>
+                              <li><strong>Backup &amp; Disaster Recovery:</strong> Implements comprehensive backup schedules (full, differential, transaction log) and conducts recovery drills to restore system state after catastrophic failures.</li>
+                              <li><strong>Integrity Constraint Enforcement:</strong> Declares and maintains domain, primary key, foreign key referential integrity, and business assertion rules.</li>
+                            </ol>
+                        </div>
+                    </div>
+
+                    <div class="theory-card">
+                        <h4 onclick="toggleTheory(this)">Q8. When is a relationship set called a recursive (self-referencing) relationship set? Provide an example. <i class="fas fa-chevron-down toggle-icon"></i></h4>
+                        <div class="answer">
+                            <p>A relationship set is called <strong>Recursive</strong> (or self-referencing) when the <em>same</em> entity set participates more than once in the relationship set in distinct structural roles.</p>
+                            <p><strong>Example &amp; Role Names:</strong></p>
+                            <ul>
+                              <li>Consider the entity set <code>Employee</code> and the relationship <code>Manages</code>.</li>
+                              <li>Both the manager and the subordinate are instances of the <code>Employee</code> entity set.</li>
+                              <li>To distinguish the participating entities, explicit <strong>Role Indicators</strong> are assigned:
+                                <ul>
+                                  <li><code>Employee</code> in the role of <em>Supervisor / Manager</em> (1).</li>
+                                  <li><code>Employee</code> in the role of <em>Subordinate / Supervisee</em> (N).</li>
+                                </ul>
+                              </li>
+                              <li><strong>Relational Table Representation:</strong>
+                                <br><code>EMPLOYEE(<u>Emp_ID</u>, Name, Salary, Manager_Emp_ID)</code>
+                                <br>where <code>Manager_Emp_ID</code> is a foreign key referencing <code>Emp_ID</code> within the very same table.
+                              </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="theory-card">
+                        <h4 onclick="toggleTheory(this)">Q9. Differentiate between Physical and Logical Data Independence. <i class="fas fa-chevron-down toggle-icon"></i></h4>
+                        <div class="answer">
+                            <div class="table-container">
+                            <table>
+                              <thead>
+                                <tr><th>Parameter</th><th>Logical Data Independence</th><th>Physical Data Independence</th></tr>
+                              </thead>
+                              <tbody>
+                                <tr><td><strong>Definition</strong></td><td>Modifying conceptual schema without affecting external views or application programs.</td><td>Modifying internal/physical schema without affecting conceptual schema or application code.</td></tr>
+                                <tr><td><strong>Level of Architecture</strong></td><td>Occurs at the Conceptual-to-External mapping boundary.</td><td>Occurs at the Internal-to-Conceptual mapping boundary.</td></tr>
+                                <tr><td><strong>Typical Operations</strong></td><td>Adding new tables/attributes, splitting relations, modifying business integrity constraints.</td><td>Creating/dropping B+ tree indexes, modifying disk block allocation, data compression, hashing.</td></tr>
+                                <tr><td><strong>Degree of Difficulty</strong></td><td><strong>Extremely Difficult:</strong> Application logic is often tightly coupled to logical data definitions.</td><td><strong>Relatively Easy:</strong> Declarative SQL compilers automatically re-optimize queries for new storage paths.</td></tr>
+                              </tbody>
+                            </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="theory-card">
+                        <h4 onclick="toggleTheory(this)">Q10. List four major disadvantages of the traditional file processing system over DBMS. <i class="fas fa-chevron-down toggle-icon"></i></h4>
+                        <div class="answer">
+                            <ol class="step-list">
+                              <li><strong>Data Redundancy and Inconsistency:</strong> Multiple application programs maintain their own redundant copies of the same data records. Modifying one file without updating other copies causes contradictory database states.</li>
+                              <li><strong>Difficulty in Accessing Data:</strong> Ad-hoc queries require developing brand-new bespoke programs in C or COBOL rather than executing declarative ad-hoc queries (like SQL).</li>
+                              <li><strong>Data Isolation and Atomicity Problems:</strong> Data is scattered across incompatible proprietary file formats. If a transaction crashes mid-operation, the file system cannot roll back changes, violating Atomicity.</li>
+                              <li><strong>Lack of Concurrent Access Control:</strong> OS file locks are coarse-grained (entire file locked), leading to severe thread contention, dirty reads, and lost updates during simultaneous user access.</li>
+                            </ol>
+                        </div>
+                    </div>
+
+                    <div class="theory-card">
+                        <h4 onclick="toggleTheory(this)">Q11. Explain Logical Data Independence and discuss why it is more difficult to achieve than physical independence. <i class="fas fa-chevron-down toggle-icon"></i></h4>
+                        <div class="answer">
+                            <p><strong>Logical Data Independence</strong> shields user applications from structural alterations in the conceptual schema (such as vertical or horizontal relation splitting, or attribute expansion).</p>
+                            <p><strong>Why it is significantly more difficult to achieve:</strong></p>
+                            <ol class="step-list">
+                              <li>Application programs embed business queries that explicitly name relations and attribute columns. If a relation is split horizontally or vertically, application queries referencing the original relation will fail unless comprehensive external views and update-triggers (<code>INSTEAD OF</code>) are engineered.</li>
+                              <li>In contrast, physical storage changes (such as creating a B+ tree index or changing disk block sizes) do not alter the table names, attribute types, or query semantics—the query optimizer automatically adjusts physical access paths.</li>
+                            </ol>
+                        </div>
+                    </div>
+
+                    <div class="theory-card">
+                        <h4 onclick="toggleTheory(this)">Q12. What are the key advantages of using a Database Management System (DBMS)? <i class="fas fa-chevron-down toggle-icon"></i></h4>
+                        <div class="answer">
+                            <ol class="step-list">
+                              <li><strong>Self-Describing Nature:</strong> Maintains a centralized system catalog (Data Dictionary) that stores metadata definitions independently of application code.</li>
+                              <li><strong>Program-Data Independence:</strong> Separates logical data definitions from low-level storage layouts.</li>
+                              <li><strong>Controlling Data Redundancy:</strong> Eliminates uncontrolled duplication through normalization, enforcing a single source of truth.</li>
+                              <li><strong>ACID Transaction Support:</strong> Guarantees Atomicity, Consistency, Isolation, and Durability in the presence of concurrent access and hardware crashes.</li>
+                              <li><strong>Multi-User Concurrency Control:</strong> Employs locking and timestamp protocols to interleave operations safely without data corruption.</li>
+                              <li><strong>Standardized Declarative Querying:</strong> Provides ANSI SQL for expressive, high-level data definition and manipulation.</li>
+                            </ol>
+                        </div>
+                    </div>
+
+                    <div class="theory-card">
+                        <h4 onclick="toggleTheory(this)">Q13. What is the concept of Keys in databases? Differentiate Superkey, Candidate Key, and Primary Key. <i class="fas fa-chevron-down toggle-icon"></i></h4>
+                        <div class="answer">
+                            <p>A <strong>Key</strong> is an attribute or set of attributes used to uniquely identify individual tuples within a relation instance.</p>
+                            <ol class="step-list">
+                              <li><strong>Superkey (SK):</strong> Any set of attributes for which no two distinct tuples in any valid relation state can have the identical values:
+                                <br><span class="math">∀ t₁, t₂ ∈ r(R), t₁ ≠ t₂ ⇒ t₁[SK] ≠ t₂[SK]</span>.
+                              </li>
+                              <li><strong>Candidate Key (CK):</strong> A <strong>minimal Superkey</strong>—a superkey from which no attribute can be removed without destroying the uniqueness property. A relation may possess multiple candidate keys.</li>
+                              <li><strong>Primary Key (PK):</strong> The specific Candidate Key chosen by the database designer as the principal mechanism for identifying tuples within the relation. Primary Key attributes are strictly prohibited from holding <code>NULL</code> values (Entity Integrity).</li>
+                            </ol>
+                        </div>
+                    </div>
+
+                    <div class="theory-card">
+                        <h4 onclick="toggleTheory(this)">Q14. What are Strong and Weak Entity Sets? Explain the concept of Discriminator (Partial Key). <i class="fas fa-chevron-down toggle-icon"></i></h4>
+                        <div class="answer">
+                            <ol class="step-list">
+                              <li><strong>Strong Entity Set:</strong> An entity set that possesses a distinct Primary Key comprised entirely of its own attributes. Its existence does not depend on any other entity set. Depicted by a <strong>single rectangle</strong>.</li>
+                              <li><strong>Weak Entity Set:</strong> An entity set that does not possess sufficient attributes to form a Primary Key of its own. It is existence-dependent on an identifying (owner) strong entity set. Depicted by a <strong>double rectangle</strong>.
+                                <ul>
+                                  <li><strong>Identifying Relationship:</strong> The relationship associating a weak entity set with its owner. Depicted by a <strong>double diamond</strong>.</li>
+                                  <li><strong>Partial Key (Discriminator):</strong> The set of attributes within a weak entity set that uniquely identifies instances among all entities dependent on the same owner entity. Depicted by a <strong>dashed underline</strong>.</li>
+                                  <li><strong>Primary Key Formulation:</strong> The Primary Key of a weak entity set is formed by combining the Primary Key of its owner entity with its own Partial Key:
+                                    <br><code>PK(Weak) = PK(Owner) &cup; Partial_Key(Weak)</code>.
+                                  </li>
+                                </ul>
+                              </li>
+                            </ol>
+                        </div>
+                    </div>
+
+                    <div class="theory-card">
+                        <h4 onclick="toggleTheory(this)">Q15. Explain Specialization, Generalization, and Attribute Inheritance in Extended ER (EER). <i class="fas fa-chevron-down toggle-icon"></i></h4>
+                        <div class="answer">
+                            <ol class="step-list">
+                              <li><strong>Generalization (Bottom-Up):</strong> The process of extracting common attributes and relationships from multiple lower-level entity sets to synthesize a generalized, higher-level superclass entity set (e.g., combining <code>Car</code> and <code>Truck</code> into <code>Vehicle</code>).</li>
+                              <li><strong>Specialization (Top-Down):</strong> The process of defining distinctive, lower-level subclass entity sets from a generalized superclass entity set based on specific distinguishing characteristics (e.g., specializing <code>Employee</code> into <code>Salaried_Employee</code> and <code>Hourly_Employee</code>).</li>
+                              <li><strong>Attribute &amp; Relationship Inheritance:</strong> A crucial rule of EER modeling where every entity instance belonging to a subclass automatically inherits all attributes and relationship participations of its parent superclass, in addition to its own specific attributes.</li>
+                              <li><strong>Constraints on Specialization:</strong>
+                                <ul>
+                                  <li><strong>Disjointness Constraint:</strong> Disjoint <code>[d]</code> (subclasses are mutually exclusive) vs Overlapping <code>[o]</code> (an entity can belong to multiple subclasses).</li>
+                                  <li><strong>Completeness Constraint:</strong> Total <code>(=)</code> (every superclass entity must belong to a subclass) vs Partial <code>(-)</code> (an entity may belong to none).</li>
+                                </ul>
+                              </li>
+                            </ol>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- UNIT II: RELATIONAL MODEL, RELATIONAL ALGEBRA &AMP; SQL -->
+                <div class="unit-section" id="unit2-theory">
+                    <h3><i class="fas fa-table"></i> Unit II: Relational Model, Relational Algebra &amp; SQL</h3>
+
+                    <div class="theory-card">
+                        <h4 onclick="toggleTheory(this)">Q16. Write the difference between DDL and DML with examples. <i class="fas fa-chevron-down toggle-icon"></i></h4>
+                        <div class="answer">
+                            <p>Structured Query Language (SQL) statements are categorized based on their functional scope into DDL and DML:</p>
+                            <div class="table-container">
+                            <table>
+                              <thead>
+                                <tr><th>Feature</th><th>Data Definition Language (DDL)</th><th>Data Manipulation Language (DML)</th></tr>
+                              </thead>
+                              <tbody>
+                                <tr><td><strong>Primary Scope</strong></td><td>Defines, alters, and manages database schema structures, tables, indexes, and constraints.</td><td>Retrieves, inserts, modifies, and deletes stored application data rows within existing tables.</td></tr>
+                                <tr><td><strong>Commands</strong></td><td><code>CREATE</code>, <code>ALTER</code>, <code>DROP</code>, <code>TRUNCATE</code>, <code>RENAME</code></td><td><code>SELECT</code> (DQL), <code>INSERT</code>, <code>UPDATE</code>, <code>DELETE</code></td></tr>
+                                <tr><td><strong>Transaction Behavior</strong></td><td>Auto-committed in most engines (cannot be rolled back once executed); directly modifies system catalog.</td><td>Requires explicit transaction control (<code>COMMIT</code> or <code>ROLLBACK</code>); does not alter schema definitions.</td></tr>
+                                <tr><td><strong>Database State</strong></td><td>Transitions the database to a new structural schema state.</td><td>Modifies database instance content without altering table definitions.</td></tr>
+                              </tbody>
+                            </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="theory-card">
+                        <h4 onclick="toggleTheory(this)">Q17. What are the different types of Relational Integrity Constraints? <i class="fas fa-chevron-down toggle-icon"></i></h4>
+                        <div class="answer">
+                            <p><strong>Integrity Constraints</strong> are declarative predicates enforced by the DBMS to guarantee that database modifications do not result in semantic inconsistency or data corruption:</p>
+                            <ol class="step-list">
+                              <li><strong>Domain Constraint:</strong> Specifies that every attribute value must be an atomic element belonging to its declared domain type, range, or enumerated set (e.g., <code>CHECK(Salary &gt; 0)</code>).</li>
+                              <li><strong>Key Constraint (Uniqueness):</strong> Mandates that candidate key attributes must uniquely identify every tuple:
+                                <br><span class="math">∀ t₁, t₂ ∈ r(R), t₁ ≠ t₂ ⇒ t₁[CK] ≠ t₂[CK]</span>.
+                              </li>
+                              <li><strong>Entity Integrity Constraint:</strong> Mandates that no attribute participating in the Primary Key of a base relation can contain a <code>NULL</code> value:
+                                <br><span class="math">∀ t ∈ r(R), t[PK] ≠ NULL</span>.
+                              </li>
+                              <li><strong>Referential Integrity Constraint:</strong> Enforces consistency across relationships by requiring that foreign key values in a referencing (child) relation must match an existing primary key value in the referenced (parent) relation, or be entirely <code>NULL</code>:
+                                <br><span class="math">FK ∈ r₁(R₁) ⊆ π<sub>PK</sub>(r₂(R₂))</span>.
+                              </li>
+                            </ol>
+                        </div>
+                    </div>
+
+                    <div class="theory-card">
+                        <h4 onclick="toggleTheory(this)">Q18. Explain the 5 command families of SQL (DDL, DML, DQL, DCL, TCL) with syntax examples. <i class="fas fa-chevron-down toggle-icon"></i></h4>
+                        <div class="answer">
+                            <ol class="step-list">
+                              <li><strong>DDL (Data Definition Language):</strong> Specifies schema creation and alteration.
+                                <br><code>CREATE TABLE Student(Roll_No INT PRIMARY KEY, Name VARCHAR(50));</code>
+                              </li>
+                              <li><strong>DML (Data Manipulation Language):</strong> Modifies table instance records.
+                                <br><code>INSERT INTO Student VALUES(101, 'Alice'); UPDATE Student SET Name='Alice J' WHERE Roll_No=101;</code>
+                              </li>
+                              <li><strong>DQL (Data Query Language):</strong> Queries declarative data sets.
+                                <br><code>SELECT Roll_No, Name FROM Student WHERE Roll_No &gt; 100 ORDER BY Name;</code>
+                              </li>
+                              <li><strong>DCL (Data Control Language):</strong> Regulates user privileges and security permissions.
+                                <br><code>GRANT SELECT, INSERT ON Student TO faculty_user; REVOKE INSERT ON Student FROM faculty_user;</code>
+                              </li>
+                              <li><strong>TCL (Transaction Control Language):</strong> Regulates ACID transactional boundaries.
+                                <br><code>SAVEPOINT sp1; UPDATE Accounts SET Bal = Bal - 100; COMMIT;</code>
+                              </li>
+                            </ol>
+                        </div>
+                    </div>
+
+                    <div class="theory-card">
+                        <h4 onclick="toggleTheory(this)">Q19. What are the fundamental and derived Relational Algebra operations? <i class="fas fa-chevron-down toggle-icon"></i></h4>
+                        <div class="answer">
+                            <p>Relational algebra operations are divided into primitive (fundamental) and derived operators:</p>
+                            <ol class="step-list">
+                              <li><strong>Fundamental Operators:</strong>
+                                <ul>
+                                  <li><strong>Selection (<span class="math">σ<sub>p</sub>(R)</span>):</strong> Filters tuples satisfying boolean predicate <span class="math">p</span>.</li>
+                                  <li><strong>Projection (<span class="math">π<sub>L</sub>(R)</span>):</strong> Extracts specified attribute columns <span class="math">L</span> and eliminates duplicate tuples.</li>
+                                  <li><strong>Cartesian Product (<span class="math">R × S</span>):</strong> Combines each tuple in relation <span class="math">R</span> with every tuple in relation <span class="math">S</span>.</li>
+                                  <li><strong>Set Union (<span class="math">R ∪ S</span>):</strong> Combines tuples from union-compatible relations.</li>
+                                  <li><strong>Set Difference (<span class="math">R - S</span>):</strong> Returns tuples present in <span class="math">R</span> that are absent in <span class="math">S</span>.</li>
+                                  <li><strong>Rename (<span class="math">ρ<sub>S</sub>(R)</span>):</strong> Assigns a new relation or attribute identifier.</li>
+                                </ul>
+                              </li>
+                              <li><strong>Derived Operators:</strong>
+                                <ul>
+                                  <li><strong>Set Intersection (<span class="math">R ∩ S = R - (R - S)</span>):</strong> Returns common tuples.</li>
+                                  <li><strong>Theta Join (<span class="math">R ⋈<sub>θ</sub> S = σ<sub>θ</sub>(R × S)</span>):</strong> Cross-product filtered by join condition.</li>
+                                  <li><strong>Natural Join (<span class="math">R ⋈ S</span>):</strong> Equijoin over identically named common attributes with duplicate column suppression.</li>
+                                  <li><strong>Division (<span class="math">R ÷ S</span>):</strong> Solves universal quantification ("find entities associated with ALL items in S").</li>
+                                </ul>
+                              </li>
+                            </ol>
+                        </div>
+                    </div>
+
+                    <div class="theory-card">
+                        <h4 onclick="toggleTheory(this)">Q20. What is Relational Calculus? Differentiate between TRC and DRC. <i class="fas fa-chevron-down toggle-icon"></i></h4>
+                        <div class="answer">
+                            <p><strong>Relational Calculus</strong> is a formal <strong>non-procedural (declarative)</strong> query language based on first-order predicate logic. A query describes <em>what</em> information is desired without specifying the procedural evaluation algorithm.</p>
+                            <div class="table-container">
+                            <table>
+                              <thead>
+                                <tr><th>Feature</th><th>Tuple Relational Calculus (TRC)</th><th>Domain Relational Calculus (DRC)</th></tr>
+                              </thead>
+                              <tbody>
+                                <tr><td><strong>Core Variable</strong></td><td>Variables range over complete <strong>tuples</strong> (<span class="math">t</span>) of a relation.</td><td>Variables range over individual <strong>attribute domains</strong> (<span class="math">x₁, x₂, …</span>).</td></tr>
+                                <tr><td><strong>Query Form</strong></td><td><span class="math">{ t | P(t) }</span> where <span class="math">P(t)</span> is a predicate formula.</td><td><span class="math">{ ⟨ x₁, x₂, …, xₙ 
+                            angle | P(x₁, x₂, …, xₙ) }</span>.</td></tr>
+                                <tr><td><strong>Example</strong></td><td><span class="math">{ t | t ∈ 	ext{Student} ∧ t[	ext{GPA}] ≥ 9.0 }</span></td><td><span class="math">{ ⟨ r, n 
+                            angle | ∃ g (⟨ r, n, g 
+                            angle ∈ 	ext{Student} ∧ g ≥ 9.0) }</span></td></tr>
+                                <tr><td><strong>Industry Impact</strong></td><td>Forms the theoretical foundation of <strong>SQL</strong>.</td><td>Forms the foundation of <strong>Query-by-Example (QBE)</strong>.</td></tr>
+                              </tbody>
+                            </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="theory-card">
+                        <h4 onclick="toggleTheory(this)">Q21. What is an Equi-Join and how does it differ from Natural Join? <i class="fas fa-chevron-down toggle-icon"></i></h4>
+                        <div class="answer">
+                            <ol class="step-list">
+                              <li><strong>Equi-Join:</strong> A Theta Join where the predicate condition uses strictly the equality operator (<code>=</code>):
+                                <br><span class="math">R ⋈<sub>R.A = S.B</sub> S</span>.
+                                <br><em>Key Attribute:</em> Both join columns <span class="math">R.A</span> and <span class="math">S.B</span> are retained in the output schema, resulting in duplicate column values.
+                              </li>
+                              <li><strong>Natural Join (<span class="math">R ⋈ S</span>):</strong> A specialized equijoin that automatically matches all attributes sharing identical names between relations <span class="math">R</span> and <span class="math">S</span>, automatically eliminating duplicate common columns.
+                                <br><em>Example:</em> If <code>EMP(Emp_ID, Name, Dept_ID)</code> and <code>DEPT(Dept_ID, DName)</code> are joined, Natural Join outputs <code>(Emp_ID, Name, Dept_ID, DName)</code> containing only one <code>Dept_ID</code> column.
+                              </li>
+                            </ol>
+                        </div>
+                    </div>
+
+                    <div class="theory-card">
+                        <h4 onclick="toggleTheory(this)">Q22. What is a CLAUSE in terms of SQL? Explain WHERE, HAVING, GROUP BY, and ORDER BY. <i class="fas fa-chevron-down toggle-icon"></i></h4>
+                        <div class="answer">
+                            <p>A <strong>Clause</strong> in SQL is a structural component of an SQL statement that specifies data filtering, aggregation, grouping, or ordering criteria:</p>
+                            <ol class="step-list">
+                              <li><strong>WHERE Clause:</strong> Filters individual candidate rows <em>before</em> any grouping or aggregation takes place.
+                                <br><code>SELECT * FROM Emp WHERE Salary &gt; 50000;</code>
+                              </li>
+                              <li><strong>GROUP BY Clause:</strong> Collapses rows sharing identical values in specified columns into summary groups for aggregate evaluation (<code>COUNT</code>, <code>SUM</code>, <code>AVG</code>).
+                                <br><code>SELECT Dept_ID, AVG(Salary) FROM Emp GROUP BY Dept_ID;</code>
+                              </li>
+                              <li><strong>HAVING Clause:</strong> Filters summary groups produced by the <code>GROUP BY</code> clause <em>after</em> aggregate computation (cannot be performed by <code>WHERE</code>).
+                                <br><code>SELECT Dept_ID, COUNT(*) FROM Emp GROUP BY Dept_ID HAVING COUNT(*) &gt; 10;</code>
+                              </li>
+                              <li><strong>ORDER BY Clause:</strong> Sorts the final result set in ascending (<code>ASC</code>) or descending (<code>DESC</code>) sequence.
+                                <br><code>SELECT * FROM Emp ORDER BY Salary DESC, Name ASC;</code>
+                              </li>
+                            </ol>
+                        </div>
+                    </div>
+
+                    <div class="theory-card">
+                        <h4 onclick="toggleTheory(this)">Q23. Differentiate between DROP, TRUNCATE, and DELETE commands in SQL. <i class="fas fa-chevron-down toggle-icon"></i></h4>
+                        <div class="answer">
+                            <div class="table-container">
+                            <table>
+                              <thead>
+                                <tr><th>Criteria</th><th>DELETE</th><th>TRUNCATE</th><th>DROP</th></tr>
+                              </thead>
+                              <tbody>
+                                <tr><td><strong>Language Category</strong></td><td>DML</td><td>DDL</td><td>DDL</td></tr>
+                                <tr><td><strong>Operation Level</strong></td><td>Row-by-row deletion using table scan.</td><td>Deallocates data pages in storage; preserves table schema.</td><td>Destroys table data, schema definition, and indexes permanently.</td></tr>
+                                <tr><td><strong>WHERE Clause</strong></td><td>Supported (can delete specific rows).</td><td>Not supported (clears entire table).</td><td>Not supported.</td></tr>
+                                <tr><td><strong>Transaction Rollback</strong></td><td>Can be rolled back via <code>ROLLBACK</code>.</td><td>Cannot be rolled back in most databases (auto-committed).</td><td>Cannot be rolled back (auto-committed catalog deletion).</td></tr>
+                                <tr><td><strong>Triggers</strong></td><td>Fires <code>ON DELETE</code> triggers per row.</td><td>Does not fire row delete triggers.</td><td>Does not fire triggers.</td></tr>
+                                <tr><td><strong>Performance</strong></td><td>Slow (generates log entries per deleted row).</td><td>Extremely fast (deallocates disk extents directly).</td><td>Instantaneous schema catalog removal.</td></tr>
+                              </tbody>
+                            </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="theory-card">
+                        <h4 onclick="toggleTheory(this)">Q24. Define Relational Algebra and its significance as a procedural query language. <i class="fas fa-chevron-down toggle-icon"></i></h4>
+                        <div class="answer">
+                            <p><strong>Relational Algebra</strong> is a formal mathematical query language in which queries are expressed as procedural expressions consisting of relational operators applied to relation instances. It is <strong>closed</strong>—every operation on relations produces a new relation.</p>
+                            <p><strong>Significance in DBMS Engines:</strong></p>
+                            <ol class="step-list">
+                              <li>When a user submits a declarative SQL query, the DBMS SQL parser translates the SQL into an internal <strong>Relational Algebra Query Tree</strong>.</li>
+                              <li>The DBMS <strong>Query Optimizer</strong> applies algebraic equivalence transformations (such as pushing selections and projections down the tree) to minimize intermediate relation sizes and select the lowest-cost execution plan.</li>
+                            </ol>
+                        </div>
+                    </div>
+
+                    <div class="theory-card">
+                        <h4 onclick="toggleTheory(this)">Q25. Explain the safety of relational calculus expressions and the domain restriction rule. <i class="fas fa-chevron-down toggle-icon"></i></h4>
+                        <div class="answer">
+                            <p>In Relational Calculus, an expression may theoretically evaluate to an <strong>infinite relation</strong> if not properly constrained. An expression is defined as <strong>Safe</strong> if it is guaranteed to produce a finite result set that is a subset of the domain of values present in the database or the query formula itself.</p>
+                            <p><strong>Example of an Unsafe Expression:</strong></p>
+                            <p><span class="math">{ t | 
+                            eg(t ∈ 	ext{Student}) }</span></p>
+                            <p>This query specifies all tuples <span class="math">t</span> in the universe that are NOT in <code>Student</code>, resulting in an infinite number of non-database tuples. The <strong>Domain of a Formula (<span class="math">dom(ψ)</span>)</strong> ensures safety by restricting quantified variables to values explicitly present in the input relations or explicit constants.</p>
+                        </div>
+                    </div>
+
+                    <div class="theory-card">
+                        <h4 onclick="toggleTheory(this)">Q26. What are Views in SQL? Explain the WITH CHECK OPTION clause. <i class="fas fa-chevron-down toggle-icon"></i></h4>
+                        <div class="answer">
+                            <p>A <strong>View</strong> is a virtual relation defined by an underlying stored SQL query. It does not store physical tuples on disk (unless materialized); instead, the DBMS reconstructs view data on demand by merging the view query with the user's outer query.</p>
+                            <p><strong>WITH CHECK OPTION:</strong></p>
+                            <ul>
+                              <li>Ensures that all <code>INSERT</code> and <code>UPDATE</code> operations executed against an updatable view satisfy the selection condition in the view definition.</li>
+                              <li><em>Example:</em>
+                                <pre><code class="language-sql">CREATE VIEW CSE_Students AS
+                            SELECT Roll_No, Name, Dept FROM Student
+                            WHERE Dept = 'CSE'
+                            WITH CHECK OPTION;</code></pre>
+                                Attempting to insert a row with <code>Dept = 'ECE'</code> through <code>CSE_Students</code> will be rejected with an integrity constraint violation.
+                              </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="theory-card">
+                        <h4 onclick="toggleTheory(this)">Q27. Explain the different types of Joins in SQL. <i class="fas fa-chevron-down toggle-icon"></i></h4>
+                        <div class="answer">
+                            <ol class="step-list">
+                              <li><strong>INNER JOIN:</strong> Returns only matching rows where the join predicate evaluates to true in both tables.
+                                <br><code>SELECT * FROM Emp E INNER JOIN Dept D ON E.Dept_ID = D.Dept_ID;</code>
+                              </li>
+                              <li><strong>LEFT OUTER JOIN:</strong> Returns all rows from the left table; unmatched rows from the right table are padded with <code>NULL</code> values.</li>
+                              <li><strong>RIGHT OUTER JOIN:</strong> Returns all rows from the right table; unmatched rows from the left table are padded with <code>NULL</code> values.</li>
+                              <li><strong>FULL OUTER JOIN:</strong> Returns all rows from both tables, preserving unmatched rows from both sides padded with <code>NULL</code> values.</li>
+                              <li><strong>CROSS JOIN (Cartesian Product):</strong> Produces the cross product of every row in the first table with every row in the second table (<span class="math">M 	imes N</span> rows).</li>
+                            </ol>
+                        </div>
+                    </div>
+
+                    <div class="theory-card">
+                        <h4 onclick="toggleTheory(this)">Q28. Define Triggers and explain their types in SQL/PL-SQL. <i class="fas fa-chevron-down toggle-icon"></i></h4>
+                        <div class="answer">
+                            <p>A <strong>Trigger</strong> is a stored procedural program in the database catalog that executes automatically ("fires") in response to a specified DDL or DML event (<code>INSERT</code>, <code>UPDATE</code>, <code>DELETE</code>) on a table or view.</p>
+                            <ol class="step-list">
+                              <li><strong>Timing:</strong>
+                                <ul>
+                                  <li><code>BEFORE</code>: Fires prior to executing the triggering DML statement (ideal for input validation and sanitization).</li>
+                                  <li><code>AFTER</code>: Fires following successful DML execution (ideal for audit logging and cascading state changes).</li>
+                                  <li><code>INSTEAD OF</code>: Fires in place of the triggering statement (enables DML updates on complex non-updatable views).</li>
+                                </ul>
+                              </li>
+                              <li><strong>Granularity:</strong>
+                                <ul>
+                                  <li><strong>Row-Level Trigger (<code>FOR EACH ROW</code>):</strong> Fires once for every individual row affected by the DML statement. Accesses pseudo-records <code>:OLD</code> and <code>:NEW</code>.</li>
+                                  <li><strong>Statement-Level Trigger:</strong> Fires exactly once for the entire DML statement, regardless of how many rows are modified.</li>
+                                </ul>
+                              </li>
+                            </ol>
+                        </div>
+                    </div>
+
+                    <div class="theory-card">
+                        <h4 onclick="toggleTheory(this)">Q29. What are PL/SQL Cursors? Differentiate between Implicit and Explicit cursors. <i class="fas fa-chevron-down toggle-icon"></i></h4>
+                        <div class="answer">
+                            <p>A <strong>Cursor</strong> is a private work area allocated in memory by the DBMS to manage the context and result set of a multi-row SQL query.</p>
+                            <ol class="step-list">
+                              <li><strong>Implicit Cursors:</strong> Automatically declared and managed by the database engine whenever an individual DML statement (<code>INSERT</code>, <code>UPDATE</code>, <code>DELETE</code>, or single-row <code>SELECT INTO</code>) is executed. Accessed via attributes: <code>SQL%FOUND</code>, <code>SQL%NOTFOUND</code>, <code>SQL%ROWCOUNT</code>.</li>
+                              <li><strong>Explicit Cursors:</strong> Programmatically defined and controlled by the developer for multi-row result sets. Follows a strict lifecycle:
+                                <ul>
+                                  <li><code>DECLARE</code>: Defines the cursor query.</li>
+                                  <li><code>OPEN</code>: Allocates memory and evaluates the active query result set.</li>
+                                  <li><code>FETCH</code>: Retrieves the current row into variables and advances the internal pointer.</li>
+                                  <li><code>CLOSE</code>: Releases private work area resources.</li>
+                                </ul>
+                              </li>
+                            </ol>
+                        </div>
+                    </div>
+
+                    <div class="theory-card">
+                        <h4 onclick="toggleTheory(this)">Q30. Explain the concept of B+ Tree Indexing in relational database storage. <i class="fas fa-chevron-down toggle-icon"></i></h4>
+                        <div class="answer">
+                            <p>A <strong>B+ Tree</strong> is a balanced search tree data structure optimized for secondary disk block storage, ensuring that all leaf nodes reside at the exact same depth. It serves as the default indexing structure in enterprise databases (PostgreSQL, Oracle, MySQL InnoDB).</p>
+                            <ol class="step-list">
+                              <li><strong>Internal Nodes:</strong> Act as index routing pointers containing search keys and disk block pointers, without holding actual tuple data.</li>
+                              <li><strong>Leaf Nodes:</strong> Hold all search keys alongside physical record pointers (RID) or entire clustered data rows. Crucially, all leaf nodes are linked sequentially via a <strong>doubly-linked list</strong>.</li>
+                              <li><strong>Search Performance:</strong> Point queries (<code>WHERE ID = 500</code>) execute in <span class="math">O(log<sub>B</sub> N)</span> disk I/O operations. Range queries (<code>WHERE Age BETWEEN 20 AND 30</code>) find the start key in <span class="math">O(log<sub>B</sub> N)</span> time and traverse the linked list directly, avoiding tree traversals.</li>
+                            </ol>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- UNIT III: RELATIONAL DATABASE DESIGN &AMP; NORMALIZATION -->
+                <div class="unit-section" id="unit3-theory">
+                    <h3><i class="fas fa-filter"></i> Unit III: Relational Database Design &amp; Normalization</h3>
+
+                    <div class="theory-card">
+                        <h4 onclick="toggleTheory(this)">Q31. What are the advantages of database normalization? <i class="fas fa-chevron-down toggle-icon"></i></h4>
+                        <div class="answer">
+                            <p><strong>Database Normalization</strong> is the theoretical process of decomposing relations with anomalies to produce smaller, well-structured relations. Key benefits:</p>
+                            <ol class="step-list">
+                              <li><strong>Elimination of Data Modification Anomalies:</strong>
+                                <ul>
+                                  <li><strong>Insertion Anomaly:</strong> Inability to represent an independent fact without adding an unrelated entity record (e.g., cannot add a new course until a student enrolls).</li>
+                                  <li><strong>Deletion Anomaly:</strong> Loss of critical business facts as an unintended side-effect of deleting an unrelated tuple (e.g., deleting the last student enrolled in a department inadvertently wipes the department's existence).</li>
+                                  <li><strong>Update Anomaly:</strong> Data inconsistency resulting from updating redundant records in some rows while missing others.</li>
+                                </ul>
+                              </li>
+                              <li><strong>Minimization of Storage Redundancy:</strong> Eliminates duplicate attribute occurrences across tuples, significantly optimizing disk and memory buffer utilization.</li>
+                              <li><strong>Lossless Join Guarantee:</strong> Decompositions ensure the original relation can be reconstructed without producing spurious or phantom tuples.</li>
+                              <li><strong>Dependency Preservation:</strong> Ensures that all business constraints (FDs) can be verified by inspecting individual tables without performing expensive multi-table joins.</li>
+                            </ol>
+                        </div>
+                    </div>
+
+                    <div class="theory-card">
+                        <h4 onclick="toggleTheory(this)">Q32. What are the Inference Rules for Functional Dependencies (Armstrong's Axioms)? <i class="fas fa-chevron-down toggle-icon"></i></h4>
+                        <div class="answer">
+                            <p><strong>Armstrong's Axioms</strong> form a complete and sound set of inference rules used to compute the closure of functional dependencies (<span class="math">F⁺</span>):</p>
+                            <ol class="step-list">
+                              <li><strong>Primary Axioms:</strong>
+                                <ul>
+                                  <li><strong>Reflexivity Rule:</strong> If <span class="math">Y ⊂eq X</span>, then <span class="math">X → Y</span>. (Trivial dependency).</li>
+                                  <li><strong>Augmentation Rule:</strong> If <span class="math">X → Y</span>, then <span class="math">XZ → YZ</span> for any attribute set <span class="math">Z</span>.</li>
+                                  <li><strong>Transitivity Rule:</strong> If <span class="math">X → Y</span> and <span class="math">Y → Z</span>, then <span class="math">X → Z</span>.</li>
+                                </ul>
+                              </li>
+                              <li><strong>Secondary (Derived) Rules:</strong>
+                                <ul>
+                                  <li><strong>Union Rule:</strong> If <span class="math">X → Y</span> and <span class="math">X → Z</span>, then <span class="math">X → YZ</span>.</li>
+                                  <li><strong>Decomposition Rule:</strong> If <span class="math">X → YZ</span>, then <span class="math">X → Y</span> and <span class="math">X → Z</span>.</li>
+                                  <li><strong>Pseudo-transitivity Rule:</strong> If <span class="math">X → Y</span> and <span class="math">γ Y → Z</span>, then <span class="math">γ X → Z</span>.</li>
+                                </ul>
+                              </li>
+                            </ol>
+                        </div>
+                    </div>
+
+                    <div class="theory-card">
+                        <h4 onclick="toggleTheory(this)">Q33. What is Boyce-Codd Normal Form (BCNF) in DBMS? State the condition. <i class="fas fa-chevron-down toggle-icon"></i></h4>
+                        <div class="answer">
+                            <p>A relation schema <code>R</code> is in <strong>Boyce-Codd Normal Form (BCNF)</strong> if and only if, for every non-trivial functional dependency <span class="math">X 	o A</span> that holds on <code>R</code>, the determinant attribute set <span class="math">X</span> is a <strong>Superkey</strong> of <code>R</code>.</p>
+                            <p><strong>Key Properties of BCNF:</strong></p>
+                            <ol class="step-list">
+                              <li>BCNF strictly eliminates all redundancy arising from functional dependencies.</li>
+                              <li>Every relation in BCNF is guaranteed to be in 3NF, 2NF, and 1NF (BCNF &sube; 3NF &sube; 2NF &sube; 1NF).</li>
+                              <li><strong>Trade-off:</strong> Unlike 3NF, BCNF decomposition guarantees Lossless Join reconstruction, but does <em>not</em> always preserve functional dependencies.</li>
+                            </ol>
+                        </div>
+                    </div>
+
+                    <div class="theory-card">
+                        <h4 onclick="toggleTheory(this)">Q34. Define the Closure of an Attribute Set and explain its algorithm. <i class="fas fa-chevron-down toggle-icon"></i></h4>
+                        <div class="answer">
+                            <p>The <strong>Closure of an Attribute Set <span class="math">X</span></strong> (denoted <span class="math">X⁺</span>) under a set of functional dependencies <span class="math">F</span> is the set of all attributes functionally determined by <span class="math">X</span> under <span class="math">F</span>.</p>
+                            <p><strong>Algorithm to Compute <span class="math">X⁺</span>:</strong></p>
+                            <ol class="step-list">
+                              <li>Initialize <span class="math">X⁺ = X</span>.</li>
+                              <li>Repeat until <span class="math">X⁺</span> does not change:
+                                <ul>
+                                  <li>For each FD <span class="math">Y 	o Z</span> in <span class="math">F</span>:</li>
+                                  <li>If <span class="math">Y ⊂eq X⁺</span>, then <span class="math">X⁺ = X⁺ ∪ Z</span>.</li>
+                                </ul>
+                              </li>
+                              <li>Return <span class="math">X⁺</span>.</li>
+                            </ol>
+                            <p><em>Usefulness:</em> If <span class="math">X⁺</span> contains all attributes of relation schema <code>R</code>, then <span class="math">X</span> is a <strong>Superkey</strong>. If no proper subset of <span class="math">X</span> derives all attributes, <span class="math">X</span> is a <strong>Candidate Key</strong>.</p>
+                        </div>
+                    </div>
+
+                    <div class="theory-card">
+                        <h4 onclick="toggleTheory(this)">Q35. What are Prime and Non-Prime attributes in a relation schema? <i class="fas fa-chevron-down toggle-icon"></i></h4>
+                        <div class="answer">
+                            <ol class="step-list">
+                              <li><strong>Prime Attribute:</strong> An attribute that is a member of <strong>at least one Candidate Key</strong> of the relation schema <code>R</code>.
+                                <br><em>Example:</em> In <span class="math">R(A, B, C, D)</span> where candidate keys are <span class="math">{AB}</span> and <span class="math">{BC}</span>, the prime attributes are <span class="math">{A, B, C}</span>.
+                              </li>
+                              <li><strong>Non-Prime Attribute:</strong> An attribute that is NOT a member of any candidate key of <code>R</code>.
+                                <br><em>Example:</em> In the relation above, <span class="math">D</span> is the sole non-prime attribute.
+                              </li>
+                            </ol>
+                            <p><em>Significance in Normalization:</em> 2NF prohibits partial dependencies of non-prime attributes on candidate keys, while 3NF permits dependencies if the RHS attribute is prime.</p>
+                        </div>
+                    </div>
+
+                    <div class="theory-card">
+                        <h4 onclick="toggleTheory(this)">Q36. Explain Multivalued Dependency (MVD) with a suitable example. <i class="fas fa-chevron-down toggle-icon"></i></h4>
+                        <div class="answer">
+                            <p>A <strong>Multivalued Dependency</strong> <span class="math">X 	woheadrightarrow Y</span> holds on schema <span class="math">R(X, Y, Z)</span> if the set of values of <span class="math">Y</span> associated with a given <span class="math">X</span>-value is completely independent of the values of <span class="math">Z</span>.</p>
+                            <p><em>Formal Definition:</em> For any two tuples <span class="math">t₁, t₂ ∈ r</span> with <span class="math">t₁[X] = t₂[X]</span>, there must exist tuples <span class="math">t₃, t₄</span> such that:
+                            <br><span class="math">t₃[X] = t₄[X] = t₁[X]</span>, <span class="math">t₃[Y] = t₁[Y]</span>, <span class="math">t₃[Z] = t₂[Z]</span>, and <span class="math">t₄[Y] = t₂[Y]</span>, <span class="math">t₄[Z] = t₁[Z]</span>.</p>
+                            <p><strong>Concrete Example:</strong> Consider relation <code>Instructor(Emp_ID, Phone_No, Skill)</code>. An instructor has multiple phone numbers and multiple skills independently. Storing this in a single table requires Cartesian explosion of redundant tuples. 4NF decomposes this into <code>(Emp_ID, Phone_No)</code> and <code>(Emp_ID, Skill)</code>.</p>
+                        </div>
+                    </div>
+
+                    <div class="theory-card">
+                        <h4 onclick="toggleTheory(this)">Q37. What are Transitive Dependencies? Explain the anomalies they cause. <i class="fas fa-chevron-down toggle-icon"></i></h4>
+                        <div class="answer">
+                            <p>In a relation schema <code>R</code>, a functional dependency <span class="math">X 	o Z</span> is <strong>Transitive</strong> if there exists an attribute set <span class="math">Y</span> such that <span class="math">X 	o Y</span> and <span class="math">Y 	o Z</span> hold, where <span class="math">Y 
+                            ot	o X</span> (i.e. <span class="math">Y</span> is not a candidate key) and <span class="math">Z 
+                            ot⊂eq Y</span>.</p>
+                            <p><strong>Example:</strong> In <code>Employee(Emp_ID, Dept_ID, Dept_Name)</code>:
+                            <br><code>Emp_ID &rarr; Dept_ID</code> and <code>Dept_ID &rarr; Dept_Name</code>. Thus, <code>Emp_ID &rarr; Dept_Name</code> is transitive.</p>
+                            <p><strong>Anomalies Caused:</strong></p>
+                            <ol class="step-list">
+                              <li><strong>Update Anomaly:</strong> Changing the department name requires updating all employee records working in that department.</li>
+                              <li><strong>Insertion Anomaly:</strong> Cannot register a newly created department until an employee is assigned to it.</li>
+                              <li><strong>Deletion Anomaly:</strong> Deleting the last employee in a department permanently erases the department's name from the system.</li>
+                            </ol>
+                        </div>
+                    </div>
+
+                    <div class="theory-card">
+                        <h4 onclick="toggleTheory(this)">Q38. Define Third Normal Form (3NF) and state its conditions. <i class="fas fa-chevron-down toggle-icon"></i></h4>
+                        <div class="answer">
+                            <p>A relation schema <code>R</code> is in <strong>Third Normal Form (3NF)</strong> if it is in 2NF and, for every non-trivial functional dependency <span class="math">X 	o A</span> holding on <code>R</code>, at least ONE of the following conditions is satisfied:</p>
+                            <ol class="step-list">
+                              <li><span class="math">X</span> is a <strong>Superkey</strong> of <code>R</code> (same as BCNF condition), <em>OR</em></li>
+                              <li><span class="math">A</span> is a <strong>Prime Attribute</strong> (i.e., <span class="math">A</span> is a member of some candidate key of <code>R</code>).</li>
+                            </ol>
+                            <p><em>Advantage over BCNF:</em> Any relation schema can always be decomposed into 3NF relations such that the decomposition is simultaneously <strong>Lossless Join</strong> AND <strong>Dependency Preserving</strong> (via Bernstein's 3NF synthesis algorithm).</p>
+                        </div>
+                    </div>
+
+                    <div class="theory-card">
+                        <h4 onclick="toggleTheory(this)">Q39. Define First Normal Form (1NF) and Second Normal Form (2NF) with examples. <i class="fas fa-chevron-down toggle-icon"></i></h4>
+                        <div class="answer">
+                            <ol class="step-list">
+                              <li><strong>First Normal Form (1NF):</strong> Mandates that the domain of all attributes must contain only <strong>atomic (indivisible) scalar values</strong>, prohibiting repeating groups, arrays, and nested relations.
+                                <br><em>Violation:</em> <code>Student(Roll_No, Name, Subjects)</code> where <code>Subjects = 'Math, DBMS, OS'</code> violates 1NF.
+                                <br><em>Fix:</em> Separate each subject into its own individual tuple.
+                              </li>
+                              <li><strong>Second Normal Form (2NF):</strong> A relation is in 2NF if it is in 1NF and <strong>no non-prime attribute is partially dependent</strong> on any candidate key of the relation.
+                                <br><em>Violation:</em> In <code>Enroll(<u>Student_ID, Course_ID</u>, Student_Name, Grade)</code>, candidate key is <code>{Student_ID, Course_ID}</code>. Since <code>Student_ID &rarr; Student_Name</code>, the non-prime attribute <code>Student_Name</code> depends only on a proper subset of the key.
+                                <br><em>Fix:</em> Decompose into <code>Student(<u>Student_ID</u>, Student_Name)</code> and <code>Enroll(<u>Student_ID, Course_ID</u>, Grade)</code>.
+                              </li>
+                            </ol>
+                        </div>
+                    </div>
+
+                    <div class="theory-card">
+                        <h4 onclick="toggleTheory(this)">Q40. What is a Minimal Cover (Canonical Cover) of a set of functional dependencies? <i class="fas fa-chevron-down toggle-icon"></i></h4>
+                        <div class="answer">
+                            <p>A <strong>Minimal Cover (Canonical Cover) <span class="math">F<sub>c</sub></span></strong> of a set of functional dependencies <span class="math">F</span> is an equivalent simplified set of FDs (<span class="math">F<sub>c</sub> ≡ F</span>) that contains no extraneous attributes and no redundant dependencies.</p>
+                            <p><strong>Three Mandatory Properties of <span class="math">F<sub>c</sub></span>:</strong></p>
+                            <ol class="step-list">
+                              <li><strong>Standard (Singleton) RHS:</strong> Every dependency in <span class="math">F<sub>c</sub></span> has a single attribute on its right-hand side (<span class="math">X 	o A</span>).</li>
+                              <li><strong>No Extraneous Attributes:</strong> No attribute can be deleted from the left-hand side of any dependency without altering the closure (<span class="math">F⁺</span>).</li>
+                              <li><strong>No Redundant Dependencies:</strong> No dependency can be removed from <span class="math">F<sub>c</sub></span> without reducing the closure (<span class="math">(F<sub>c</sub> - {X 	o A})⁺ 
+                            e F⁺</span>).</li>
+                            </ol>
+                        </div>
+                    </div>
+
+                    <div class="theory-card">
+                        <h4 onclick="toggleTheory(this)">Q41. What is Lossless Join Decomposition? State the necessary and sufficient condition. <i class="fas fa-chevron-down toggle-icon"></i></h4>
+                        <div class="answer">
+                            <p>A decomposition of relation schema <span class="math">R</span> into subschemas <span class="math">R₁, R₂</span> is a <strong>Lossless Join Decomposition</strong> with respect to dependency set <span class="math">F</span> if, for every valid instance <span class="math">r(R)</span>:</p>
+                            <p><span class="math">π<sub>R₁</sub>(r) owtie π<sub>R₂</sub>(r) = r</span></p>
+                            <p><strong>Necessary and Sufficient Condition:</strong></p>
+                            <p>For a binary decomposition into <span class="math">R₁</span> and <span class="math">R₂</span>, the decomposition is lossless if and only if the intersection of their attribute sets forms a superkey of at least one of the decomposed schemas:</p>
+                            <p><span class="math">(R₁ ∩ R₂) 	o R₁ ∈ F⁺  &emsp;  	ext{OR}  &emsp;  (R₁ ∩ R₂) 	o R₂ ∈ F⁺</span></p>
+                        </div>
+                    </div>
+
+                    <div class="theory-card">
+                        <h4 onclick="toggleTheory(this)">Q42. What is Dependency Preservation in schema decomposition? <i class="fas fa-chevron-down toggle-icon"></i></h4>
+                        <div class="answer">
+                            <p>A decomposition of relation schema <span class="math">R</span> into <span class="math">R₁, R₂, …, Rₖ</span> with dependency set <span class="math">F</span> is <strong>Dependency Preserving</strong> if the union of the projections of <span class="math">F</span> onto each subschema logically implies all dependencies in <span class="math">F</span>:</p>
+                            <p><span class="math">(F₁ ∪ F₂ ∪ … ∪ Fₖ)⁺ = F⁺</span></p>
+                            <p><em>Practical Value:</em> When a database update occurs on table <span class="math">Rᵢ</span>, the DBMS can verify that all declared functional dependencies remain satisfied by inspecting only table <span class="math">Rᵢ</span> locally, without having to perform an expensive multi-table join across all decomposed relations.</p>
+                        </div>
+                    </div>
+
+                    <div class="theory-card">
+                        <h4 onclick="toggleTheory(this)">Q43. Compare 3NF and BCNF in terms of dependency preservation and redundancy. <i class="fas fa-chevron-down toggle-icon"></i></h4>
+                        <div class="answer">
+                            <div class="table-container">
+                            <table>
+                              <thead>
+                                <tr><th>Feature</th><th>Third Normal Form (3NF)</th><th>Boyce-Codd Normal Form (BCNF)</th></tr>
+                              </thead>
+                              <tbody>
+                                <tr><td><strong>Condition for <span class="math">X 	o A</span></strong></td><td><span class="math">X</span> is a Superkey OR <span class="math">A</span> is Prime.</td><td><span class="math">X</span> MUST be a Superkey.</td></tr>
+                                <tr><td><strong>Redundancy Level</strong></td><td>May retain some minor redundancy when <span class="math">A</span> is prime but <span class="math">X</span> is not superkey.</td><td>Completely eliminates all redundancy resulting from functional dependencies.</td></tr>
+                                <tr><td><strong>Lossless Join</strong></td><td>Always achievable.</td><td>Always achievable.</td></tr>
+                                <tr><td><strong>Dependency Preservation</strong></td><td><strong>Guaranteed:</strong> Bernstein's algorithm always yields a dependency-preserving 3NF schema.</td><td><strong>Not Guaranteed:</strong> Achieving BCNF can sometimes sacrifice dependency preservation.</td></tr>
+                              </tbody>
+                            </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="theory-card">
+                        <h4 onclick="toggleTheory(this)">Q44. Define Fourth Normal Form (4NF) and explain how it addresses Multivalued Dependencies. <i class="fas fa-chevron-down toggle-icon"></i></h4>
+                        <div class="answer">
+                            <p>A relation schema <code>R</code> is in <strong>Fourth Normal Form (4NF)</strong> if and only if, for every non-trivial multivalued dependency <span class="math">X 	woheadrightarrow Y</span> holding on <code>R</code>, the determinant <span class="math">X</span> is a <strong>Superkey</strong> of <code>R</code>.</p>
+                            <ol class="step-list">
+                              <li><strong>Trivial MVD:</strong> An MVD <span class="math">X 	woheadrightarrow Y</span> is trivial if <span class="math">Y ⊂eq X</span> or <span class="math">X ∪ Y = R</span>.</li>
+                              <li><strong>Significance:</strong> 4NF eliminates independent 1:M relationships coexisting in the same table, preventing combinatorial record explosion.</li>
+                            </ol>
+                        </div>
+                    </div>
+
+                    <div class="theory-card">
+                        <h4 onclick="toggleTheory(this)">Q45. Define Fifth Normal Form (5NF / Project-Join Normal Form) and Join Dependencies. <i class="fas fa-chevron-down toggle-icon"></i></h4>
+                        <div class="answer">
+                            <p>A relation schema <code>R</code> is in <strong>Fifth Normal Form (5NF)</strong> (or Project-Join Normal Form, PJNF) if every non-trivial <strong>Join Dependency</strong> <span class="math">owtie(R₁, R₂, …, Rₙ)</span> holding on <code>R</code> is implied by the candidate keys of <code>R</code>.</p>
+                            <ol class="step-list">
+                              <li><strong>Join Dependency:</strong> A relation satisfies join dependency <span class="math">owtie(R₁, R₂, …, Rₙ)</span> if <span class="math">R</span> can be losslessly decomposed into and reconstructed from <span class="math">n ≥ 3</span> sub-relations without spurious tuples.</li>
+                              <li>5NF guarantees that a relation cannot be further non-loss decomposed into smaller relations without losing data consistency.</li>
+                            </ol>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- UNIT IV: TRANSACTION PROCESSING, SERIALIZABILITY &AMP; RECOVERY -->
+                <div class="unit-section" id="unit4-theory">
+                    <h3><i class="fas fa-exchange-alt"></i> Unit IV: Transaction Processing, Serializability &amp; Recovery</h3>
+
+                    <div class="theory-card">
+                        <h4 onclick="toggleTheory(this)">Q46. What is a Transaction in DBMS? Explain ACID properties with banking examples. <i class="fas fa-chevron-down toggle-icon"></i></h4>
+                        <div class="answer">
+                            <p>A <strong>Transaction</strong> is a logical unit of database processing that includes one or more database access operations (read, write, update, delete). It transforms the database from one consistent state to another consistent state.</p>
+                            <p>To ensure database integrity, every transaction must strictly satisfy the <strong>ACID Properties</strong>:</p>
+                            <ol class="step-list">
+                              <li><strong>Atomicity ("All or Nothing"):</strong> Guarantees that either all operations of the transaction complete successfully, or none of them have any effect on the database. If a failure occurs midway, all partial modifications must be rolled back.
+                                <br><em>Banking Example:</em> Transferring $500 from Account A to Account B requires deducting $500 from A and adding $500 to B. If the system crashes after deducting from A, Atomicity ensures the $500 deduction is undone.
+                              </li>
+                              <li><strong>Consistency (Preservation of Invariants):</strong> Ensures that the execution of a transaction in isolation preserves all explicit schema constraints, domain rules, and semantic database invariants.
+                                <br><em>Banking Example:</em> The sum total of balances in accounts A and B before the transfer must equal the sum total after the transfer (<span class="math">A<sub>new</sub> + B<sub>new</sub> = A<sub>old</sub> + B<sub>old</sub></span>).
+                              </li>
+                              <li><strong>Isolation (Independent Execution):</strong> Guarantees that the intermediate states of concurrently executing transactions are invisible to one another. Each transaction behaves as if it were the sole transaction executing on the database.
+                                <br><em>Banking Example:</em> While transaction $T_1$ transfers money between A and B, concurrent transaction $T_2$ calculating the branch total cannot see A deducted before B is credited.
+                              </li>
+                              <li><strong>Durability (Persistence of Committed Updates):</strong> Guarantees that once a transaction completes and commits, its state modifications persist permanently in non-volatile storage, surviving subsequent power outages or operating system crashes.
+                                <br><em>Banking Example:</em> Once a customer receives a "Transfer Successful" confirmation receipt, the updated balances remain permanently recorded even if the server crashes seconds later.
+                              </li>
+                            </ol>
+                        </div>
+                    </div>
+
+                    <div class="theory-card">
+                        <h4 onclick="toggleTheory(this)">Q47. Draw and explain the Transaction State Diagram (Active to Terminated). <i class="fas fa-chevron-down toggle-icon"></i></h4>
+                        <div class="answer">
+                            <p>During its execution lifecycle, a transaction transitions through several distinct operational states:</p>
+                            <ol class="step-list">
+                              <li><strong>Active:</strong> The initial state upon creation where the transaction begins executing its read and write operations.</li>
+                              <li><strong>Partially Committed:</strong> The state reached immediately after the final statement has completed execution, but before the log records are flushed to non-volatile disk.</li>
+                              <li><strong>Committed:</strong> Reached after all updates and transaction log records are successfully flushed to disk. The transaction has permanently terminated with success.</li>
+                              <li><strong>Failed:</strong> Entered when regular execution can no longer proceed due to hardware errors, logical exceptions, or integrity constraint violations.</li>
+                              <li><strong>Aborted:</strong> Entered after the transaction is rolled back and the database state is restored to its pre-transaction state. The transaction manager can restart or terminate the transaction.</li>
+                              <li><strong>Terminated:</strong> The final exit point after commit or abort, where all memory buffers and transaction locks are released back to the system.</li>
+                            </ol>
+                        </div>
+                    </div>
+
+                    <div class="theory-card">
+                        <h4 onclick="toggleTheory(this)">Q48. What is a Schedule? Differentiate between Serial, Non-Serial, and Concurrent Schedules. <i class="fas fa-chevron-down toggle-icon"></i></h4>
+                        <div class="answer">
+                            <p>A <strong>Schedule (or History)</strong> is an ordered chronological sequence of operations (read, write, abort, commit) from a set of concurrent transactions that preserves the individual operation order within each transaction.</p>
+                            <div class="table-container">
+                            <table>
+                              <thead>
+                                <tr><th>Schedule Type</th><th>Execution Ordering</th><th>Throughput &amp; CPU Utilization</th><th>Consistency Assurance</th></tr>
+                              </thead>
+                              <tbody>
+                                <tr><td><strong>Serial Schedule</strong></td><td>Operations of each transaction execute consecutively to completion before the next transaction begins; no interleaving.</td><td>Very low; CPU sits idle during disk I/O operations of the active transaction.</td><td>Guaranteed consistent and conflict-free by definition; zero concurrency anomalies.</td></tr>
+                                <tr><td><strong>Non-Serial Schedule</strong></td><td>Operations of multiple transactions are interleaved chronologically over time.</td><td>High; permits concurrent utilization of CPU and disk I/O channels.</td><td>Requires concurrency control protocols to guarantee equivalence to a serial schedule.</td></tr>
+                                <tr><td><strong>Serializable Schedule</strong></td><td>A non-serial interleaved schedule whose outcome is mathematically equivalent to some serial execution of the same transactions.</td><td>Optimal throughput combined with mathematical correctness.</td><td>Guaranteed consistent, satisfying all ACID properties.</td></tr>
+                              </tbody>
+                            </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="theory-card">
+                        <h4 onclick="toggleTheory(this)">Q49. Define Conflict Serializability and explain the Conflicting Operations condition. <i class="fas fa-chevron-down toggle-icon"></i></h4>
+                        <div class="answer">
+                            <p>A schedule $S$ is <strong>Conflict Serializable</strong> if it can be transformed into a serial schedule by a series of swaps of non-conflicting adjacent operations.</p>
+                            <p><strong>Conditions for Two Operations to Conflict:</strong> Two operations $O_i$ and $O_j$ in a schedule are said to be in <em>conflict</em> if and only if they satisfy all three of the following criteria:</p>
+                            <ol class="step-list">
+                              <li>They belong to different transactions ($T_i \ne T_j$).</li>
+                              <li>They access the exact same data item (e.g., item $X$).</li>
+                              <li>At least one of the two operations is a <strong>Write</strong> operation:
+                                <ul>
+                                  <li><strong>Read-Write Conflict:</strong> $R_i(X)$ and $W_j(X)$ (leads to unrepeatable reads or inconsistent analysis).</li>
+                                  <li><strong>Write-Read Conflict:</strong> $W_i(X)$ and $R_j(X)$ (leads to reading uncommitted dirty data).</li>
+                                  <li><strong>Write-Write Conflict:</strong> $W_i(X)$ and $W_j(X)$ (leads to lost updates or overwritten data).</li>
+                                </ul>
+                              </li>
+                            </ol>
+                            <p><em>Note:</em> Two read operations $R_i(X)$ and $R_j(X)$ do <strong>not</strong> conflict because reading does not mutate data state.</p>
+                        </div>
+                    </div>
+
+                    <div class="theory-card">
+                        <h4 onclick="toggleTheory(this)">Q50. How is a Precedence Graph (Serialization Graph) constructed to test conflict serializability? <i class="fas fa-chevron-down toggle-icon"></i></h4>
+                        <div class="answer">
+                            <p>A <strong>Precedence Graph (or Conflict / Serialization Graph)</strong> is a directed graph $G = (V, E)$ used to determine whether a concurrent schedule is conflict serializable:</p>
+                            <ol class="step-list">
+                              <li><strong>Vertices ($V$):</strong> Create a node for each active transaction participating in the schedule ($T_1, T_2, \dots, T_n$).</li>
+                              <li><strong>Directed Edges ($E$):</strong> Draw a directed edge from $T_i → T_j$ if an operation of $T_i$ precedes and conflicts with an operation of $T_j$ on some data item $X$:
+                                <ul>
+                                  <li>$T_i$ executes $R(X)$ before $T_j$ executes $W(X)$.</li>
+                                  <li>$T_i$ executes $W(X)$ before $T_j$ executes $R(X)$.</li>
+                                  <li>$T_i$ executes $W(X)$ before $T_j$ executes $W(X)$.</li>
+                                </ul>
+                              </li>
+                              <li><strong>Serializability Theorem:</strong> A schedule $S$ is conflict serializable <strong>if and only if its precedence graph contains NO directed cycles</strong>.
+                                <br>If acyclic, the topological sort of the graph yields the equivalent serial ordering of transactions.
+                              </li>
+                            </ol>
+                        </div>
+                    </div>
+
+                    <div class="theory-card">
+                        <h4 onclick="toggleTheory(this)">Q51. What is View Serializability? Explain the three conditions of View Equivalence and Blind Writes. <i class="fas fa-chevron-down toggle-icon"></i></h4>
+                        <div class="answer">
+                            <p>A schedule $S$ is <strong>View Serializable</strong> if it is view equivalent to some serial schedule $S_{serial}$ consisting of the same participating transactions.</p>
+                            <p><strong>Three Rules for View Equivalence:</strong> Two schedules $S$ and $S'$ over the same transactions are view equivalent if:</p>
+                            <ol class="step-list">
+                              <li><strong>Initial Read:</strong> For each data item $X$, if transaction $T_i$ reads the initial value of $X$ in $S$, then $T_i$ must also read the initial value of $X$ in $S'$.</li>
+                              <li><strong>Updated Read (Read-From):</strong> If transaction $T_i$ reads a value of $X$ written by transaction $T_j$ in $S$, then $T_i$ must also read the value of $X$ written by $T_j$ in $S'$.</li>
+                              <li><strong>Final Write:</strong> For each data item $X$, if transaction $T_i$ performs the final write on $X$ in $S$, then $T_i$ must perform the final write on $X$ in $S'$.</li>
+                            </ol>
+                            <p><strong>Blind Writes:</strong> A write operation $W_i(X)$ executed without a prior $R_i(X)$ by the same transaction is called a <em>blind write</em>. View serializable schedules that are <em>not</em> conflict serializable always contain blind writes.</p>
+                        </div>
+                    </div>
+
+                    <div class="theory-card">
+                        <h4 onclick="toggleTheory(this)">Q52. Explain Recoverable Schedules, Cascading Aborts, and Cascadeless Schedules. <i class="fas fa-chevron-down toggle-icon"></i></h4>
+                        <div class="answer">
+                            <p>In concurrent processing, transaction rollbacks can trigger chain reactions across other transactions unless properly restricted:</p>
+                            <ol class="step-list">
+                              <li><strong>Recoverable Schedule:</strong> A schedule where, for every pair of transactions $T_i$ and $T_j$, if $T_j$ reads a data item previously written by $T_i$, then the commit operation of $T_i$ must precede the commit operation of $T_j$ (<span class="math">Cᵢ &lt; Cⱼ</span>). Prevents committed transactions from having read uncommitted rolled-back data.</li>
+                              <li><strong>Cascading Rollback (Cascading Abort):</strong> A phenomenon where the failure and rollback of one transaction ($T_1$) forces the recursive abort and rollback of multiple dependent transactions ($T_2, T_3, \dots$) that read uncommitted data written by $T_1$. Leads to massive wasted CPU and I/O work.</li>
+                              <li><strong>Cascadeless Schedule (Avoids Cascading Aborts - ACA):</strong> A schedule where every transaction is permitted to read a data item $X$ only <em>after</em> the previous transaction that wrote $X$ has committed (<span class="math">Wᵢ(X) … Cᵢ … Rⱼ(X)</span>).
+                                <br><em>Hierarchy:</em> Strict Schedules &sube; Cascadeless Schedules &sube; Recoverable Schedules.
+                              </li>
+                            </ol>
+                        </div>
+                    </div>
+
+                    <div class="theory-card">
+                        <h4 onclick="toggleTheory(this)">Q53. What is a Strict Schedule and why is it desirable in practical database engines? <i class="fas fa-chevron-down toggle-icon"></i></h4>
+                        <div class="answer">
+                            <p>A schedule is <strong>Strict</strong> if a transaction is not allowed to read <em>or</em> write a data item $X$ until the previous transaction that wrote $X$ has either committed or aborted:</p>
+                            <div class="math-box">
+                              <span class="math">∀ Tᵢ, Tⱼ: Wᵢ(X) ⇒ (Cᵢ ∨ Aᵢ)  precedes both  Rⱼ(X)  and  Wⱼ(X)</span>
+                            </div>
+                            <p><strong>Why Strict Schedules are Desirable in DBMS:</strong></p>
+                            <ol class="step-list">
+                              <li><strong>Trivial Rollback Recovery:</strong> If an active transaction $T_1$ fails, the DBMS restores the before-image of modified items from the undo log without accidentally overwriting uncommitted or committed updates of concurrent transactions.</li>
+                              <li><strong>Zero Cascading Aborts:</strong> Dependent transactions never read dirty uncommitted values.</li>
+                              <li><strong>Implemented via Strict 2PL:</strong> Enforced in commercial DBMSs (PostgreSQL, MySQL InnoDB, SQL Server) by holding all exclusive locks until transaction completion (<code>COMMIT</code> or <code>ROLLBACK</code>).</li>
+                            </ol>
+                        </div>
+                    </div>
+
+                    <div class="theory-card">
+                        <h4 onclick="toggleTheory(this)">Q54. Explain Log-Based Recovery and Write-Ahead Logging (WAL) protocol. <i class="fas fa-chevron-down toggle-icon"></i></h4>
+                        <div class="answer">
+                            <p>The <strong>Write-Ahead Logging (WAL)</strong> protocol is the foundational mechanism ensuring the Atomicity and Durability (ACID) of transactions across unexpected system failures.</p>
+                            <ol class="step-list">
+                              <li><strong>Log Record Structure:</strong> Every database mutation is appended sequentially to an append-only log file before altering disk data pages:
+                                <br><code>&lt;T_id, DataItem, Old_Value (Before-Image), New_Value (After-Image)&gt;</code>
+                              </li>
+                              <li><strong>Core WAL Rules:</strong>
+                                <ul>
+                                  <li><strong>Undo Rule:</strong> The log record containing the before-image must be flushed to non-volatile disk <em>before</em> the corresponding dirty data page is written from memory to disk. (Enables rollback).</li>
+                                  <li><strong>Redo Rule:</strong> All log records for a transaction (including the <code>&lt;COMMIT&gt;</code> record) must be flushed to non-volatile disk <em>before</em> the transaction is acknowledged as committed to the client. (Enables crash replay).</li>
+                                </ul>
+                              </li>
+                            </ol>
+                        </div>
+                    </div>
+
+                    <div class="theory-card">
+                        <h4 onclick="toggleTheory(this)">Q55. Differentiate between Deferred Database Modification and Immediate Database Modification. <i class="fas fa-chevron-down toggle-icon"></i></h4>
+                        <div class="answer">
+                            <div class="table-container">
+                            <table>
+                              <thead>
+                                <tr><th>Feature</th><th>Deferred Database Modification</th><th>Immediate Database Modification</th></tr>
+                              </thead>
+                              <tbody>
+                                <tr><td><strong>Disk Update Timing</strong></td><td>All write operations are deferred and applied to disk only <em>after</em> the transaction completely reaches its commit point.</td><td>Updates may be flushed to disk pages at any time during active execution, even before transaction commit.</td></tr>
+                                <tr><td><strong>Undo Operation</strong></td><td><strong>Never required:</strong> Uncommitted transactions never modified the physical disk, so no before-images are ever restored.</td><td><strong>Required:</strong> If a crash occurs, any uncommitted transaction that wrote to disk must have its before-images restored.</td></tr>
+                                <tr><td><strong>Redo Operation</strong></td><td>Required for all transactions that committed prior to the crash.</td><td>Required for all transactions that committed prior to the crash.</td></tr>
+                                <tr><td><strong>Log Record Requirements</strong></td><td>Requires only New Values (After-Images): <code>&lt;T, X, V_new&gt;</code>.</td><td>Requires both Old and New Values: <code>&lt;T, X, V_old, V_new&gt;</code>.</td></tr>
+                              </tbody>
+                            </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="theory-card">
+                        <h4 onclick="toggleTheory(this)">Q56. What is a Checkpoint in database recovery and how does it reduce recovery crash replay overhead? <i class="fas fa-chevron-down toggle-icon"></i></h4>
+                        <div class="answer">
+                            <p>A <strong>Checkpoint</strong> is an administrative operation performed periodically by the DBMS recovery manager to flush in-memory buffers to stable storage, limiting the amount of log that must be scanned during crash recovery.</p>
+                            <ol class="step-list">
+                              <li><strong>Checkpoint Sequence:</strong>
+                                <ul>
+                                  <li>Stop accepting new transactions temporarily (or use fuzzy checkpointing).</li>
+                                  <li>Flush all modified database buffer pool pages (dirty pages) from RAM to non-volatile disk storage.</li>
+                                  <li>Append a <code>&lt;CHECKPOINT L&gt;</code> record to the log, where $L$ is the list of transactions active at checkpoint time.</li>
+                                  <li>Flush all log records up to the checkpoint record to stable disk storage.</li>
+                                </ul>
+                              </li>
+                              <li><strong>Crash Recovery Benefit:</strong> The recovery system does not need to scan the entire log file from the beginning of database creation. It only needs to scan backward to the most recent checkpoint record, dramatically speeding up recovery time.</li>
+                            </ol>
+                        </div>
+                    </div>
+
+                    <div class="theory-card">
+                        <h4 onclick="toggleTheory(this)">Q57. Explain Deadlock in DBMS and the 4 necessary Coffman conditions for deadlock occurrence. <i class="fas fa-chevron-down toggle-icon"></i></h4>
+                        <div class="answer">
+                            <p>A <strong>Deadlock</strong> is an execution impasse where two or more transactions are in a simultaneous circular wait state, each waiting to acquire a lock on a resource held by another transaction in the cycle.</p>
+                            <p>Deadlocks can occur only if all <strong>4 Coffman Conditions</strong> hold simultaneously:</p>
+                            <ol class="step-list">
+                              <li><strong>Mutual Exclusion:</strong> At least one resource (table, page, tuple) must be held in a non-shareable exclusive mode (Exclusive lock).</li>
+                              <li><strong>Hold and Wait:</strong> A transaction holds at least one lock while simultaneously requesting additional locks held by other transactions.</li>
+                              <li><strong>No Preemption:</strong> Locks cannot be forcibly confiscated from a transaction; locks are released only voluntarily by the holding transaction.</li>
+                              <li><strong>Circular Wait:</strong> A closed chain of transactions exists such that $T_0$ waits for a lock held by $T_1$, $T_1$ waits for $T_2$, ..., and $T_n$ waits for $T_0$.</li>
+                            </ol>
+                        </div>
+                    </div>
+
+                    <div class="theory-card">
+                        <h4 onclick="toggleTheory(this)">Q58. How does Deadlock Detection work using a Wait-For Graph (WFG)? <i class="fas fa-chevron-down toggle-icon"></i></h4>
+                        <div class="answer">
+                            <p><strong>Deadlock Detection</strong> allows transactions to acquire locks without restriction and periodically inspects the system state to identify circular wait conditions using a <strong>Wait-For Graph (WFG)</strong>.</p>
+                            <ol class="step-list">
+                              <li><strong>Graph Construction:</strong>
+                                <ul>
+                                  <li><strong>Nodes ($V$):</strong> Represent active transactions in the database ($T_1, T_2, \dots, T_k$).</li>
+                                  <li><strong>Directed Edges ($E$):</strong> A directed edge $T_i → T_j$ is created if transaction $T_i$ is waiting to lock a resource currently held by transaction $T_j$.</li>
+                                  <li>When $T_j$ releases the lock and $T_i$ acquires it, the directed edge $T_i → T_j$ is removed.</li>
+                                </ul>
+                              </li>
+                              <li><strong>Deadlock Condition:</strong> A deadlock exists in the system <strong>if and only if the Wait-For Graph contains a directed cycle</strong>.</li>
+                              <li><strong>Recovery:</strong> Once a cycle is detected, the DBMS selects a <em>victim transaction</em> (based on minimum cost, age, or fewest locks held) and rolls it back to break the cycle.</li>
+                            </ol>
+                        </div>
+                    </div>
+
+                    <div class="theory-card">
+                        <h4 onclick="toggleTheory(this)">Q59. Explain Deadlock Prevention schemes: Wait-Die and Wound-Wait schemes based on timestamps. <i class="fas fa-chevron-down toggle-icon"></i></h4>
+                        <div class="answer">
+                            <p>Deadlock prevention algorithms use unique transaction timestamps $TS(T_i)$ (assigned at transaction start time; older transactions have smaller timestamps) to avoid circular wait conditions without building graphs:</p>
+                            <div class="table-container">
+                            <table>
+                              <thead>
+                                <tr><th>Protocol Scheme</th><th>Older Transaction Requests Lock Held by Younger ($TS(T_i) &lt; TS(T_j)$)</th><th>Younger Transaction Requests Lock Held by Older ($TS(T_i) &gt; TS(T_j)$)</th><th>Preemption Type</th></tr>
+                              </thead>
+                              <tbody>
+                                <tr><td><strong>Wait-Die Scheme</strong></td><td><strong>Wait:</strong> $T_i$ (older) is permitted to wait for $T_j$ (younger).</td><td><strong>Die:</strong> $T_i$ (younger) is killed and rolled back immediately (dies).</td><td>Non-preemptive (younger transactions die when requesting).</td></tr>
+                                <tr><td><strong>Wound-Wait Scheme</strong></td><td><strong>Wound:</strong> $T_i$ (older) preempts $T_j$ (younger); $T_j$ is aborted and rolled back.</td><td><strong>Wait:</strong> $T_i$ (younger) is permitted to wait for $T_j$ (older).</td><td>Preemptive (older transactions wound/preempt younger ones).</td></tr>
+                              </tbody>
+                            </table>
+                            </div>
+                            <p><em>Starvation Prevention:</em> When a transaction dies or is wounded, it restarts with its <strong>original timestamp</strong>, guaranteeing it eventually becomes the oldest transaction and completes without starvation.</p>
+                        </div>
+                    </div>
+
+                    <div class="theory-card">
+                        <h4 onclick="toggleTheory(this)">Q60. What is Two-Phase Commit Protocol (2PC) in distributed database transactions? <i class="fas fa-chevron-down toggle-icon"></i></h4>
+                        <div class="answer">
+                            <p>The <strong>Two-Phase Commit (2PC)</strong> protocol is an atomic commitment protocol that ensures all distributed database nodes (cohorts) either commit or abort a distributed transaction uniformly:</p>
+                            <ol class="step-list">
+                              <li><strong>Phase 1: Prepare Phase:</strong>
+                                <ul>
+                                  <li>The Coordinator node appends a <code>&lt;PREPARE&gt;</code> record to its log and sends a <code>PREPARE</code> message to all participating cohort nodes.</li>
+                                  <li>Each Cohort checks if it can commit its local operations, flushes undo/redo log records, and replies with either <code>VOTE_COMMIT</code> or <code>VOTE_ABORT</code>.</li>
+                                </ul>
+                              </li>
+                              <li><strong>Phase 2: Commit Phase:</strong>
+                                <ul>
+                                  <li><strong>Global Commit:</strong> If <em>all</em> cohorts voted <code>VOTE_COMMIT</code>, the coordinator writes <code>&lt;GLOBAL_COMMIT&gt;</code> to its log and broadcasts a <code>GLOBAL_COMMIT</code> message to all cohorts. Cohorts commit locally and send an <code>ACK</code>.</li>
+                                  <li><strong>Global Abort:</strong> If <em>any</em> cohort voted <code>VOTE_ABORT</code> or timed out, the coordinator writes <code>&lt;GLOBAL_ABORT&gt;</code> and commands all cohorts to roll back.</li>
+                                </ul>
+                              </li>
+                            </ol>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- UNIT V: CONCURRENCY CONTROL, DEADLOCKS &AMP; STORAGE RECOVERY -->
+                <div class="unit-section" id="unit5-theory">
+                    <h3><i class="fas fa-shield-alt"></i> Unit V: Concurrency Control, Deadlocks &amp; Storage Recovery</h3>
+
+                    <div class="theory-card">
+                        <h4 onclick="toggleTheory(this)">Q61. Explain the 4 classic Concurrency Anomalies: Dirty Read, Non-Repeatable Read, Lost Update, Phantom Read. <i class="fas fa-chevron-down toggle-icon"></i></h4>
+                        <div class="answer">
+                            <p>When concurrent transactions execute without proper isolation, four classic concurrency anomalies can corrupt database state:</p>
+                            <ol class="step-list">
+                              <li><strong>Dirty Read (Temporary Update Anomaly):</strong> Occurs when transaction $T_1$ reads a data item modified by transaction $T_2$ that has <em>not yet committed</em>. If $T_2$ subsequently rolls back, $T_1$ has computed results based on an invalid, non-existent database state.</li>
+                              <li><strong>Non-Repeatable Read (Inconsistent Analysis):</strong> Occurs when transaction $T_1$ reads a record $X$, and transaction $T_2$ modifies or deletes $X$ and commits. When $T_1$ re-reads $X$, it finds a different value or finds that the record has disappeared.</li>
+                              <li><strong>Lost Update Anomaly:</strong> Occurs when two transactions $T_1$ and $T_2$ read the same data item $X$ simultaneously and update it concurrently. The second write completely overwrites the first write without incorporating its modification.</li>
+                              <li><strong>Phantom Read:</strong> Occurs when transaction $T_1$ executes a range query (e.g., <code>WHERE Salary &gt; 50000</code>). Concurrently, $T_2$ inserts a new tuple satisfying the condition and commits. When $T_1$ re-executes the query, a new "phantom" row appears.</li>
+                            </ol>
+                        </div>
+                    </div>
+
+                    <div class="theory-card">
+                        <h4 onclick="toggleTheory(this)">Q62. What is Two-Phase Locking (2PL) Protocol? Explain Growing Phase and Shrinking Phase. <i class="fas fa-chevron-down toggle-icon"></i></h4>
+                        <div class="answer">
+                            <p>The <strong>Two-Phase Locking (2PL)</strong> protocol is a concurrency control mechanism that guarantees conflict serializability by governing when locks can be acquired and released:</p>
+                            <ol class="step-list">
+                              <li><strong>Phase 1: Growing (Expanding) Phase:</strong>
+                                <ul>
+                                  <li>A transaction may acquire new locks (Shared or Exclusive) as needed.</li>
+                                  <li><strong>Strict Constraint:</strong> The transaction is <strong>not allowed to release any lock</strong> during this phase.</li>
+                                </ul>
+                              </li>
+                              <li><strong>Lock Point:</strong> The instantaneous point in time when the transaction has acquired the final lock needed for its execution (marks the end of the growing phase).</li>
+                              <li><strong>Phase 2: Shrinking (Contracting) Phase:</strong>
+                                <ul>
+                                  <li>A transaction may release locks that are no longer needed.</li>
+                                  <li><strong>Strict Constraint:</strong> The transaction is <strong>not allowed to acquire any new lock</strong> once it has released even a single lock.</li>
+                                </ul>
+                              </li>
+                            </ol>
+                            <p><em>Theorem:</em> Any schedule generated by 2PL is guaranteed to be conflict serializable. However, basic 2PL does <em>not</em> prevent deadlocks or cascading aborts.</p>
+                        </div>
+                    </div>
+
+                    <div class="theory-card">
+                        <h4 onclick="toggleTheory(this)">Q63. Compare Basic 2PL, Strict 2PL, and Rigorous 2PL protocols. <i class="fas fa-chevron-down toggle-icon"></i></h4>
+                        <div class="answer">
+                            <div class="table-container">
+                            <table>
+                              <thead>
+                                <tr><th>Feature</th><th>Basic 2PL</th><th>Strict 2PL</th><th>Rigorous 2PL</th></tr>
+                              </thead>
+                              <tbody>
+                                <tr><td><strong>Lock Release Rules</strong></td><td>Locks can be released gradually in the shrinking phase before transaction commit.</td><td>All <strong>Exclusive (X)</strong> locks must be held until transaction termination (Commit/Abort).</td><td><strong>ALL</strong> locks (both Shared and Exclusive) must be held until transaction termination.</td></tr>
+                                <tr><td><strong>Conflict Serializability</strong></td><td>Guaranteed.</td><td>Guaranteed.</td><td>Guaranteed.</td></tr>
+                                <tr><td><strong>Cascading Aborts</strong></td><td>Possible (reading uncommitted data if lock released early).</td><td><strong>Eliminated:</strong> Schedules are guaranteed to be cascadeless and strict.</td><td><strong>Eliminated:</strong> Strict and cascadeless.</td></tr>
+                                <tr><td><strong>Concurrency Level</strong></td><td>Highest among 2PL variants.</td><td>Moderate.</td><td>Lowest (read locks held longer).</td></tr>
+                                <tr><td><strong>Industry Adoption</strong></td><td>Theoretical interest.</td><td>Standard default in relational engines (PostgreSQL, MySQL).</td><td>Used for strict distributed ordering.</td></tr>
+                              </tbody>
+                            </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="theory-card">
+                        <h4 onclick="toggleTheory(this)">Q64. What is Conservative (Static) 2PL and how does it prevent deadlocks? <i class="fas fa-chevron-down toggle-icon"></i></h4>
+                        <div class="answer">
+                            <p><strong>Conservative 2PL (or Static 2PL)</strong> is a deadlock-free variant of the Two-Phase Locking protocol:</p>
+                            <ol class="step-list">
+                              <li><strong>Pre-declaration of Locks:</strong> Before beginning execution, a transaction must declare all data items it will read or write and attempt to acquire <strong>all required locks simultaneously</strong>.</li>
+                              <li><strong>All-or-Nothing Locking:</strong>
+                                <ul>
+                                  <li>If all requested locks are available, the transaction locks them all and proceeds with execution.</li>
+                                  <li>If even a single lock cannot be acquired immediately, the transaction <strong>waits without holding any locks</strong> (all temporary locks are released).</li>
+                                </ul>
+                              </li>
+                              <li><strong>Deadlock Freedom:</strong> Because transactions never hold resources while waiting for other resources (eliminates the "Hold and Wait" condition), deadlocks are mathematically impossible.</li>
+                              <li><strong>Limitation:</strong> In practice, predicting all data items a transaction will access prior to execution is difficult or impossible for interactive queries.</li>
+                            </ol>
+                        </div>
+                    </div>
+
+                    <div class="theory-card">
+                        <h4 onclick="toggleTheory(this)">Q65. What are Shared (S) and Exclusive (X) Locks? Draw the Lock Compatibility Matrix. <i class="fas fa-chevron-down toggle-icon"></i></h4>
+                        <div class="answer">
+                            <p>DBMS locking protocols utilize two primary lock modes to balance concurrency with write integrity:</p>
+                            <ol class="step-list">
+                              <li><strong>Shared Lock (S-Lock / Read Lock):</strong> Requested by a transaction wishing to read a data item. Multiple transactions can hold shared locks on the same item concurrently (<span class="math">S + S = Allowed</span>).</li>
+                              <li><strong>Exclusive Lock (X-Lock / Write Lock):</strong> Requested by a transaction wishing to read and write/modify a data item. Only one transaction can hold an exclusive lock on an item at any instant; all other requests are blocked.</li>
+                            </ol>
+                            <div class="table-container">
+                            <table>
+                              <thead>
+                                <tr><th>Requested \ Held</th><th>Shared Lock (S)</th><th>Exclusive Lock (X)</th></tr>
+                              </thead>
+                              <tbody>
+                                <tr><td><strong>Shared Lock (S)</strong></td><td><strong style="color:#2e7d32;">COMPATIBLE (TRUE)</strong></td><td><strong style="color:#d32f2f;">CONFLICT (FALSE)</strong></td></tr>
+                                <tr><td><strong>Exclusive Lock (X)</strong></td><td><strong style="color:#d32f2f;">CONFLICT (FALSE)</strong></td><td><strong style="color:#d32f2f;">CONFLICT (FALSE)</strong></td></tr>
+                              </tbody>
+                            </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="theory-card">
+                        <h4 onclick="toggleTheory(this)">Q66. Explain Lock Conversions (Lock Upgrading and Lock Downgrading) in 2PL. <i class="fas fa-chevron-down toggle-icon"></i></h4>
+                        <div class="answer">
+                            <p><strong>Lock Conversion</strong> provides flexibility by permitting a transaction to transition a lock from one mode to another during its lifecycle:</p>
+                            <ol class="step-list">
+                              <li><strong>Lock Upgrade ($S → X$):</strong> Converting a Shared (Read) lock to an Exclusive (Write) lock.
+                                <ul>
+                                  <li>Permitted <strong>only during the Growing Phase</strong> of 2PL.</li>
+                                  <li>Allowed only when no other transaction holds a shared lock on the same item.</li>
+                                  <li><em>Use Case:</em> A transaction reads a customer balance, calculates interest, and then upgrades to write the new balance.</li>
+                                </ul>
+                              </li>
+                              <li><strong>Lock Downgrade ($X → S$):</strong> Converting an Exclusive (Write) lock to a Shared (Read) lock.
+                                <ul>
+                                  <li>Permitted <strong>only during the Shrinking Phase</strong> of 2PL.</li>
+                                  <li>Releases exclusive write privilege while allowing the transaction to continue reading without violating serializability.</li>
+                                </ul>
+                              </li>
+                            </ol>
+                        </div>
+                    </div>
+
+                    <div class="theory-card">
+                        <h4 onclick="toggleTheory(this)">Q67. Explain the Timestamp Ordering (TO) Protocol for concurrency control. <i class="fas fa-chevron-down toggle-icon"></i></h4>
+                        <div class="answer">
+                            <p>The <strong>Timestamp Ordering (TO) Protocol</strong> ensures serializability without locks by assigning every transaction a unique monotonic timestamp $TS(T_i)$ at initiation. Operations are ordered based on transaction timestamps.</p>
+                            <p>Each data item $X$ maintains two timestamps: <strong>$R\text{-timestamp}(X)$</strong> (largest timestamp of any transaction that read $X$) and <strong>$W\text{-timestamp}(X)$</strong> (largest timestamp of any transaction that wrote $X$).</p>
+                            <ol class="step-list">
+                              <li><strong>Read Rule for $T_i$ executing $R(X)$:</strong>
+                                <ul>
+                                  <li>If $TS(T_i) &lt; W\text{-timestamp}(X)$, $T_i$ needs to read an overwritten value. $T_i$ is <strong>rejected and rolled back</strong>.</li>
+                                  <li>If $TS(T_i) \ge W\text{-timestamp}(X)$, operation proceeds: $R\text{-timestamp}(X) = \max(R\text{-timestamp}(X), TS(T_i))$.</li>
+                                </ul>
+                              </li>
+                              <li><strong>Write Rule for $T_i$ executing $W(X)$:</strong>
+                                <ul>
+                                  <li>If $TS(T_i) &lt; R\text{-timestamp}(X)$, the value produced by $T_i$ was needed previously. $T_i$ is <strong>rejected and rolled back</strong>.</li>
+                                  <li>If $TS(T_i) &lt; W\text{-timestamp}(X)$, $T_i$ is attempting to write an obsolete value. $T_i$ is <strong>rejected and rolled back</strong>.</li>
+                                  <li>Otherwise, operation proceeds: $W\text{-timestamp}(X) = TS(T_i)$.</li>
+                                </ul>
+                              </li>
+                            </ol>
+                        </div>
+                    </div>
+
+                    <div class="theory-card">
+                        <h4 onclick="toggleTheory(this)">Q68. What is Thomas' Write Rule and how does it relax strict timestamp ordering? <i class="fas fa-chevron-down toggle-icon"></i></h4>
+                        <div class="answer">
+                            <p><strong>Thomas' Write Rule</strong> is an optimization of the standard Timestamp Ordering protocol that eliminates unnecessary rollbacks for obsolete write operations:</p>
+                            <ol class="step-list">
+                              <li><strong>Condition:</strong> When transaction $T_i$ executes $W(X)$ and finds:
+                                <br><span class="math">TS(Tᵢ) &lt; W-timestamp(X)</span> (i.e., a younger transaction has already overwritten $X$).
+                              </li>
+                              <li><strong>Standard TO Action:</strong> Roll back and abort transaction $T_i$.</li>
+                              <li><strong>Thomas' Rule Action:</strong> Instead of aborting $T_i$, <strong>ignore the write operation and permit $T_i$ to continue execution</strong>.</li>
+                              <li><strong>Mathematical Rationale:</strong> Because a younger transaction's write has already occurred and is the latest value on disk, ignoring $T_i$'s obsolete write produces an outcome equivalent to executing $T_i$'s write and then immediately overwriting it.
+                                <br><em>Significance:</em> Allows schedules that are view serializable but not conflict serializable.
+                              </li>
+                            </ol>
+                        </div>
+                    </div>
+
+                    <div class="theory-card">
+                        <h4 onclick="toggleTheory(this)">Q69. Explain Validation-Based (Optimistic) Concurrency Control (OCC) and its three phases. <i class="fas fa-chevron-down toggle-icon"></i></h4>
+                        <div class="answer">
+                            <p><strong>Optimistic Concurrency Control (OCC)</strong> assumes that data conflicts between concurrent transactions are rare. It avoids locking during execution and validates transactions prior to commit:</p>
+                            <ol class="step-list">
+                              <li><strong>1. Read Phase:</strong>
+                                <ul>
+                                  <li>The transaction reads data values from the database and writes all updates to local private workspace variables (copy buffers). No updates touch the database disk.</li>
+                                </ul>
+                              </li>
+                              <li><strong>2. Validation Phase:</strong>
+                                <ul>
+                                  <li>The DBMS checks whether the transaction's updates conflict with any concurrently committed transactions.</li>
+                                  <li>If validation passes (no write-read or write-write collisions), the transaction proceeds to commit.</li>
+                                  <li>If validation fails, the private copy is discarded and the transaction is aborted and restarted.</li>
+                                </ul>
+                              </li>
+                              <li><strong>3. Write Phase:</strong>
+                                <ul>
+                                  <li>If validation was successful, the local updates are copied permanently to the database on disk.</li>
+                                </ul>
+                              </li>
+                            </ol>
+                        </div>
+                    </div>
+
+                    <div class="theory-card">
+                        <h4 onclick="toggleTheory(this)">Q70. What is Multiple Granularity Locking (MGL) and explain Intent Locks (IS, IX, SIX)? <i class="fas fa-chevron-down toggle-icon"></i></h4>
+                        <div class="answer">
+                            <p><strong>Multiple Granularity Locking (MGL)</strong> organizes lockable database elements as a tree hierarchy: <em>Database &rarr; Area &rarr; File &rarr; Page &rarr; Record</em>. It avoids inspecting thousands of fine-grained locks when locking a coarse-grained container.</p>
+                            <p><strong>Intent Lock Types:</strong></p>
+                            <ol class="step-list">
+                              <li><strong>Intent Shared (IS):</strong> Indicates an intention to acquire Shared locks at a lower level of the hierarchy.</li>
+                              <li><strong>Intent Exclusive (IX):</strong> Indicates an intention to acquire Exclusive locks at a lower level of the hierarchy.</li>
+                              <li><strong>Shared Intent Exclusive (SIX):</strong> The current subtree is locked in Shared mode, with the intention of acquiring Exclusive locks on specific descendants.</li>
+                            </ol>
+                            <p><strong>Locking Rules:</strong> To lock a node, all its ancestors in the hierarchy must already be locked with appropriate Intent locks (IS/IX) from top-to-bottom. Locks are released from bottom-to-top.</p>
+                        </div>
+                    </div>
+
+                    <div class="theory-card">
+                        <h4 onclick="toggleTheory(this)">Q71. What is Multi-Version Concurrency Control (MVCC) and how does it allow readers not to block writers? <i class="fas fa-chevron-down toggle-icon"></i></h4>
+                        <div class="answer">
+                            <p><strong>Multi-Version Concurrency Control (MVCC)</strong> maintains multiple physical versions of each data item (<span class="math">X₁, X₂, …, Xₖ</span>) to ensure that <em>read operations never wait for write locks, and write operations never wait for read locks</em>.</p>
+                            <ol class="step-list">
+                              <li><strong>Snapshot Isolation:</strong> When a write operation modifies a tuple, the DBMS creates a new version timestamped with the transaction's commit time instead of overwriting the in-place record.</li>
+                              <li><strong>Consistent Reads:</strong> When a read operation queries data, it reads the latest committed version that was active as of the reading transaction's snapshot start time.</li>
+                              <li><strong>Garbage Collection (Vacuum):</strong> Outdated versions not visible to any active transaction snapshot are periodically purged (e.g., PostgreSQL <code>VACUUM</code>, MySQL Undo Purge).</li>
+                            </ol>
+                        </div>
+                    </div>
+
+                    <div class="theory-card">
+                        <h4 onclick="toggleTheory(this)">Q72. Explain Buffer Pool Management policies in recovery: STEAL vs NO-STEAL and FORCE vs NO-FORCE. <i class="fas fa-chevron-down toggle-icon"></i></h4>
+                        <div class="answer">
+                            <p>The interaction between the DBMS buffer manager and crash recovery is characterized by four orthogonal policies:</p>
+                            <div class="table-container">
+                            <table>
+                              <thead>
+                                <tr><th>Policy</th><th>Definition</th><th>Recovery Implication</th></tr>
+                              </thead>
+                              <tbody>
+                                <tr><td><strong>STEAL</strong></td><td>Buffer manager can flush dirty pages of an uncommitted transaction to disk to free RAM space.</td><td><strong>Requires UNDO logging:</strong> Before-images must be logged to roll back stolen pages on crash.</td></tr>
+                                <tr><td><strong>NO-STEAL</strong></td><td>Dirty pages cannot be written to disk until the transaction commits.</td><td>Zero UNDO overhead; consumes high RAM buffer space.</td></tr>
+                                <tr><td><strong>FORCE</strong></td><td>All dirty pages of a transaction must be flushed to disk before commit completes.</td><td>Zero REDO overhead on crash; causes severe disk I/O write bottleneck.</td></tr>
+                                <tr><td><strong>NO-FORCE</strong></td><td>Transaction can commit once its log records are flushed; data pages can remain in RAM.</td><td><strong>Requires REDO logging:</strong> After-images must be replayed on crash. Provides maximum runtime throughput.</td></tr>
+                              </tbody>
+                            </table>
+                            </div>
+                            <p><em>Industry Standard:</em> Modern engines (PostgreSQL, InnoDB, Oracle) use <strong>STEAL / NO-FORCE</strong> for maximum performance paired with WAL.</p>
+                        </div>
+                    </div>
+
+                    <div class="theory-card">
+                        <h4 onclick="toggleTheory(this)">Q73. What is the ARIES Recovery Algorithm? Explain Analysis, Redo, and Undo passes. <i class="fas fa-chevron-down toggle-icon"></i></h4>
+                        <div class="answer">
+                            <p><strong>ARIES (Algorithms for Recovery and Isolation Exploiting Semantics)</strong> is the industry-standard crash recovery algorithm based on Write-Ahead Logging (WAL) and repeating history:</p>
+                            <ol class="step-list">
+                              <li><strong>1. Analysis Pass:</strong>
+                                <ul>
+                                  <li>Scans the log forward from the most recent checkpoint.</li>
+                                  <li>Reconstructs the state of the <em>Transaction Table</em> (identifies active "loser" transactions at crash time) and the <em>Dirty Page Table (DPT)</em> (identifies pages modified in RAM but not flushed).</li>
+                                </ul>
+                              </li>
+                              <li><strong>2. Redo Pass ("Repeating History"):</strong>
+                                <ul>
+                                  <li>Scans forward from the smallest <code>RecLSN</code> in the Dirty Page Table to the end of the log.</li>
+                                  <li>Replays all logged changes (for both committed and aborted transactions) to restore the exact database state at crash time.</li>
+                                </ul>
+                              </li>
+                              <li><strong>3. Undo Pass:</strong>
+                                <ul>
+                                  <li>Scans backward from the end of the log, rolling back changes made by active loser transactions that never committed prior to the crash.</li>
+                                  <li>Writes <strong>Compensation Log Records (CLRs)</strong> for each undone action so undo operations are never repeated if another crash occurs.</li>
+                                </ul>
+                              </li>
+                            </ol>
+                        </div>
+                    </div>
+
+                    <div class="theory-card">
+                        <h4 onclick="toggleTheory(this)">Q74. What is Shadow Paging recovery technique? Explain its advantages and disadvantages. <i class="fas fa-chevron-down toggle-icon"></i></h4>
+                        <div class="answer">
+                            <p><strong>Shadow Paging</strong> is an alternative recovery technique that maintains two page tables during transaction execution:</p>
+                            <ol class="step-list">
+                              <li><strong>Architecture:</strong>
+                                <ul>
+                                  <li><strong>Current Page Table:</strong> Points to the active database pages on disk being modified by the transaction.</li>
+                                  <li><strong>Shadow Page Table:</strong> Kept in read-only state pointing to the original, unmodified pages on disk.</li>
+                                </ul>
+                              </li>
+                              <li><strong>Commit &amp; Abort:</strong>
+                                <ul>
+                                  <li><strong>Commit:</strong> The pointer to the shadow page table is atomicaly replaced with the current page table pointer.</li>
+                                  <li><strong>Abort:</strong> Discard the current page table and reinstate the shadow page table pointer.</li>
+                                </ul>
+                              </li>
+                              <li><strong>Trade-offs:</strong>
+                                <br><em>Advantages:</em> Zero log generation overhead; instantaneous recovery without Redo or Undo passes.
+                                <br><em>Disadvantages:</em> Causes severe disk fragmentation; high page table overhead; difficult to support concurrent transactions.
+                              </li>
+                            </ol>
+                        </div>
+                    </div>
+
+                    <div class="theory-card">
+                        <h4 onclick="toggleTheory(this)">Q75. How does a Lock Manager implement lock tables, hash tables, and transaction wait queues? <i class="fas fa-chevron-down toggle-icon"></i></h4>
+                        <div class="answer">
+                            <p>A DBMS <strong>Lock Manager</strong> is an internal subsystem that coordinates concurrent resource access using high-performance in-memory data structures:</p>
+                            <ol class="step-list">
+                              <li><strong>Lock Hash Table:</strong> A hash table indexed by data item ID (hash of <code>TableID + PageID + TupleID</code>). Each bucket points to a <strong>Lock Head</strong> for that resource.</li>
+                              <li><strong>Lock Head Record:</strong> Contains:
+                                <ul>
+                                  <li><strong>Current Lock Mode:</strong> (Shared, Exclusive, or None).</li>
+                                  <li><strong>Granted List:</strong> Linked list of granted lock requests containing transaction ID and mode.</li>
+                                  <li><strong>Wait Queue:</strong> FIFO queue of blocked transaction requests waiting for lock availability.</li>
+                                </ul>
+                              </li>
+                              <li><strong>Lock Request Protocol:</strong> When $T_1$ requests an X lock on $X$, the lock manager hashes $X$. If the Granted List is empty, the lock is granted. If incompatible locks exist, $T_1$ is enqueued into the Wait Queue and put to sleep via an OS semaphore or condition variable until signaled.</li>
+                            </ol>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-section">
+                    <h3>About DBMS Hub</h3>
+                    <p>A comprehensive, university-standard digital reference manual designed for computer science engineering students (BCS501), gate aspirants, and competitive examination preparation.</p>
+                </div>
+                <div class="footer-section">
+                    <h3>Quick Links</h3>
+                    <ul>
+                        <li><a href="index.html">Course Overview</a></li>
+                        <li><a href="unit1.html">Unit I - ER &amp; Architecture</a></li>
+                        <li><a href="unit2.html">Unit II - Relational &amp; SQL</a></li>
+                        <li><a href="unit3.html">Unit III - Normalization</a></li>
+                        <li><a href="unit4.html">Unit IV - Transactions</a></li>
+                        <li><a href="unit5.html">Unit V - Concurrency</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>Study Resources</h3>
+                    <ul>
+                        <li><a href="theory.html">Theory &amp; Viva Questions</a></li>
+                        <li><a href="mcq.html">MCQ Question Bank</a></li>
+                        <li><a href="cheatsheet.html">Cheat Sheet</a></li>
+                        <li><a href="previousyear.html">Solved PYQ Bank</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 DBMS Learning Hub (BCS501). Built for academic and competitive exam excellence.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="js/script.js"></script>
+    <script>
+        function toggleTheory(headerEl) {
+            const card = headerEl.parentElement;
+            const answer = card.querySelector('.answer');
+            const icon = headerEl.querySelector('.toggle-icon');
+            
+            if (answer) {
+                answer.classList.toggle('show');
+                if (icon) icon.classList.toggle('rotate');
+            }
+        }
+
+        function expandAllTheory() {
+            document.querySelectorAll('.theory-card .answer').forEach(ans => ans.classList.add('show'));
+            document.querySelectorAll('.theory-card .toggle-icon').forEach(icon => icon.classList.add('rotate'));
+        }
+
+        function collapseAllTheory() {
+            document.querySelectorAll('.theory-card .answer').forEach(ans => ans.classList.remove('show'));
+            document.querySelectorAll('.theory-card .toggle-icon').forEach(icon => icon.classList.remove('rotate'));
+        }
+
+        // Live search filter across question headers and answers
+        const theorySearchInput = document.getElementById('theorySearch');
+        if (theorySearchInput) {
+            theorySearchInput.addEventListener('input', (e) => {
+                const query = e.target.value.toLowerCase().trim();
+                document.querySelectorAll('.theory-card').forEach(card => {
+                    const text = card.textContent.toLowerCase();
+                    if (query === '' || text.includes(query)) {
+                        card.style.display = '';
+                    } else {
+                        card.style.display = 'none';
+                    }
+                });
+            });
+        }
+    </script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            if (typeof renderMathInElement === 'function') {
+                renderMathInElement(document.body, {
+                    delimiters: [
+                        {left: '$$', right: '$$', display: true},
+                        {left: '$', right: '$', display: false}
+                    ],
+                    throwOnError: false
+                });
+            }
+            if (typeof mermaid !== 'undefined') {
+                mermaid.initialize({ startOnLoad: true, theme: 'neutral', securityLevel: 'loose' });
+            }
+        });
+    </script>
+</body>
+</html>
