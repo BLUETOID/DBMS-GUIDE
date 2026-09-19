@@ -1388,7 +1388,7 @@ $(R_1 \cap R_2) \to R_1 \in F^+ \quad \text{OR} \quad (R_1 \cap R_2) \to R_2 \in
 
 ---
 
-### Q53. Consider the universal relation R = {A, B, C, D, E, F, G, H, I, J} and the set of functional dependencies F = {{A, B}→{C}, {A}→{D, E}, {B}→{F}, {F}→{G,H}, {D}→{I,J} }. What is the key for R? Decompose R into 2NF and then 3NF relations.
+### Q53. Consider the universal relation R = {A, B, C, D, E, F, G, H, I, J} and the set of functional dependencies F = { {A, B}→{C}, {A}→{D, E}, {B}→{F}, {F}→{G,H}, {D}→{I,J} }. What is the key for R? Decompose R into 2NF and then 3NF relations.
 
 #### 1. Candidate Key Computation
 Compute $(AB)^+$:
