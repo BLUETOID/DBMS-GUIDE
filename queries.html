@@ -1,0 +1,1071 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Interactive SQL Query Lab - Learn SQL step-by-step from scratch to mastery with visual before/after table examples and a live WebAssembly SQLite playground.">
+    <title>Interactive SQL Query Lab | Learn SQL Step-by-Step (SQLBolt &amp; SQLZoo Style)</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- WebAssembly SQLite for Browser Execution -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.8.0/sql-wasm.js"></script>
+    <script defer src="js/sql-lab.js"></script>
+</head>
+<body>
+    <!-- Top Navigation Bar -->
+    <nav class="navbar" role="navigation" aria-label="Main navigation">
+        <div class="nav-container">
+            <a href="index.html" class="logo" aria-label="DBMS Hub Home">
+                <i class="fas fa-database" aria-hidden="true"></i> DBMS Hub
+            </a>
+            <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation menu" aria-expanded="false" aria-controls="navMenu">
+                <i class="fas fa-bars" aria-hidden="true"></i>
+            </button>
+            <ul class="nav-menu" id="navMenu">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="unit1.html">Unit I</a></li>
+                <li><a href="unit2.html">Unit II</a></li>
+                <li><a href="unit3.html">Unit III</a></li>
+                <li><a href="unit4.html">Unit IV</a></li>
+                <li><a href="unit5.html">Unit V</a></li>
+                <li><a href="theory.html">Theory</a></li>
+                <li><a href="queries.html" class="active"><i class="fas fa-code"></i> SQL Lab</a></li>
+                <li><a href="mcq.html">MCQ Bank</a></li>
+                <li><a href="cheatsheet.html">Cheat Sheet</a></li>
+                <li class="nav-divider"></li>
+                <li><a href="previousyear.html">Solved PYQs</a></li>
+            </ul>
+            <button class="theme-toggle-btn" id="darkModeToggle" onclick="toggleDarkMode()" aria-label="Toggle Dark Mode">
+                <i class="fas fa-moon"></i>
+            </button>
+        </div>
+    </nav>
+
+    <main id="main-content">
+        <!-- Hero Header -->
+        <header class="query-lab-header">
+            <div class="container">
+                <h1><i class="fas fa-laptop-code"></i> Interactive SQL Query Lab</h1>
+                <p>Master SQL from absolute basics to advanced analytical queries. Built in the pedagogical style of <strong>SQLBolt</strong> and <strong>SQLZoo</strong>: every concept visually proves <em>"if we run this query on this table, we get this exact result table."</em></p>
+            </div>
+        </header>
+
+        <!-- Sticky Controls & Search Bar -->
+        <div class="query-controls-wrapper">
+            <div class="container">
+                <div class="query-search-row">
+                    <div class="query-search-input-box">
+                        <i class="fas fa-search"></i>
+                        <input type="text" id="querySearchInput" placeholder="Search any SQL clause, operator, or concept (e.g. INNER JOIN, GROUP BY, HAVING, DENSE_RANK, Subquery)...">
+                    </div>
+                    <div class="query-quick-actions">
+                        <button class="query-action-btn" onclick="document.getElementById('sqlPlayground').scrollIntoView({behavior: 'smooth'})"><i class="fas fa-terminal"></i> Open SQL Playground</button>
+                    </div>
+                </div>
+                <!-- Category Filter Pills -->
+                <div class="query-filter-pills">
+                    <button class="query-pill active" data-cat="all" onclick="filterQueryModules('all')">All Lessons (12 Modules)</button>
+                    <button class="query-pill" data-cat="basics" onclick="filterQueryModules('basics')">1. SELECT Basics</button>
+                    <button class="query-pill" data-cat="filtering" onclick="filterQueryModules('filtering')">2. WHERE Filtering</button>
+                    <button class="query-pill" data-cat="sorting" onclick="filterQueryModules('sorting')">3. ORDER &amp; LIMIT</button>
+                    <button class="query-pill" data-cat="joins" onclick="filterQueryModules('joins')">4. Multi-Table JOINs</button>
+                    <button class="query-pill" data-cat="aggregates" onclick="filterQueryModules('aggregates')">5. Aggregates</button>
+                    <button class="query-pill" data-cat="grouping" onclick="filterQueryModules('grouping')">6. GROUP BY &amp; HAVING</button>
+                    <button class="query-pill" data-cat="case" onclick="filterQueryModules('case')">7. CASE Expressions</button>
+                    <button class="query-pill" data-cat="subqueries" onclick="filterQueryModules('subqueries')">8. Subqueries</button>
+                    <button class="query-pill" data-cat="set" onclick="filterQueryModules('set')">9. Set Operations</button>
+                    <button class="query-pill" data-cat="dml" onclick="filterQueryModules('dml')">10. DML (INSERT/UPDATE)</button>
+                    <button class="query-pill" data-cat="window" onclick="filterQueryModules('window')">11. Window &amp; CTE</button>
+                    <button class="query-pill" data-cat="challenges" onclick="filterQueryModules('challenges')">12. Interview Challenges</button>
+                </div>
+                <div id="queryMatchCount" style="font-size: 0.85rem; color: #64748b; margin-top: 6px;"></div>
+            </div>
+        </div>
+
+        <div class="container">
+            <!-- INTERACTIVE SQL PLAYGROUND WIDGET -->
+            <section class="playground-card" id="sqlPlayground">
+                <div class="playground-topbar">
+                    <div class="playground-title">
+                        <i class="fas fa-play-circle"></i> Live In-Browser SQL Playground
+                        <span id="engineStatusBadge" class="result-status-badge result-status-success"><i class="fas fa-check-circle"></i> SQLite WASM Ready</span>
+                    </div>
+                    <div class="playground-db-controls">
+                        <label for="dbSelector" style="font-size: 0.82rem; color: #9ca3af;"><i class="fas fa-database"></i> Active DB:</label>
+                        <select id="dbSelector" class="playground-select">
+                            <option value="movies">1. Pixar Movies &amp; Box Office</option>
+                            <option value="techcorp">2. TechCorp HR &amp; Payroll</option>
+                            <option value="university">3. University Academic DB</option>
+                            <option value="retail">4. Retail E-Commerce DB</option>
+                        </select>
+                        <button class="playground-btn playground-btn-schema" onclick="showDatabaseSchema()"><i class="fas fa-table"></i> View Schema</button>
+                        <button class="playground-btn playground-btn-reset" onclick="resetCurrentDatabase()"><i class="fas fa-undo"></i> Reset DB</button>
+                        <button class="playground-btn playground-btn-run" onclick="runPlaygroundQuery()"><i class="fas fa-play"></i> Run Query (Ctrl+Enter)</button>
+                    </div>
+                </div>
+                <div class="playground-body">
+                    <!-- Left: SQL Editor -->
+                    <div class="playground-editor-pane">
+                        <div class="editor-header">
+                            <span><i class="fas fa-edit"></i> SQL Editor</span>
+                            <span id="activeDbDescription" style="color: #38bdf8;">Pixar Movies &amp; Box Office (movies, box_office)</span>
+                        </div>
+                        <textarea id="sqlEditorInput" class="playground-textarea" spellcheck="false">-- Write any valid SQL query and click Run Query (or press Ctrl + Enter)
+SELECT title, director, year, length_minutes
+FROM movies
+WHERE year >= 2000
+ORDER BY length_minutes DESC
+LIMIT 5;</textarea>
+                    </div>
+                    <!-- Right: Results Console -->
+                    <div class="playground-result-pane">
+                        <div class="result-header">
+                            <span><i class="fas fa-table"></i> Query Results</span>
+                            <span id="queryStatusBadge" class="result-status-badge result-status-success"><i class="fas fa-info-circle"></i> Ready</span>
+                        </div>
+                        <div class="playground-output-area" id="playgroundOutput">
+                            <table class="playground-output-table">
+                                <thead>
+                                    <tr><th>title</th><th>director</th><th>year</th><th>length_minutes</th></tr>
+                                </thead>
+                                <tbody>
+                                    <tr><td>Cars</td><td>John Lasseter</td><td>2006</td><td>117</td></tr>
+                                    <tr><td>The Incredibles</td><td>Brad Bird</td><td>2004</td><td>115</td></tr>
+                                    <tr><td>Ratatouille</td><td>Brad Bird</td><td>2007</td><td>111</td></tr>
+                                    <tr><td>Finding Nemo</td><td>Andrew Stanton</td><td>2003</td><td>100</td></tr>
+                                    <tr><td>WALL-E</td><td>Andrew Stanton</td><td>2008</td><td>98</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+<div class="query-module-card" data-category="basics">
+        <div class="module-header">
+            <div class="module-title-group">
+                <h2><i class="fas fa-table"></i> Module 1: Introduction to SQL &amp; SELECT Queries</h2>
+                <p>SQLBolt Lessons 1 &amp; 2: Retrieving data from relational tables, column projection, expressions, and duplicate removal.</p>
+            </div>
+            <span class="module-badge">4 Lessons</span>
+        </div>
+
+        <div class="query-item-box">
+            <div class="query-item-header">
+                <div class="query-item-title">1.1 Retrieving All Data with SELECT *</div>
+                <div class="query-badge-row"><span class="badge-difficulty badge-beginner">Beginner</span><span class="tag-badge tag-unit">SELECT *</span></div>
+            </div>
+            <p class="query-concept-text">The asterisk (<code>*</code>) is a wildcard shorthand meaning "all columns". This statement performs a full table scan and returns every attribute and row present in the target relation.</p>
+            <div class="comparison-grid">
+                <div class="comparison-box"><div class="comparison-label label-before"><span><i class="fas fa-database"></i> Input: movies</span><span>10 Rows</span></div><div class="sample-table-wrapper"><table class="sample-table"><thead><tr><th>id</th><th>title</th><th>director</th><th>year</th><th>length_minutes</th></tr></thead><tbody><tr><td>1</td><td>Toy Story</td><td>John Lasseter</td><td>1995</td><td>81</td></tr><tr><td>2</td><td>A Bug's Life</td><td>John Lasseter</td><td>1998</td><td>95</td></tr><tr><td>3</td><td>Toy Story 2</td><td>John Lasseter</td><td>1999</td><td>93</td></tr><tr><td>4</td><td>Monsters, Inc.</td><td>Pete Docter</td><td>2001</td><td>92</td></tr><tr><td>…</td><td>…</td><td>…</td><td>…</td><td>…</td></tr></tbody></table></div></div><div class="comparison-divider"><div class="divider-arrow"><i class="fas fa-arrow-right"></i></div></div>
+                <div class="comparison-box"><div class="comparison-label label-after"><span><i class="fas fa-check-circle"></i> Output Result Table</span><span>All Columns Projected</span></div><div class="sample-table-wrapper result-table-wrapper"><table class="sample-table"><thead><tr><th>id</th><th>title</th><th>director</th><th>year</th><th>length_minutes</th></tr></thead><tbody><tr><td>1</td><td>Toy Story</td><td>John Lasseter</td><td>1995</td><td>81</td></tr><tr><td>2</td><td>A Bug's Life</td><td>John Lasseter</td><td>1998</td><td>95</td></tr><tr><td>3</td><td>Toy Story 2</td><td>John Lasseter</td><td>1999</td><td>93</td></tr><tr><td>4</td><td>Monsters, Inc.</td><td>Pete Docter</td><td>2001</td><td>92</td></tr><tr><td>…</td><td>…</td><td>…</td><td>…</td><td>…</td></tr></tbody></table></div></div></div><div class="query-code-card">
+    <div class="query-code-top">
+        <span class="query-code-lang"><i class="fas fa-terminal"></i> SQL Query (MOVIES DB)</span>
+        <div class="query-code-actions">
+            <button class="btn-try-playground" onclick="loadQueryToEditor('SELECT * FROM movies;', 'movies')"><i class="fas fa-play"></i> Run in Playground</button>
+            <button class="btn-code-copy" onclick="copyQueryText(this, `SELECT * FROM movies;`)"><i class="far fa-copy"></i> Copy</button>
+        </div>
+    </div>
+    <pre><code>SELECT * FROM movies;</code></pre>
+</div><div class="pipeline-breakdown"><strong>Execution Pipeline:</strong> <code>FROM movies</code> (locate table partition) &rarr; <code>SELECT *</code> (project all 5 attributes for all tuples).</div><div class="challenge-toggle-box">
+    <div class="challenge-question" onclick="toggleChallenge('c1_1')">
+        <span><i class="fas fa-pencil-alt" style="color: #f59e0b;"></i> <strong>Try It Yourself:</strong> Select all records from the box_office table.</span>
+        <span style="font-size: 0.8rem; color: #38bdf8;"><i class="fas fa-lightbulb"></i> Hint &amp; Solution <i class="fas fa-chevron-down"></i></span>
+    </div>
+    <div class="challenge-solution" id="c1_1">
+        <p style="margin: 6px 0; font-size: 0.85rem; color: #64748b;"><em>Hint:</em> Use SELECT * with the box_office table name.</p>
+        <div style="background: #0f172a; padding: 10px; border-radius: 6px; font-family: monospace; font-size: 0.85rem; color: #34d399; margin: 8px 0; display: flex; justify-content: space-between; align-items: center;">
+            <code>SELECT * FROM box_office;</code>
+            <button class="btn-try-playground" style="padding: 2px 8px;" onclick="loadQueryToEditor('SELECT * FROM box_office;', 'movies')"><i class="fas fa-play"></i> Try in Playground</button>
+        </div>
+    </div>
+</div></div><div class="query-item-box">
+        <div class="query-item-header">
+            <div class="query-item-title">1.2 Projecting Specific Columns (Column Selection)</div>
+            <div class="query-badge-row"><span class="badge-difficulty badge-beginner">Beginner</span><span class="tag-badge tag-unit">PROJECTION</span></div>
+        </div>
+        <p class="query-concept-text">In production databases, queries should never request unneeded columns. By specifying exact column names separated by commas, the database minimizes network payload and disk I/O.</p>
+        <div class="comparison-grid">
+            <div class="comparison-box"><div class="comparison-label label-before"><span><i class="fas fa-database"></i> Input: movies</span><span>5 Columns Available</span></div><div class="sample-table-wrapper"><table class="sample-table"><thead><tr><th>id</th><th>title</th><th>director</th><th>year</th><th>length_minutes</th></tr></thead><tbody><tr><td>1</td><td>Toy Story</td><td>John Lasseter</td><td>1995</td><td>81</td></tr><tr><td>2</td><td>A Bug's Life</td><td>John Lasseter</td><td>1998</td><td>95</td></tr><tr><td>3</td><td>Toy Story 2</td><td>John Lasseter</td><td>1999</td><td>93</td></tr></tbody></table></div></div><div class="comparison-divider"><div class="divider-arrow"><i class="fas fa-arrow-right"></i></div></div>
+            <div class="comparison-box"><div class="comparison-label label-after"><span><i class="fas fa-check-circle"></i> Output: 3 Columns Only</span><span>id &amp; length excluded</span></div><div class="sample-table-wrapper result-table-wrapper"><table class="sample-table"><thead><tr><th>title</th><th>director</th><th>year</th></tr></thead><tbody><tr><td>Toy Story</td><td>John Lasseter</td><td>1995</td></tr><tr><td>A Bug's Life</td><td>John Lasseter</td><td>1998</td></tr><tr><td>Toy Story 2</td><td>John Lasseter</td><td>1999</td></tr></tbody></table></div></div></div><div class="query-code-card">
+    <div class="query-code-top">
+        <span class="query-code-lang"><i class="fas fa-terminal"></i> SQL Query (MOVIES DB)</span>
+        <div class="query-code-actions">
+            <button class="btn-try-playground" onclick="loadQueryToEditor('SELECT title, director, year FROM movies;', 'movies')"><i class="fas fa-play"></i> Run in Playground</button>
+            <button class="btn-code-copy" onclick="copyQueryText(this, `SELECT title, director, year FROM movies;`)"><i class="far fa-copy"></i> Copy</button>
+        </div>
+    </div>
+    <pre><code>SELECT title, director, year FROM movies;</code></pre>
+</div></div><div class="query-item-box">
+        <div class="query-item-header">
+            <div class="query-item-title">1.3 Computed Expressions &amp; Column Aliasing (AS)</div>
+            <div class="query-badge-row"><span class="badge-difficulty badge-beginner">Beginner</span><span class="tag-badge tag-unit">EXPRESSIONS</span></div>
+        </div>
+        <p class="query-concept-text">You can compute new mathematical or string expressions on-the-fly and assign clean, human-readable column titles using the <code>AS alias_name</code> clause.</p>
+        <div class="comparison-grid">
+            <div class="comparison-box"><div class="comparison-label label-before"><span><i class="fas fa-database"></i> Input: movies</span><span>length_minutes (Raw Integer)</span></div><div class="sample-table-wrapper"><table class="sample-table"><thead><tr><th>title</th><th>length_minutes</th></tr></thead><tbody><tr><td>Toy Story</td><td>81</td></tr><tr><td>A Bug's Life</td><td>95</td></tr><tr><td>The Incredibles</td><td>115</td></tr></tbody></table></div></div><div class="comparison-divider"><div class="divider-arrow"><i class="fas fa-arrow-right"></i></div></div>
+            <div class="comparison-box"><div class="comparison-label label-after"><span><i class="fas fa-check-circle"></i> Output: Computed Column</span><span>duration_hours (Computed Float)</span></div><div class="sample-table-wrapper result-table-wrapper"><table class="sample-table"><thead><tr><th>title</th><th>duration_hours</th></tr></thead><tbody><tr><td>Toy Story</td><td>1.35</td></tr><tr><td>A Bug's Life</td><td>1.58</td></tr><tr><td>The Incredibles</td><td>1.92</td></tr></tbody></table></div></div></div><div class="query-code-card">
+    <div class="query-code-top">
+        <span class="query-code-lang"><i class="fas fa-terminal"></i> SQL Query (MOVIES DB)</span>
+        <div class="query-code-actions">
+            <button class="btn-try-playground" onclick="loadQueryToEditor('SELECT title, ROUND(length_minutes / 60.0, 2) AS duration_hours FROM movies;', 'movies')"><i class="fas fa-play"></i> Run in Playground</button>
+            <button class="btn-code-copy" onclick="copyQueryText(this, `SELECT title, ROUND(length_minutes / 60.0, 2) AS duration_hours FROM movies;`)"><i class="far fa-copy"></i> Copy</button>
+        </div>
+    </div>
+    <pre><code>SELECT title, ROUND(length_minutes / 60.0, 2) AS duration_hours FROM movies;</code></pre>
+</div></div><div class="query-item-box">
+        <div class="query-item-header">
+            <div class="query-item-title">1.4 Eliminating Duplicate Rows with DISTINCT</div>
+            <div class="query-badge-row"><span class="badge-difficulty badge-beginner">Beginner</span><span class="tag-badge tag-unit">DISTINCT</span></div>
+        </div>
+        <p class="query-concept-text">The <code>DISTINCT</code> keyword evaluates the projected attributes and discards duplicate values, guaranteeing that every row in the result set is mathematically unique.</p>
+        <div class="comparison-grid">
+            <div class="comparison-box"><div class="comparison-label label-before"><span><i class="fas fa-database"></i> Without DISTINCT</span><span>Duplicate Director Names</span></div><div class="sample-table-wrapper"><table class="sample-table"><thead><tr><th>director</th></tr></thead><tbody><tr><td>John Lasseter</td></tr><tr><td>John Lasseter</td></tr><tr><td>John Lasseter</td></tr><tr><td>Pete Docter</td></tr><tr><td>Andrew Stanton</td></tr><tr><td>Brad Bird</td></tr></tbody></table></div></div><div class="comparison-divider"><div class="divider-arrow"><i class="fas fa-arrow-right"></i></div></div>
+            <div class="comparison-box"><div class="comparison-label label-after"><span><i class="fas fa-check-circle"></i> With DISTINCT</span><span>Unique Directors Only (4 Rows)</span></div><div class="sample-table-wrapper result-table-wrapper"><table class="sample-table"><thead><tr><th>director</th></tr></thead><tbody><tr><td>Andrew Stanton</td></tr><tr><td>Brad Bird</td></tr><tr><td>John Lasseter</td></tr><tr><td>Pete Docter</td></tr></tbody></table></div></div></div><div class="query-code-card">
+    <div class="query-code-top">
+        <span class="query-code-lang"><i class="fas fa-terminal"></i> SQL Query (MOVIES DB)</span>
+        <div class="query-code-actions">
+            <button class="btn-try-playground" onclick="loadQueryToEditor('SELECT DISTINCT director FROM movies ORDER BY director ASC;', 'movies')"><i class="fas fa-play"></i> Run in Playground</button>
+            <button class="btn-code-copy" onclick="copyQueryText(this, `SELECT DISTINCT director FROM movies ORDER BY director ASC;`)"><i class="far fa-copy"></i> Copy</button>
+        </div>
+    </div>
+    <pre><code>SELECT DISTINCT director FROM movies ORDER BY director ASC;</code></pre>
+</div><div class="challenge-toggle-box">
+    <div class="challenge-question" onclick="toggleChallenge('c1_4')">
+        <span><i class="fas fa-pencil-alt" style="color: #f59e0b;"></i> <strong>Try It Yourself:</strong> Find all distinct cohort years from the students table in the university database.</span>
+        <span style="font-size: 0.8rem; color: #38bdf8;"><i class="fas fa-lightbulb"></i> Hint &amp; Solution <i class="fas fa-chevron-down"></i></span>
+    </div>
+    <div class="challenge-solution" id="c1_4">
+        <p style="margin: 6px 0; font-size: 0.85rem; color: #64748b;"><em>Hint:</em> Use SELECT DISTINCT cohort_year FROM students.</p>
+        <div style="background: #0f172a; padding: 10px; border-radius: 6px; font-family: monospace; font-size: 0.85rem; color: #34d399; margin: 8px 0; display: flex; justify-content: space-between; align-items: center;">
+            <code>SELECT DISTINCT cohort_year FROM students ORDER BY cohort_year;</code>
+            <button class="btn-try-playground" style="padding: 2px 8px;" onclick="loadQueryToEditor('SELECT DISTINCT cohort_year FROM students ORDER BY cohort_year;', 'university')"><i class="fas fa-play"></i> Try in Playground</button>
+        </div>
+    </div>
+</div></div></div>
+<div class="query-module-card" data-category="filtering">
+        <div class="module-header">
+            <div class="module-title-group">
+                <h2><i class="fas fa-filter"></i> Module 2: Filtering Data with WHERE Clauses</h2>
+                <p>SQLBolt Lessons 3 &amp; 4: Comparison operators, boolean logic, ranges (BETWEEN), lists (IN), wildcards (LIKE), and NULL handling.</p>
+            </div>
+            <span class="module-badge">4 Lessons</span>
+        </div>
+
+        <div class="query-item-box">
+            <div class="query-item-header">
+                <div class="query-item-title">2.1 Numerical Comparisons (=, &lt;&gt;, &lt;, &gt;, &le;, &ge;)</div>
+                <div class="query-badge-row"><span class="badge-difficulty badge-beginner">Beginner</span><span class="tag-badge tag-unit">WHERE</span></div>
+            </div>
+            <p class="query-concept-text">The <code>WHERE</code> clause evaluates each row against a boolean predicate. Only tuples where the condition evaluates to <code>TRUE</code> are included in the result set.</p>
+            <div class="comparison-grid">
+                <div class="comparison-box"><div class="comparison-label label-before"><span><i class="fas fa-database"></i> Input: movies</span><span>10 Rows</span></div><div class="sample-table-wrapper"><table class="sample-table"><thead><tr><th>title</th><th>year</th><th>length_minutes</th></tr></thead><tbody><tr><td>Toy Story</td><td>1995</td><td>81</td></tr><tr><td>Finding Nemo</td><td>2003</td><td>100</td></tr><tr><td>Cars</td><td>2006</td><td>117</td></tr><tr><td>WALL-E</td><td>2008</td><td>98</td></tr><tr><td>Up</td><td>2009</td><td>96</td></tr></tbody></table></div></div><div class="comparison-divider"><div class="divider-arrow"><i class="fas fa-arrow-right"></i></div></div>
+                <div class="comparison-box"><div class="comparison-label label-after"><span><i class="fas fa-check-circle"></i> Output: year &gt; 2004</span><span>4 Movies Matched</span></div><div class="sample-table-wrapper result-table-wrapper"><table class="sample-table"><thead><tr><th>title</th><th>year</th><th>length_minutes</th></tr></thead><tbody><tr><td>Cars</td><td>2006</td><td>117</td></tr><tr><td>WALL-E</td><td>2008</td><td>98</td></tr><tr><td>Up</td><td>2009</td><td>96</td></tr></tbody></table></div></div></div><div class="query-code-card">
+    <div class="query-code-top">
+        <span class="query-code-lang"><i class="fas fa-terminal"></i> SQL Query (MOVIES DB)</span>
+        <div class="query-code-actions">
+            <button class="btn-try-playground" onclick="loadQueryToEditor('SELECT title, year, length_minutes FROM movies WHERE year > 2004;', 'movies')"><i class="fas fa-play"></i> Run in Playground</button>
+            <button class="btn-code-copy" onclick="copyQueryText(this, `SELECT title, year, length_minutes
+FROM movies
+WHERE year > 2004;`)"><i class="far fa-copy"></i> Copy</button>
+        </div>
+    </div>
+    <pre><code>SELECT title, year, length_minutes
+FROM movies
+WHERE year > 2004;</code></pre>
+</div></div><div class="query-item-box">
+        <div class="query-item-header">
+            <div class="query-item-title">2.2 Range Filtering with BETWEEN &amp; Membership with IN</div>
+            <div class="query-badge-row"><span class="badge-difficulty badge-beginner">Beginner</span><span class="tag-badge tag-unit">BETWEEN &amp; IN</span></div>
+        </div>
+        <p class="query-concept-text"><code>BETWEEN a AND b</code> matches values in an inclusive range. <code>IN (x, y, z)</code> tests if a value matches any member of a set.</p>
+        <div class="comparison-grid">
+            <div class="comparison-box"><div class="comparison-label label-before"><span><i class="fas fa-database"></i> Input: movies</span><span>Director &amp; Year</span></div><div class="sample-table-wrapper"><table class="sample-table"><thead><tr><th>title</th><th>director</th><th>year</th></tr></thead><tbody><tr><td>Monsters, Inc.</td><td>Pete Docter</td><td>2001</td></tr><tr><td>Finding Nemo</td><td>Andrew Stanton</td><td>2003</td></tr><tr><td>The Incredibles</td><td>Brad Bird</td><td>2004</td></tr><tr><td>Up</td><td>Pete Docter</td><td>2009</td></tr></tbody></table></div></div><div class="comparison-divider"><div class="divider-arrow"><i class="fas fa-arrow-right"></i></div></div>
+            <div class="comparison-box"><div class="comparison-label label-after"><span><i class="fas fa-check-circle"></i> Output: IN ('Brad Bird', 'Pete Docter')</span><span>3 Matches</span></div><div class="sample-table-wrapper result-table-wrapper"><table class="sample-table"><thead><tr><th>title</th><th>director</th><th>year</th></tr></thead><tbody><tr><td>Monsters, Inc.</td><td>Pete Docter</td><td>2001</td></tr><tr><td>The Incredibles</td><td>Brad Bird</td><td>2004</td></tr><tr><td>Up</td><td>Pete Docter</td><td>2009</td></tr></tbody></table></div></div></div><div class="query-code-card">
+    <div class="query-code-top">
+        <span class="query-code-lang"><i class="fas fa-terminal"></i> SQL Query (MOVIES DB)</span>
+        <div class="query-code-actions">
+            <button class="btn-try-playground" onclick="loadQueryToEditor('SELECT title, director, year FROM movies WHERE director IN (\'Brad Bird\', \'Pete Docter\');', 'movies')"><i class="fas fa-play"></i> Run in Playground</button>
+            <button class="btn-code-copy" onclick="copyQueryText(this, `SELECT title, director, year
+FROM movies
+WHERE director IN ('Brad Bird', 'Pete Docter');`)"><i class="far fa-copy"></i> Copy</button>
+        </div>
+    </div>
+    <pre><code>SELECT title, director, year
+FROM movies
+WHERE director IN ('Brad Bird', 'Pete Docter');</code></pre>
+</div></div><div class="query-item-box">
+        <div class="query-item-header">
+            <div class="query-item-title">2.3 Pattern Matching with LIKE &amp; Wildcards (%, _)</div>
+            <div class="query-badge-row"><span class="badge-difficulty badge-beginner">Beginner</span><span class="tag-badge tag-unit">LIKE</span></div>
+        </div>
+        <p class="query-concept-text">Search for text patterns: <code>%</code> matches zero or more characters; <code>_</code> matches exactly one single character.</p>
+        <div class="comparison-grid">
+            <div class="comparison-box"><div class="comparison-label label-before"><span><i class="fas fa-database"></i> Input: movies</span><span>title column</span></div><div class="sample-table-wrapper"><table class="sample-table"><thead><tr><th>id</th><th>title</th></tr></thead><tbody><tr><td>1</td><td>Toy Story</td></tr><tr><td>2</td><td>A Bug's Life</td></tr><tr><td>3</td><td>Toy Story 2</td></tr><tr><td>5</td><td>Finding Nemo</td></tr></tbody></table></div></div><div class="comparison-divider"><div class="divider-arrow"><i class="fas fa-arrow-right"></i></div></div>
+            <div class="comparison-box"><div class="comparison-label label-after"><span><i class="fas fa-check-circle"></i> Output: LIKE 'Toy Story%'</span><span>Prefix Match (2 Rows)</span></div><div class="sample-table-wrapper result-table-wrapper"><table class="sample-table"><thead><tr><th>id</th><th>title</th></tr></thead><tbody><tr><td>1</td><td>Toy Story</td></tr><tr><td>3</td><td>Toy Story 2</td></tr></tbody></table></div></div></div><div class="query-code-card">
+    <div class="query-code-top">
+        <span class="query-code-lang"><i class="fas fa-terminal"></i> SQL Query (MOVIES DB)</span>
+        <div class="query-code-actions">
+            <button class="btn-try-playground" onclick="loadQueryToEditor('SELECT id, title FROM movies WHERE title LIKE \'Toy Story%\';', 'movies')"><i class="fas fa-play"></i> Run in Playground</button>
+            <button class="btn-code-copy" onclick="copyQueryText(this, `SELECT id, title FROM movies WHERE title LIKE 'Toy Story%';`)"><i class="far fa-copy"></i> Copy</button>
+        </div>
+    </div>
+    <pre><code>SELECT id, title FROM movies WHERE title LIKE 'Toy Story%';</code></pre>
+</div></div><div class="query-item-box">
+        <div class="query-item-header">
+            <div class="query-item-title">2.4 Handling NULL Values (IS NULL vs IS NOT NULL)</div>
+            <div class="query-badge-row"><span class="badge-difficulty badge-beginner">Beginner</span><span class="tag-badge tag-unit">NULL</span></div>
+        </div>
+        <p class="query-concept-text">Never compare NULL using <code>= NULL</code>; in three-valued logic, that evaluates to UNKNOWN. Always use <code>IS NULL</code> or <code>IS NOT NULL</code>.</p>
+        <div class="comparison-grid">
+            <div class="comparison-box"><div class="comparison-label label-before"><span><i class="fas fa-database"></i> Input: TechCorp employees</span><span>George Clark has dept=NULL</span></div><div class="sample-table-wrapper"><table class="sample-table"><thead><tr><th>emp_id</th><th>first_name</th><th>dept_id</th></tr></thead><tbody><tr><td>101</td><td>Alice</td><td>10</td></tr><tr><td>106</td><td>Fiona</td><td>30</td></tr><tr><td>107</td><td>George</td><td><span style='color:red;'>NULL</span></td></tr></tbody></table></div></div><div class="comparison-divider"><div class="divider-arrow"><i class="fas fa-arrow-right"></i></div></div>
+            <div class="comparison-box"><div class="comparison-label label-after"><span><i class="fas fa-check-circle"></i> Output: WHERE dept_id IS NULL</span><span>1 Row Isolated</span></div><div class="sample-table-wrapper result-table-wrapper"><table class="sample-table"><thead><tr><th>emp_id</th><th>first_name</th><th>dept_id</th></tr></thead><tbody><tr><td>107</td><td>George</td><td>NULL</td></tr></tbody></table></div></div></div><div class="query-code-card">
+    <div class="query-code-top">
+        <span class="query-code-lang"><i class="fas fa-terminal"></i> SQL Query (TECHCORP DB)</span>
+        <div class="query-code-actions">
+            <button class="btn-try-playground" onclick="loadQueryToEditor('SELECT emp_id, first_name, salary FROM employees WHERE dept_id IS NULL;', 'techcorp')"><i class="fas fa-play"></i> Run in Playground</button>
+            <button class="btn-code-copy" onclick="copyQueryText(this, `SELECT emp_id, first_name, salary FROM employees WHERE dept_id IS NULL;`)"><i class="far fa-copy"></i> Copy</button>
+        </div>
+    </div>
+    <pre><code>SELECT emp_id, first_name, salary FROM employees WHERE dept_id IS NULL;</code></pre>
+</div></div></div>
+<div class="query-module-card" data-category="sorting">
+        <div class="module-header">
+            <div class="module-title-group">
+                <h2><i class="fas fa-sort-amount-down"></i> Module 3: Sorting, Limiting &amp; Pagination</h2>
+                <p>SQLBolt Lesson 5: Ordering output tuples with ORDER BY (ASC/DESC), multi-attribute sorting, and web-scale pagination using LIMIT and OFFSET.</p>
+            </div>
+            <span class="module-badge">2 Lessons</span>
+        </div>
+
+        <div class="query-item-box">
+            <div class="query-item-header">
+                <div class="query-item-title">3.1 Sorting with ORDER BY (ASC / DESC)</div>
+                <div class="query-badge-row"><span class="badge-difficulty badge-beginner">Beginner</span><span class="tag-badge tag-unit">ORDER BY</span></div>
+            </div>
+            <p class="query-concept-text">Without ORDER BY, relational systems return rows in non-deterministic order. Use <code>DESC</code> for descending and <code>ASC</code> for ascending.</p>
+            <div class="comparison-grid">
+                <div class="comparison-box"><div class="comparison-label label-before"><span><i class="fas fa-database"></i> Input: movies</span><span>Unordered</span></div><div class="sample-table-wrapper"><table class="sample-table"><thead><tr><th>title</th><th>length_minutes</th></tr></thead><tbody><tr><td>Toy Story</td><td>81</td></tr><tr><td>Cars</td><td>117</td></tr><tr><td>WALL-E</td><td>98</td></tr></tbody></table></div></div><div class="comparison-divider"><div class="divider-arrow"><i class="fas fa-arrow-right"></i></div></div>
+                <div class="comparison-box"><div class="comparison-label label-after"><span><i class="fas fa-check-circle"></i> Output: ORDER BY length_minutes DESC</span><span>Sorted</span></div><div class="sample-table-wrapper result-table-wrapper"><table class="sample-table"><thead><tr><th>title</th><th>length_minutes</th></tr></thead><tbody><tr><td>Cars</td><td>117</td></tr><tr><td>WALL-E</td><td>98</td></tr><tr><td>Toy Story</td><td>81</td></tr></tbody></table></div></div></div><div class="query-code-card">
+    <div class="query-code-top">
+        <span class="query-code-lang"><i class="fas fa-terminal"></i> SQL Query (MOVIES DB)</span>
+        <div class="query-code-actions">
+            <button class="btn-try-playground" onclick="loadQueryToEditor('SELECT title, length_minutes FROM movies ORDER BY length_minutes DESC;', 'movies')"><i class="fas fa-play"></i> Run in Playground</button>
+            <button class="btn-code-copy" onclick="copyQueryText(this, `SELECT title, length_minutes FROM movies ORDER BY length_minutes DESC;`)"><i class="far fa-copy"></i> Copy</button>
+        </div>
+    </div>
+    <pre><code>SELECT title, length_minutes FROM movies ORDER BY length_minutes DESC;</code></pre>
+</div></div><div class="query-item-box">
+        <div class="query-item-header">
+            <div class="query-item-title">3.2 Web Pagination with LIMIT &amp; OFFSET</div>
+            <div class="query-badge-row"><span class="badge-difficulty badge-intermediate">Intermediate</span><span class="tag-badge tag-unit">PAGINATION</span></div>
+        </div>
+        <p class="query-concept-text">Pagination formula: <code>LIMIT page_size OFFSET (page_number - 1) * page_size</code>.</p>
+        <div class="comparison-grid">
+            <div class="comparison-box"><div class="comparison-label label-before"><span><i class="fas fa-database"></i> Input: Sorted by Year</span><span>Chronological</span></div><div class="sample-table-wrapper"><table class="sample-table"><thead><tr><th>title</th><th>year</th></tr></thead><tbody><tr><td>Toy Story</td><td>1995</td></tr><tr><td>A Bug's Life</td><td>1998</td></tr><tr><td>Toy Story 2</td><td>1999</td></tr><tr><td>Monsters, Inc.</td><td>2001</td></tr><tr><td>Finding Nemo</td><td>2003</td></tr></tbody></table></div></div><div class="comparison-divider"><div class="divider-arrow"><i class="fas fa-arrow-right"></i></div></div>
+            <div class="comparison-box"><div class="comparison-label label-after"><span><i class="fas fa-check-circle"></i> Output: LIMIT 2 OFFSET 2</span><span>Page 2 (2 Rows)</span></div><div class="sample-table-wrapper result-table-wrapper"><table class="sample-table"><thead><tr><th>title</th><th>year</th></tr></thead><tbody><tr><td>Toy Story 2</td><td>1999</td></tr><tr><td>Monsters, Inc.</td><td>2001</td></tr></tbody></table></div></div></div><div class="query-code-card">
+    <div class="query-code-top">
+        <span class="query-code-lang"><i class="fas fa-terminal"></i> SQL Query (MOVIES DB)</span>
+        <div class="query-code-actions">
+            <button class="btn-try-playground" onclick="loadQueryToEditor('SELECT title, year FROM movies ORDER BY year ASC LIMIT 2 OFFSET 2;', 'movies')"><i class="fas fa-play"></i> Run in Playground</button>
+            <button class="btn-code-copy" onclick="copyQueryText(this, `SELECT title, year FROM movies ORDER BY year ASC LIMIT 2 OFFSET 2;`)"><i class="far fa-copy"></i> Copy</button>
+        </div>
+    </div>
+    <pre><code>SELECT title, year FROM movies ORDER BY year ASC LIMIT 2 OFFSET 2;</code></pre>
+</div></div></div>
+<div class="query-module-card" data-category="joins">
+        <div class="module-header">
+            <div class="module-title-group">
+                <h2><i class="fas fa-project-diagram"></i> Module 4: Multi-Table Queries &amp; Relational JOINs</h2>
+                <p>SQLBolt Lessons 6 &amp; 7: INNER JOIN, LEFT OUTER JOIN, Anti-Joins, Self-Joins, and normalized 3-way table joins.</p>
+            </div>
+            <span class="module-badge">4 Lessons</span>
+        </div>
+
+        <div class="query-item-box">
+            <div class="query-item-header">
+                <div class="query-item-title">4.1 INNER JOIN: Matching Tuples Across Tables</div>
+                <div class="query-badge-row"><span class="badge-difficulty badge-beginner">Beginner</span><span class="tag-badge tag-unit">INNER JOIN</span></div>
+            </div>
+            <p class="query-concept-text">Combines rows from two tables where the <code>ON</code> join predicate matches on both sides.</p>
+            <div class="comparison-grid">
+                <div class="comparison-box"><div class="comparison-label label-before"><span><i class="fas fa-database"></i> Input: movies &amp; box_office</span><span>Matched on movie_id</span></div><div class="sample-table-wrapper"><table class="sample-table"><thead><tr><th>m.title</th><th>b.rating</th><th>b.domestic_sales</th></tr></thead><tbody><tr><td>WALL-E</td><td>8.4</td><td>$223,808,164</td></tr><tr><td>Toy Story</td><td>8.3</td><td>$191,796,233</td></tr><tr><td>Cars</td><td>7.2</td><td>$244,082,982</td></tr></tbody></table></div></div><div class="comparison-divider"><div class="divider-arrow"><i class="fas fa-arrow-right"></i></div></div>
+                <div class="comparison-box"><div class="comparison-label label-after"><span><i class="fas fa-check-circle"></i> Output: INNER JOIN (rating &ge; 8.3)</span><span>2 Hits</span></div><div class="sample-table-wrapper result-table-wrapper"><table class="sample-table"><thead><tr><th>title</th><th>rating</th><th>domestic_sales</th></tr></thead><tbody><tr><td>WALL-E</td><td>8.4</td><td>$223,808,164</td></tr><tr><td>Toy Story</td><td>8.3</td><td>$191,796,233</td></tr></tbody></table></div></div></div><div class="query-code-card">
+    <div class="query-code-top">
+        <span class="query-code-lang"><i class="fas fa-terminal"></i> SQL Query (MOVIES DB)</span>
+        <div class="query-code-actions">
+            <button class="btn-try-playground" onclick="loadQueryToEditor('SELECT m.title, b.rating, b.domestic_sales FROM movies m INNER JOIN box_office b ON m.id = b.movie_id WHERE b.rating >= 8.3 ORDER BY b.rating DESC;', 'movies')"><i class="fas fa-play"></i> Run in Playground</button>
+            <button class="btn-code-copy" onclick="copyQueryText(this, `SELECT m.title, b.rating, b.domestic_sales
+FROM movies m
+INNER JOIN box_office b ON m.id = b.movie_id
+WHERE b.rating >= 8.3
+ORDER BY b.rating DESC;`)"><i class="far fa-copy"></i> Copy</button>
+        </div>
+    </div>
+    <pre><code>SELECT m.title, b.rating, b.domestic_sales
+FROM movies m
+INNER JOIN box_office b ON m.id = b.movie_id
+WHERE b.rating >= 8.3
+ORDER BY b.rating DESC;</code></pre>
+</div></div><div class="query-item-box">
+        <div class="query-item-header">
+            <div class="query-item-title">4.2 LEFT OUTER JOIN: Preserving Unmatched Left Rows</div>
+            <div class="query-badge-row"><span class="badge-difficulty badge-intermediate">Intermediate</span><span class="tag-badge tag-unit">LEFT JOIN</span></div>
+        </div>
+        <p class="query-concept-text">A LEFT JOIN guarantees every row from the left table is returned, substituting NULL for missing right-hand columns.</p>
+        <div class="comparison-grid">
+            <div class="comparison-box"><div class="comparison-label label-before"><span><i class="fas fa-database"></i> Left: employees (incl. George, dept=NULL)</span><span>Right: departments</span></div><div class="sample-table-wrapper"><table class="sample-table"><thead><tr><th>emp_id</th><th>first_name</th><th>dept_id</th></tr></thead><tbody><tr><td>101</td><td>Alice</td><td>10</td></tr><tr><td>107</td><td>George</td><td>NULL</td></tr></tbody></table></div></div><div class="comparison-divider"><div class="divider-arrow"><i class="fas fa-arrow-right"></i></div></div>
+            <div class="comparison-box"><div class="comparison-label label-after"><span><i class="fas fa-check-circle"></i> Output: LEFT JOIN</span><span>George preserved with NULL dept</span></div><div class="sample-table-wrapper result-table-wrapper"><table class="sample-table"><thead><tr><th>first_name</th><th>dept_name</th></tr></thead><tbody><tr><td>Alice</td><td>Engineering</td></tr><tr><td>George</td><td><span style='color:red;'>NULL</span></td></tr></tbody></table></div></div></div><div class="query-code-card">
+    <div class="query-code-top">
+        <span class="query-code-lang"><i class="fas fa-terminal"></i> SQL Query (TECHCORP DB)</span>
+        <div class="query-code-actions">
+            <button class="btn-try-playground" onclick="loadQueryToEditor('SELECT e.first_name, e.last_name, d.dept_name FROM employees e LEFT JOIN departments d ON e.dept_id = d.dept_id;', 'techcorp')"><i class="fas fa-play"></i> Run in Playground</button>
+            <button class="btn-code-copy" onclick="copyQueryText(this, `SELECT e.first_name, e.last_name, d.dept_name
+FROM employees e
+LEFT JOIN departments d ON e.dept_id = d.dept_id;`)"><i class="far fa-copy"></i> Copy</button>
+        </div>
+    </div>
+    <pre><code>SELECT e.first_name, e.last_name, d.dept_name
+FROM employees e
+LEFT JOIN departments d ON e.dept_id = d.dept_id;</code></pre>
+</div></div><div class="query-item-box">
+        <div class="query-item-header">
+            <div class="query-item-title">4.3 Self-Join: Hierarchical Employee-to-Manager Traversal</div>
+            <div class="query-badge-row"><span class="badge-difficulty badge-intermediate">Intermediate</span><span class="tag-badge tag-unit">SELF-JOIN</span></div>
+        </div>
+        <p class="query-concept-text">Join a table with itself using distinct aliases (<code>e</code> for employee, <code>m</code> for manager).</p>
+        <div class="comparison-grid">
+            <div class="comparison-box"><div class="comparison-label label-before"><span><i class="fas fa-database"></i> Input: employees (emp_id, manager_id)</span><span>Hierarchy</span></div><div class="sample-table-wrapper"><table class="sample-table"><thead><tr><th>emp_id</th><th>first_name</th><th>manager_id</th></tr></thead><tbody><tr><td>101</td><td>Alice</td><td>NULL</td></tr><tr><td>102</td><td>Bob</td><td>101</td></tr><tr><td>103</td><td>Charlie</td><td>105</td></tr></tbody></table></div></div><div class="comparison-divider"><div class="divider-arrow"><i class="fas fa-arrow-right"></i></div></div>
+            <div class="comparison-box"><div class="comparison-label label-after"><span><i class="fas fa-check-circle"></i> Output: Self-Join</span><span>Employee &rarr; Manager</span></div><div class="sample-table-wrapper result-table-wrapper"><table class="sample-table"><thead><tr><th>employee</th><th>manager</th></tr></thead><tbody><tr><td>Bob Jones</td><td>Alice Smith</td></tr><tr><td>Charlie Brown</td><td>Evan Wright</td></tr><tr><td>Alice Smith</td><td>Top Boss (No Manager)</td></tr></tbody></table></div></div></div><div class="query-code-card">
+    <div class="query-code-top">
+        <span class="query-code-lang"><i class="fas fa-terminal"></i> SQL Query (TECHCORP DB)</span>
+        <div class="query-code-actions">
+            <button class="btn-try-playground" onclick="loadQueryToEditor('SELECT e.first_name || \' \' || e.last_name AS employee,        COALESCE(m.first_name || \' \' || m.last_name, \'Top Boss (No Manager)\') AS manager FROM employees e LEFT JOIN employees m ON e.manager_id = m.emp_id;', 'techcorp')"><i class="fas fa-play"></i> Run in Playground</button>
+            <button class="btn-code-copy" onclick="copyQueryText(this, `SELECT e.first_name || ' ' || e.last_name AS employee,
+       COALESCE(m.first_name || ' ' || m.last_name, 'Top Boss (No Manager)') AS manager
+FROM employees e
+LEFT JOIN employees m ON e.manager_id = m.emp_id;`)"><i class="far fa-copy"></i> Copy</button>
+        </div>
+    </div>
+    <pre><code>SELECT e.first_name || ' ' || e.last_name AS employee,
+       COALESCE(m.first_name || ' ' || m.last_name, 'Top Boss (No Manager)') AS manager
+FROM employees e
+LEFT JOIN employees m ON e.manager_id = m.emp_id;</code></pre>
+</div></div><div class="query-item-box">
+        <div class="query-item-header">
+            <div class="query-item-title">4.4 Three-Table Join (Students &rarr; Enrollments &rarr; Courses)</div>
+            <div class="query-badge-row"><span class="badge-difficulty badge-intermediate">Intermediate</span><span class="tag-badge tag-unit">3-TABLE JOIN</span></div>
+        </div>
+        <p class="query-concept-text">Traversing a Many-to-Many junction table (<code>enrollments</code>) to link students directly to course names and grade records.</p>
+        <div class="comparison-grid">
+            <div class="comparison-box"><div class="comparison-label label-before"><span><i class="fas fa-database"></i> Input: 3 Tables Linked</span><span>Junction Model</span></div><div class="sample-table-wrapper"><table class="sample-table"><thead><tr><th>student</th><th>course_code</th><th>grade</th></tr></thead><tbody><tr><td>Aarav Sharma</td><td>CS101</td><td>A</td></tr><tr><td>Diya Patel</td><td>CS101</td><td>A+</td></tr><tr><td>Meera Nair</td><td>CS101</td><td>A+</td></tr></tbody></table></div></div><div class="comparison-divider"><div class="divider-arrow"><i class="fas fa-arrow-right"></i></div></div>
+            <div class="comparison-box"><div class="comparison-label label-after"><span><i class="fas fa-check-circle"></i> Output: Grade = 'A+'</span><span>2 Students</span></div><div class="sample-table-wrapper result-table-wrapper"><table class="sample-table"><thead><tr><th>student_name</th><th>course_name</th><th>grade</th></tr></thead><tbody><tr><td>Diya Patel</td><td>Database Management Systems</td><td>A+</td></tr><tr><td>Meera Nair</td><td>Database Management Systems</td><td>A+</td></tr></tbody></table></div></div></div><div class="query-code-card">
+    <div class="query-code-top">
+        <span class="query-code-lang"><i class="fas fa-terminal"></i> SQL Query (UNIVERSITY DB)</span>
+        <div class="query-code-actions">
+            <button class="btn-try-playground" onclick="loadQueryToEditor('SELECT s.name AS student_name, c.course_name, e.grade FROM students s INNER JOIN enrollments e ON s.student_id = e.student_id INNER JOIN courses c ON e.course_id = c.course_id WHERE e.grade = \'A+\' ORDER BY s.name ASC;', 'university')"><i class="fas fa-play"></i> Run in Playground</button>
+            <button class="btn-code-copy" onclick="copyQueryText(this, `SELECT s.name AS student_name, c.course_name, e.grade
+FROM students s
+INNER JOIN enrollments e ON s.student_id = e.student_id
+INNER JOIN courses c ON e.course_id = c.course_id
+WHERE e.grade = 'A+'
+ORDER BY s.name ASC;`)"><i class="far fa-copy"></i> Copy</button>
+        </div>
+    </div>
+    <pre><code>SELECT s.name AS student_name, c.course_name, e.grade
+FROM students s
+INNER JOIN enrollments e ON s.student_id = e.student_id
+INNER JOIN courses c ON e.course_id = c.course_id
+WHERE e.grade = 'A+'
+ORDER BY s.name ASC;</code></pre>
+</div></div></div>
+<div class="query-module-card" data-category="aggregates">
+        <div class="module-header">
+            <div class="module-title-group">
+                <h2><i class="fas fa-calculator"></i> Module 5: Aggregate Functions</h2>
+                <p>SQLBolt Lessons 8 &amp; 10: Summarizing data using COUNT, SUM, AVG, MIN, MAX, and distinguishing COUNT(*) vs COUNT(col).</p>
+            </div>
+            <span class="module-badge">2 Lessons</span>
+        </div>
+
+        <div class="query-item-box">
+            <div class="query-item-header">
+                <div class="query-item-title">5.1 Computing Statistical Metrics (COUNT, SUM, AVG, MIN, MAX)</div>
+                <div class="query-badge-row"><span class="badge-difficulty badge-beginner">Beginner</span><span class="tag-badge tag-unit">AGGREGATES</span></div>
+            </div>
+            <p class="query-concept-text">Aggregate functions evaluate multiple column values across rows and collapse them into a single summary scalar value.</p>
+            <div class="comparison-grid">
+                <div class="comparison-box"><div class="comparison-label label-before"><span><i class="fas fa-database"></i> Input: TechCorp employees in Dept 10</span><span>Salaries: 95k, 82k, 88k</span></div><div class="sample-table-wrapper"><table class="sample-table"><thead><tr><th>first_name</th><th>dept_id</th><th>salary</th></tr></thead><tbody><tr><td>Alice</td><td>10</td><td>95000</td></tr><tr><td>Bob</td><td>10</td><td>82000</td></tr><tr><td>Diana</td><td>10</td><td>88000</td></tr></tbody></table></div></div><div class="comparison-divider"><div class="divider-arrow"><i class="fas fa-arrow-right"></i></div></div>
+                <div class="comparison-box"><div class="comparison-label label-after"><span><i class="fas fa-check-circle"></i> Output: Aggregate Summary</span><span>Single Row</span></div><div class="sample-table-wrapper result-table-wrapper"><table class="sample-table"><thead><tr><th>lowest_salary</th><th>average_salary</th><th>highest_salary</th><th>total_payroll</th></tr></thead><tbody><tr><td>82000</td><td>88333.33</td><td>95000</td><td>265000</td></tr></tbody></table></div></div></div><div class="query-code-card">
+    <div class="query-code-top">
+        <span class="query-code-lang"><i class="fas fa-terminal"></i> SQL Query (TECHCORP DB)</span>
+        <div class="query-code-actions">
+            <button class="btn-try-playground" onclick="loadQueryToEditor('SELECT      MIN(salary) AS lowest_salary,     ROUND(AVG(salary), 2) AS average_salary,     MAX(salary) AS highest_salary,     SUM(salary) AS total_payroll FROM employees WHERE dept_id = 10;', 'techcorp')"><i class="fas fa-play"></i> Run in Playground</button>
+            <button class="btn-code-copy" onclick="copyQueryText(this, `SELECT 
+    MIN(salary) AS lowest_salary,
+    ROUND(AVG(salary), 2) AS average_salary,
+    MAX(salary) AS highest_salary,
+    SUM(salary) AS total_payroll
+FROM employees
+WHERE dept_id = 10;`)"><i class="far fa-copy"></i> Copy</button>
+        </div>
+    </div>
+    <pre><code>SELECT 
+    MIN(salary) AS lowest_salary,
+    ROUND(AVG(salary), 2) AS average_salary,
+    MAX(salary) AS highest_salary,
+    SUM(salary) AS total_payroll
+FROM employees
+WHERE dept_id = 10;</code></pre>
+</div></div><div class="query-item-box">
+        <div class="query-item-header">
+            <div class="query-item-title">5.2 COUNT(*) vs COUNT(col) vs COUNT(DISTINCT col)</div>
+            <div class="query-badge-row"><span class="badge-difficulty badge-beginner">Beginner</span><span class="tag-badge tag-unit">COUNT VARIATIONS</span></div>
+        </div>
+        <p class="query-concept-text"><code>COUNT(*)</code> counts all rows including NULLs; <code>COUNT(col)</code> counts only non-null values; <code>COUNT(DISTINCT col)</code> counts unique non-null values.</p>
+        <div class="comparison-grid">
+            <div class="comparison-box"><div class="comparison-label label-before"><span><i class="fas fa-database"></i> Input: 8 Employees</span><span>1 employee has dept_id = NULL</span></div><div class="sample-table-wrapper"><table class="sample-table"><thead><tr><th>emp_id</th><th>dept_id</th></tr></thead><tbody><tr><td>101</td><td>10</td></tr><tr><td>102</td><td>10</td></tr><tr><td>103</td><td>20</td></tr><tr><td>107</td><td>NULL</td></tr></tbody></table></div></div><div class="comparison-divider"><div class="divider-arrow"><i class="fas fa-arrow-right"></i></div></div>
+            <div class="comparison-box"><div class="comparison-label label-after"><span><i class="fas fa-check-circle"></i> Output: Count Metrics</span><span>8 vs 7 vs 3</span></div><div class="sample-table-wrapper result-table-wrapper"><table class="sample-table"><thead><tr><th>total_rows</th><th>assigned_departments</th><th>unique_departments</th></tr></thead><tbody><tr><td>8</td><td>7</td><td>3</td></tr></tbody></table></div></div></div><div class="query-code-card">
+    <div class="query-code-top">
+        <span class="query-code-lang"><i class="fas fa-terminal"></i> SQL Query (TECHCORP DB)</span>
+        <div class="query-code-actions">
+            <button class="btn-try-playground" onclick="loadQueryToEditor('SELECT      COUNT(*) AS total_rows,     COUNT(dept_id) AS assigned_departments,     COUNT(DISTINCT dept_id) AS unique_departments FROM employees;', 'techcorp')"><i class="fas fa-play"></i> Run in Playground</button>
+            <button class="btn-code-copy" onclick="copyQueryText(this, `SELECT 
+    COUNT(*) AS total_rows,
+    COUNT(dept_id) AS assigned_departments,
+    COUNT(DISTINCT dept_id) AS unique_departments
+FROM employees;`)"><i class="far fa-copy"></i> Copy</button>
+        </div>
+    </div>
+    <pre><code>SELECT 
+    COUNT(*) AS total_rows,
+    COUNT(dept_id) AS assigned_departments,
+    COUNT(DISTINCT dept_id) AS unique_departments
+FROM employees;</code></pre>
+</div></div></div>
+<div class="query-module-card" data-category="grouping">
+        <div class="module-header">
+            <div class="module-title-group">
+                <h2><i class="fas fa-layer-group"></i> Module 6: Grouping Data (GROUP BY &amp; HAVING)</h2>
+                <p>SQLBolt Lessons 11 &amp; 12: Grouping tuples into category buckets, computing statistics per group, and filtering groups using HAVING.</p>
+            </div>
+            <span class="module-badge">2 Lessons</span>
+        </div>
+
+        <div class="query-item-box">
+            <div class="query-item-header">
+                <div class="query-item-title">6.1 Grouping Rows with GROUP BY</div>
+                <div class="query-badge-row"><span class="badge-difficulty badge-intermediate">Intermediate</span><span class="tag-badge tag-unit">GROUP BY</span></div>
+            </div>
+            <p class="query-concept-text">The <code>GROUP BY</code> clause partitions rows sharing the same value into summary rows, enabling aggregate functions to run per group.</p>
+            <div class="comparison-grid">
+                <div class="comparison-box"><div class="comparison-label label-before"><span><i class="fas fa-database"></i> Input: employees &amp; departments</span><span>Individual Tuples</span></div><div class="sample-table-wrapper"><table class="sample-table"><thead><tr><th>dept_name</th><th>salary</th></tr></thead><tbody><tr><td>Engineering</td><td>95000</td></tr><tr><td>Engineering</td><td>82000</td></tr><tr><td>Marketing</td><td>68000</td></tr><tr><td>Sales</td><td>72000</td></tr></tbody></table></div></div><div class="comparison-divider"><div class="divider-arrow"><i class="fas fa-arrow-right"></i></div></div>
+                <div class="comparison-box"><div class="comparison-label label-after"><span><i class="fas fa-check-circle"></i> Output: GROUP BY dept_name</span><span>Summary Rows</span></div><div class="sample-table-wrapper result-table-wrapper"><table class="sample-table"><thead><tr><th>dept_name</th><th>headcount</th><th>avg_salary</th></tr></thead><tbody><tr><td>Engineering</td><td>3</td><td>$88,333.33</td></tr><tr><td>Marketing</td><td>2</td><td>$79,500.00</td></tr><tr><td>Sales</td><td>2</td><td>$80,500.00</td></tr></tbody></table></div></div></div><div class="query-code-card">
+    <div class="query-code-top">
+        <span class="query-code-lang"><i class="fas fa-terminal"></i> SQL Query (TECHCORP DB)</span>
+        <div class="query-code-actions">
+            <button class="btn-try-playground" onclick="loadQueryToEditor('SELECT d.dept_name, COUNT(e.emp_id) AS headcount, ROUND(AVG(e.salary), 2) AS avg_salary FROM departments d INNER JOIN employees e ON d.dept_id = e.dept_id GROUP BY d.dept_name;', 'techcorp')"><i class="fas fa-play"></i> Run in Playground</button>
+            <button class="btn-code-copy" onclick="copyQueryText(this, `SELECT d.dept_name, COUNT(e.emp_id) AS headcount, ROUND(AVG(e.salary), 2) AS avg_salary
+FROM departments d
+INNER JOIN employees e ON d.dept_id = e.dept_id
+GROUP BY d.dept_name;`)"><i class="far fa-copy"></i> Copy</button>
+        </div>
+    </div>
+    <pre><code>SELECT d.dept_name, COUNT(e.emp_id) AS headcount, ROUND(AVG(e.salary), 2) AS avg_salary
+FROM departments d
+INNER JOIN employees e ON d.dept_id = e.dept_id
+GROUP BY d.dept_name;</code></pre>
+</div></div><div class="query-item-box">
+        <div class="query-item-header">
+            <div class="query-item-title">6.2 Filtering Grouped Aggregates with HAVING</div>
+            <div class="query-badge-row"><span class="badge-difficulty badge-intermediate">Intermediate</span><span class="tag-badge tag-unit">HAVING</span></div>
+        </div>
+        <p class="query-concept-text"><code>WHERE</code> filters base rows <em>before</em> grouping; <code>HAVING</code> filters aggregated groups <em>after</em> computation. Aggregate functions (e.g. <code>AVG() &gt; 80000</code>) are invalid in WHERE and must go in HAVING.</p>
+        <div class="comparison-grid">
+            <div class="comparison-box"><div class="comparison-label label-before"><span><i class="fas fa-database"></i> All 3 Department Groups</span><span>Engineering, Marketing, Sales</span></div><div class="sample-table-wrapper"><table class="sample-table"><thead><tr><th>dept_name</th><th>avg_salary</th></tr></thead><tbody><tr><td>Engineering</td><td>$88,333.33</td></tr><tr><td>Marketing</td><td>$79,500.00</td></tr><tr><td>Sales</td><td>$80,500.00</td></tr></tbody></table></div></div><div class="comparison-divider"><div class="divider-arrow"><i class="fas fa-arrow-right"></i></div></div>
+            <div class="comparison-box"><div class="comparison-label label-after"><span><i class="fas fa-check-circle"></i> Output: HAVING AVG(salary) &gt; 80000</span><span>Marketing Excluded</span></div><div class="sample-table-wrapper result-table-wrapper"><table class="sample-table"><thead><tr><th>dept_name</th><th>avg_salary</th></tr></thead><tbody><tr><td>Engineering</td><td>$88,333.33</td></tr><tr><td>Sales</td><td>$80,500.00</td></tr></tbody></table></div></div></div><div class="query-code-card">
+    <div class="query-code-top">
+        <span class="query-code-lang"><i class="fas fa-terminal"></i> SQL Query (TECHCORP DB)</span>
+        <div class="query-code-actions">
+            <button class="btn-try-playground" onclick="loadQueryToEditor('SELECT d.dept_name, ROUND(AVG(e.salary), 2) AS avg_salary FROM departments d INNER JOIN employees e ON d.dept_id = e.dept_id GROUP BY d.dept_name HAVING AVG(e.salary) > 80000;', 'techcorp')"><i class="fas fa-play"></i> Run in Playground</button>
+            <button class="btn-code-copy" onclick="copyQueryText(this, `SELECT d.dept_name, ROUND(AVG(e.salary), 2) AS avg_salary
+FROM departments d
+INNER JOIN employees e ON d.dept_id = e.dept_id
+GROUP BY d.dept_name
+HAVING AVG(e.salary) > 80000;`)"><i class="far fa-copy"></i> Copy</button>
+        </div>
+    </div>
+    <pre><code>SELECT d.dept_name, ROUND(AVG(e.salary), 2) AS avg_salary
+FROM departments d
+INNER JOIN employees e ON d.dept_id = e.dept_id
+GROUP BY d.dept_name
+HAVING AVG(e.salary) > 80000;</code></pre>
+</div></div></div>
+<div class="query-module-card" data-category="case">
+        <div class="module-header">
+            <div class="module-title-group">
+                <h2><i class="fas fa-code-branch"></i> Module 7: Conditional Logic (CASE WHEN)</h2>
+                <p>Applying procedural if-else branching declaratively inside SQL queries to format data, generate custom labels, and pivot counts.</p>
+            </div>
+            <span class="module-badge">2 Lessons</span>
+        </div>
+
+        <div class="query-item-box">
+            <div class="query-item-header">
+                <div class="query-item-title">7.1 Labeling Tiers with Searched CASE WHEN</div>
+                <div class="query-badge-row"><span class="badge-difficulty badge-intermediate">Intermediate</span><span class="tag-badge tag-unit">CASE WHEN</span></div>
+            </div>
+            <p class="query-concept-text">Evaluate boolean conditions sequentially: when a condition evaluates to TRUE, its corresponding THEN result is returned, falling back to ELSE.</p>
+            <div class="comparison-grid">
+                <div class="comparison-box"><div class="comparison-label label-before"><span><i class="fas fa-database"></i> Input: Employee Salaries</span><span>Raw numerical amounts</span></div><div class="sample-table-wrapper"><table class="sample-table"><thead><tr><th>first_name</th><th>salary</th></tr></thead><tbody><tr><td>Alice</td><td>95000</td></tr><tr><td>Diana</td><td>88000</td></tr><tr><td>Charlie</td><td>68000</td></tr></tbody></table></div></div><div class="comparison-divider"><div class="divider-arrow"><i class="fas fa-arrow-right"></i></div></div>
+                <div class="comparison-box"><div class="comparison-label label-after"><span><i class="fas fa-check-circle"></i> Output: Computed Salary Tier</span><span>Tier Categorization</span></div><div class="sample-table-wrapper result-table-wrapper"><table class="sample-table"><thead><tr><th>first_name</th><th>salary</th><th>salary_tier</th></tr></thead><tbody><tr><td>Alice</td><td>95000</td><td>Executive Tier (&ge; 90k)</td></tr><tr><td>Diana</td><td>88000</td><td>Senior Tier (&ge; 80k)</td></tr><tr><td>Charlie</td><td>68000</td><td>Standard Tier (&lt; 80k)</td></tr></tbody></table></div></div></div><div class="query-code-card">
+    <div class="query-code-top">
+        <span class="query-code-lang"><i class="fas fa-terminal"></i> SQL Query (TECHCORP DB)</span>
+        <div class="query-code-actions">
+            <button class="btn-try-playground" onclick="loadQueryToEditor('SELECT first_name, last_name, salary,     CASE         WHEN salary >= 90000 THEN \'Executive Tier\'         WHEN salary >= 80000 THEN \'Senior Tier\'         ELSE \'Standard Tier\'     END AS salary_tier FROM employees ORDER BY salary DESC;', 'techcorp')"><i class="fas fa-play"></i> Run in Playground</button>
+            <button class="btn-code-copy" onclick="copyQueryText(this, `SELECT first_name, last_name, salary,
+    CASE
+        WHEN salary >= 90000 THEN 'Executive Tier'
+        WHEN salary >= 80000 THEN 'Senior Tier'
+        ELSE 'Standard Tier'
+    END AS salary_tier
+FROM employees
+ORDER BY salary DESC;`)"><i class="far fa-copy"></i> Copy</button>
+        </div>
+    </div>
+    <pre><code>SELECT first_name, last_name, salary,
+    CASE
+        WHEN salary >= 90000 THEN 'Executive Tier'
+        WHEN salary >= 80000 THEN 'Senior Tier'
+        ELSE 'Standard Tier'
+    END AS salary_tier
+FROM employees
+ORDER BY salary DESC;</code></pre>
+</div></div><div class="query-item-box">
+        <div class="query-item-header">
+            <div class="query-item-title">7.2 Conditional Pivoting: SUM(CASE WHEN ...)</div>
+            <div class="query-badge-row"><span class="badge-difficulty badge-intermediate">Intermediate</span><span class="tag-badge tag-unit">PIVOT COUNTING</span></div>
+        </div>
+        <p class="query-concept-text">Wrap <code>CASE WHEN</code> inside <code>SUM()</code> to count specific subsets as separate column metrics.</p>
+        <div class="comparison-grid">
+            <div class="comparison-box"><div class="comparison-label label-before"><span><i class="fas fa-database"></i> Input: University Students</span><span>GPA &amp; Major</span></div><div class="sample-table-wrapper"><table class="sample-table"><thead><tr><th>major</th><th>gpa</th></tr></thead><tbody><tr><td>Computer Science</td><td>3.85</td></tr><tr><td>Computer Science</td><td>3.40</td></tr><tr><td>Computer Science</td><td>3.95</td></tr></tbody></table></div></div><div class="comparison-divider"><div class="divider-arrow"><i class="fas fa-arrow-right"></i></div></div>
+            <div class="comparison-box"><div class="comparison-label label-after"><span><i class="fas fa-check-circle"></i> Output: Horizontal Metrics</span><span>Honor vs Standard Breakdown</span></div><div class="sample-table-wrapper result-table-wrapper"><table class="sample-table"><thead><tr><th>major</th><th>total_students</th><th>honor_students</th><th>standard_students</th></tr></thead><tbody><tr><td>Computer Science</td><td>3</td><td>2</td><td>1</td></tr></tbody></table></div></div></div><div class="query-code-card">
+    <div class="query-code-top">
+        <span class="query-code-lang"><i class="fas fa-terminal"></i> SQL Query (UNIVERSITY DB)</span>
+        <div class="query-code-actions">
+            <button class="btn-try-playground" onclick="loadQueryToEditor('SELECT major,     COUNT(*) AS total_students,     SUM(CASE WHEN gpa >= 3.8 THEN 1 ELSE 0 END) AS honor_students,     SUM(CASE WHEN gpa < 3.8 THEN 1 ELSE 0 END) AS standard_students FROM students GROUP BY major;', 'university')"><i class="fas fa-play"></i> Run in Playground</button>
+            <button class="btn-code-copy" onclick="copyQueryText(this, `SELECT major,
+    COUNT(*) AS total_students,
+    SUM(CASE WHEN gpa >= 3.8 THEN 1 ELSE 0 END) AS honor_students,
+    SUM(CASE WHEN gpa < 3.8 THEN 1 ELSE 0 END) AS standard_students
+FROM students
+GROUP BY major;`)"><i class="far fa-copy"></i> Copy</button>
+        </div>
+    </div>
+    <pre><code>SELECT major,
+    COUNT(*) AS total_students,
+    SUM(CASE WHEN gpa >= 3.8 THEN 1 ELSE 0 END) AS honor_students,
+    SUM(CASE WHEN gpa < 3.8 THEN 1 ELSE 0 END) AS standard_students
+FROM students
+GROUP BY major;</code></pre>
+</div></div></div>
+<div class="query-module-card" data-category="subqueries">
+        <div class="module-header">
+            <div class="module-title-group">
+                <h2><i class="fas fa-sitemap"></i> Module 8: Subqueries &amp; Nested Queries</h2>
+                <p>Scalar subqueries, multi-row membership testing with IN, derived tables, and correlated subqueries with EXISTS.</p>
+            </div>
+            <span class="module-badge">2 Lessons</span>
+        </div>
+
+        <div class="query-item-box">
+            <div class="query-item-header">
+                <div class="query-item-title">8.1 Scalar Subquery in WHERE: Comparing Against Dynamic Averages</div>
+                <div class="query-badge-row"><span class="badge-difficulty badge-intermediate">Intermediate</span><span class="tag-badge tag-unit">SCALAR SUBQUERY</span></div>
+            </div>
+            <p class="query-concept-text">A scalar subquery returns exactly one row and one column, enabling dynamic comparisons (e.g. finding employees earning more than the company average).</p>
+            <div class="comparison-grid">
+                <div class="comparison-box"><div class="comparison-label label-before"><span><i class="fas fa-database"></i> Subquery: SELECT AVG(salary)</span><span>Calculates: $79,875.00</span></div><div class="sample-table-wrapper"><table class="sample-table"><thead><tr><th>first_name</th><th>salary</th></tr></thead><tbody><tr><td>Alice</td><td>95000</td></tr><tr><td>Bob</td><td>82000</td></tr><tr><td>Charlie</td><td>68000</td></tr><tr><td>Fiona</td><td>72000</td></tr></tbody></table></div></div><div class="comparison-divider"><div class="divider-arrow"><i class="fas fa-arrow-right"></i></div></div>
+                <div class="comparison-box"><div class="comparison-label label-after"><span><i class="fas fa-check-circle"></i> Output: salary &gt; $79,875</span><span>Above Average Earners</span></div><div class="sample-table-wrapper result-table-wrapper"><table class="sample-table"><thead><tr><th>first_name</th><th>salary</th></tr></thead><tbody><tr><td>Alice</td><td>95000</td></tr><tr><td>Bob</td><td>82000</td></tr><tr><td>Diana</td><td>88000</td></tr><tr><td>Evan</td><td>91000</td></tr></tbody></table></div></div></div><div class="query-code-card">
+    <div class="query-code-top">
+        <span class="query-code-lang"><i class="fas fa-terminal"></i> SQL Query (TECHCORP DB)</span>
+        <div class="query-code-actions">
+            <button class="btn-try-playground" onclick="loadQueryToEditor('SELECT first_name, last_name, salary FROM employees WHERE salary > (SELECT AVG(salary) FROM employees) ORDER BY salary DESC;', 'techcorp')"><i class="fas fa-play"></i> Run in Playground</button>
+            <button class="btn-code-copy" onclick="copyQueryText(this, `SELECT first_name, last_name, salary
+FROM employees
+WHERE salary > (SELECT AVG(salary) FROM employees)
+ORDER BY salary DESC;`)"><i class="far fa-copy"></i> Copy</button>
+        </div>
+    </div>
+    <pre><code>SELECT first_name, last_name, salary
+FROM employees
+WHERE salary > (SELECT AVG(salary) FROM employees)
+ORDER BY salary DESC;</code></pre>
+</div></div><div class="query-item-box">
+        <div class="query-item-header">
+            <div class="query-item-title">8.2 Correlated Subquery with NOT EXISTS (Anti-Filter)</div>
+            <div class="query-badge-row"><span class="badge-difficulty badge-advanced">Advanced</span><span class="tag-badge tag-unit">EXISTS</span></div>
+        </div>
+        <p class="query-concept-text"><code>EXISTS</code> tests for the presence of any tuple matching the outer query. It short-circuits as soon as one match is found, making it faster than <code>NOT IN</code>.</p>
+        <div class="comparison-grid">
+            <div class="comparison-box"><div class="comparison-label label-before"><span><i class="fas fa-database"></i> Input: 6 Retail Customers</span><span>Orders checked per customer</span></div><div class="sample-table-wrapper"><table class="sample-table"><thead><tr><th>customer_id</th><th>name</th></tr></thead><tbody><tr><td>1</td><td>John Doe</td></tr><tr><td>4</td><td>Yuki Tanaka</td></tr><tr><td>6</td><td>Carlos Silva</td></tr></tbody></table></div></div><div class="comparison-divider"><div class="divider-arrow"><i class="fas fa-arrow-right"></i></div></div>
+            <div class="comparison-box"><div class="comparison-label label-after"><span><i class="fas fa-check-circle"></i> Output: NOT EXISTS (Orders)</span><span>Customers With Zero Purchases</span></div><div class="sample-table-wrapper result-table-wrapper"><table class="sample-table"><thead><tr><th>customer_id</th><th>name</th><th>city</th></tr></thead><tbody><tr><td>4</td><td>Yuki Tanaka</td><td>Tokyo</td></tr><tr><td>6</td><td>Carlos Silva</td><td>Sao Paulo</td></tr></tbody></table></div></div></div><div class="query-code-card">
+    <div class="query-code-top">
+        <span class="query-code-lang"><i class="fas fa-terminal"></i> SQL Query (RETAIL DB)</span>
+        <div class="query-code-actions">
+            <button class="btn-try-playground" onclick="loadQueryToEditor('SELECT c.customer_id, c.name, c.city FROM customers c WHERE NOT EXISTS (     SELECT 1 FROM orders o WHERE o.customer_id = c.customer_id );', 'retail')"><i class="fas fa-play"></i> Run in Playground</button>
+            <button class="btn-code-copy" onclick="copyQueryText(this, `SELECT c.customer_id, c.name, c.city
+FROM customers c
+WHERE NOT EXISTS (
+    SELECT 1 FROM orders o WHERE o.customer_id = c.customer_id
+);`)"><i class="far fa-copy"></i> Copy</button>
+        </div>
+    </div>
+    <pre><code>SELECT c.customer_id, c.name, c.city
+FROM customers c
+WHERE NOT EXISTS (
+    SELECT 1 FROM orders o WHERE o.customer_id = c.customer_id
+);</code></pre>
+</div></div></div>
+<div class="query-module-card" data-category="set">
+        <div class="module-header">
+            <div class="module-title-group">
+                <h2><i class="fas fa-shapes"></i> Module 9: Set Operations (UNION, INTERSECT, EXCEPT)</h2>
+                <p>Combining relational query outputs using mathematical set theory with union-compatible schemas.</p>
+            </div>
+            <span class="module-badge">2 Lessons</span>
+        </div>
+
+        <div class="query-item-box">
+            <div class="query-item-header">
+                <div class="query-item-title">9.1 UNION vs UNION ALL</div>
+                <div class="query-badge-row"><span class="badge-difficulty badge-intermediate">Intermediate</span><span class="tag-badge tag-unit">UNION</span></div>
+            </div>
+            <p class="query-concept-text"><code>UNION</code> combines outputs and removes duplicate tuples. <code>UNION ALL</code> retains all duplicate tuples, avoiding an expensive sorting/deduplication step.</p>
+            <div class="comparison-grid">
+                <div class="comparison-box"><div class="comparison-label label-before"><span><i class="fas fa-database"></i> Query 1 &amp; Query 2</span><span>Two distinct datasets</span></div><div class="sample-table-wrapper"><table class="sample-table"><thead><tr><th>source</th><th>name</th></tr></thead><tbody><tr><td>Employees (>90k)</td><td>Alice Smith</td></tr><tr><td>Students (GPA>=3.9)</td><td>Meera Nair</td></tr></tbody></table></div></div><div class="comparison-divider"><div class="divider-arrow"><i class="fas fa-arrow-right"></i></div></div>
+                <div class="comparison-box"><div class="comparison-label label-after"><span><i class="fas fa-check-circle"></i> Output: Unified Dataset</span><span>Combined Streams</span></div><div class="sample-table-wrapper result-table-wrapper"><table class="sample-table"><thead><tr><th>person_name</th><th>role</th></tr></thead><tbody><tr><td>Alice Smith</td><td>High Earner</td></tr><tr><td>Evan Wright</td><td>High Earner</td></tr></tbody></table></div></div></div><div class="query-code-card">
+    <div class="query-code-top">
+        <span class="query-code-lang"><i class="fas fa-terminal"></i> SQL Query (TECHCORP DB)</span>
+        <div class="query-code-actions">
+            <button class="btn-try-playground" onclick="loadQueryToEditor('SELECT first_name || \' \' || last_name AS person_name, \'High Earner\' AS role FROM employees WHERE salary >= 90000 UNION SELECT first_name || \' \' || last_name, \'Senior Staff\' FROM employees WHERE hire_date < \'2019-01-01\';', 'techcorp')"><i class="fas fa-play"></i> Run in Playground</button>
+            <button class="btn-code-copy" onclick="copyQueryText(this, `SELECT first_name || ' ' || last_name AS person_name, 'High Earner' AS role
+FROM employees WHERE salary >= 90000
+UNION
+SELECT first_name || ' ' || last_name, 'Senior Staff'
+FROM employees WHERE hire_date < '2019-01-01';`)"><i class="far fa-copy"></i> Copy</button>
+        </div>
+    </div>
+    <pre><code>SELECT first_name || ' ' || last_name AS person_name, 'High Earner' AS role
+FROM employees WHERE salary >= 90000
+UNION
+SELECT first_name || ' ' || last_name, 'Senior Staff'
+FROM employees WHERE hire_date < '2019-01-01';</code></pre>
+</div></div><div class="query-item-box">
+        <div class="query-item-header">
+            <div class="query-item-title">9.2 Set Intersection (INTERSECT)</div>
+            <div class="query-badge-row"><span class="badge-difficulty badge-intermediate">Intermediate</span><span class="tag-badge tag-unit">INTERSECT</span></div>
+        </div>
+        <p class="query-concept-text">Finds rows present in both result streams (e.g. students enrolled simultaneously in CS101 and CS102).</p>
+        <div class="comparison-grid">
+            <div class="comparison-box"><div class="comparison-label label-before"><span><i class="fas fa-database"></i> CS101 Students vs CS102 Students</span><span>Two enrollment lists</span></div><div class="sample-table-wrapper"><table class="sample-table"><thead><tr><th>CS101 IDs</th><th>CS102 IDs</th></tr></thead><tbody><tr><td>1</td><td>1</td></tr><tr><td>2</td><td>6</td></tr><tr><td>3</td><td>-</td></tr><tr><td>6</td><td>-</td></tr></tbody></table></div></div><div class="comparison-divider"><div class="divider-arrow"><i class="fas fa-arrow-right"></i></div></div>
+            <div class="comparison-box"><div class="comparison-label label-after"><span><i class="fas fa-check-circle"></i> Output: Common Student IDs</span><span>Intersection ({1, 6})</span></div><div class="sample-table-wrapper result-table-wrapper"><table class="sample-table"><thead><tr><th>student_id</th></tr></thead><tbody><tr><td>1</td></tr><tr><td>6</td></tr></tbody></table></div></div></div><div class="query-code-card">
+    <div class="query-code-top">
+        <span class="query-code-lang"><i class="fas fa-terminal"></i> SQL Query (UNIVERSITY DB)</span>
+        <div class="query-code-actions">
+            <button class="btn-try-playground" onclick="loadQueryToEditor('SELECT student_id FROM enrollments WHERE course_id = \'CS101\' INTERSECT SELECT student_id FROM enrollments WHERE course_id = \'CS102\';', 'university')"><i class="fas fa-play"></i> Run in Playground</button>
+            <button class="btn-code-copy" onclick="copyQueryText(this, `SELECT student_id FROM enrollments WHERE course_id = 'CS101'
+INTERSECT
+SELECT student_id FROM enrollments WHERE course_id = 'CS102';`)"><i class="far fa-copy"></i> Copy</button>
+        </div>
+    </div>
+    <pre><code>SELECT student_id FROM enrollments WHERE course_id = 'CS101'
+INTERSECT
+SELECT student_id FROM enrollments WHERE course_id = 'CS102';</code></pre>
+</div></div></div>
+<div class="query-module-card" data-category="dml">
+        <div class="module-header">
+            <div class="module-title-group">
+                <h2><i class="fas fa-edit"></i> Module 10: Data Modification Language (DML)</h2>
+                <p>SQLBolt Lessons 13, 14, 15: Inserting records (INSERT), safe updates with predicates (UPDATE), and removing tuples (DELETE).</p>
+            </div>
+            <span class="module-badge">2 Lessons</span>
+        </div>
+
+        <div class="query-item-box">
+            <div class="query-item-header">
+                <div class="query-item-title">10.1 Inserting New Records with INSERT INTO</div>
+                <div class="query-badge-row"><span class="badge-difficulty badge-beginner">Beginner</span><span class="tag-badge tag-unit">INSERT</span></div>
+            </div>
+            <p class="query-concept-text"><code>INSERT INTO table (cols) VALUES (...)</code> appends new valid tuples into the table while enforcing primary/foreign key constraints.</p>
+            <div class="comparison-grid">
+                <div class="comparison-box"><div class="comparison-label label-before"><span><i class="fas fa-database"></i> Table Before (10 movies)</span><span>Max ID = 10</span></div><div class="sample-table-wrapper"><table class="sample-table"><thead><tr><th>id</th><th>title</th><th>year</th></tr></thead><tbody><tr><td>9</td><td>WALL-E</td><td>2008</td></tr><tr><td>10</td><td>Up</td><td>2009</td></tr></tbody></table></div></div><div class="comparison-divider"><div class="divider-arrow"><i class="fas fa-arrow-right"></i></div></div>
+                <div class="comparison-box"><div class="comparison-label label-after"><span><i class="fas fa-check-circle"></i> Table After (11 movies)</span><span>New Film Added</span></div><div class="sample-table-wrapper result-table-wrapper"><table class="sample-table"><thead><tr><th>id</th><th>title</th><th>year</th></tr></thead><tbody><tr><td>10</td><td>Up</td><td>2009</td></tr><tr><td>11</td><td>Inside Out</td><td>2015</td></tr></tbody></table></div></div></div><div class="query-code-card">
+    <div class="query-code-top">
+        <span class="query-code-lang"><i class="fas fa-terminal"></i> SQL Query (MOVIES DB)</span>
+        <div class="query-code-actions">
+            <button class="btn-try-playground" onclick="loadQueryToEditor('INSERT INTO movies (id, title, director, year, length_minutes) VALUES (11, \'Inside Out\', \'Pete Docter\', 2015, 95);', 'movies')"><i class="fas fa-play"></i> Run in Playground</button>
+            <button class="btn-code-copy" onclick="copyQueryText(this, `INSERT INTO movies (id, title, director, year, length_minutes)
+VALUES (11, 'Inside Out', 'Pete Docter', 2015, 95);`)"><i class="far fa-copy"></i> Copy</button>
+        </div>
+    </div>
+    <pre><code>INSERT INTO movies (id, title, director, year, length_minutes)
+VALUES (11, 'Inside Out', 'Pete Docter', 2015, 95);</code></pre>
+</div></div><div class="query-item-box">
+        <div class="query-item-header">
+            <div class="query-item-title">10.2 Targeted Modifications: UPDATE ... SET ... WHERE</div>
+            <div class="query-badge-row"><span class="badge-difficulty badge-intermediate">Intermediate</span><span class="tag-badge tag-unit">UPDATE</span></div>
+        </div>
+        <p class="query-concept-text">Always verify the <code>WHERE</code> clause in an <code>UPDATE</code> statement! An UPDATE without WHERE modifies every single row in the entire table.</p>
+        <div class="comparison-grid">
+            <div class="comparison-box"><div class="comparison-label label-before"><span><i class="fas fa-database"></i> Before: Bob Jones Salary</span><span>$82,000</span></div><div class="sample-table-wrapper"><table class="sample-table"><thead><tr><th>emp_id</th><th>first_name</th><th>salary</th></tr></thead><tbody><tr><td>102</td><td>Bob</td><td>82000</td></tr></tbody></table></div></div><div class="comparison-divider"><div class="divider-arrow"><i class="fas fa-arrow-right"></i></div></div>
+            <div class="comparison-box"><div class="comparison-label label-after"><span><i class="fas fa-check-circle"></i> After: 10% Raise Applied</span><span>$90,200</span></div><div class="sample-table-wrapper result-table-wrapper"><table class="sample-table"><thead><tr><th>emp_id</th><th>first_name</th><th>salary</th></tr></thead><tbody><tr><td>102</td><td>Bob</td><td>90200</td></tr></tbody></table></div></div></div><div class="query-code-card">
+    <div class="query-code-top">
+        <span class="query-code-lang"><i class="fas fa-terminal"></i> SQL Query (TECHCORP DB)</span>
+        <div class="query-code-actions">
+            <button class="btn-try-playground" onclick="loadQueryToEditor('UPDATE employees SET salary = salary * 1.10 WHERE emp_id = 102;', 'techcorp')"><i class="fas fa-play"></i> Run in Playground</button>
+            <button class="btn-code-copy" onclick="copyQueryText(this, `UPDATE employees
+SET salary = salary * 1.10
+WHERE emp_id = 102;`)"><i class="far fa-copy"></i> Copy</button>
+        </div>
+    </div>
+    <pre><code>UPDATE employees
+SET salary = salary * 1.10
+WHERE emp_id = 102;</code></pre>
+</div></div></div>
+<div class="query-module-card" data-category="window">
+        <div class="module-header">
+            <div class="module-title-group">
+                <h2><i class="fas fa-chart-line"></i> Module 11: Analytical SQL, Window Functions &amp; CTEs</h2>
+                <p>Modern advanced SQL: Ranking functions (DENSE_RANK), cumulative running totals, and Common Table Expressions (WITH).</p>
+            </div>
+            <span class="module-badge">3 Lessons</span>
+        </div>
+
+        <div class="query-item-box">
+            <div class="query-item-header">
+                <div class="query-item-title">11.1 Ranking Rows per Category: DENSE_RANK() OVER (PARTITION BY ...)</div>
+                <div class="query-badge-row"><span class="badge-difficulty badge-advanced">Advanced</span><span class="tag-badge tag-unit">WINDOW FUNCTION</span></div>
+            </div>
+            <p class="query-concept-text">Unlike GROUP BY which collapses rows, window functions calculate values across a partition of rows while preserving every individual tuple in the output.</p>
+            <div class="comparison-grid">
+                <div class="comparison-box"><div class="comparison-label label-before"><span><i class="fas fa-database"></i> Input: TechCorp Employees</span><span>Dept 10 &amp; 20</span></div><div class="sample-table-wrapper"><table class="sample-table"><thead><tr><th>first_name</th><th>dept_id</th><th>salary</th></tr></thead><tbody><tr><td>Alice</td><td>10</td><td>95000</td></tr><tr><td>Diana</td><td>10</td><td>88000</td></tr><tr><td>Bob</td><td>10</td><td>82000</td></tr><tr><td>Evan</td><td>20</td><td>91000</td></tr></tbody></table></div></div><div class="comparison-divider"><div class="divider-arrow"><i class="fas fa-arrow-right"></i></div></div>
+                <div class="comparison-box"><div class="comparison-label label-after"><span><i class="fas fa-check-circle"></i> Output: DENSE_RANK() per Dept</span><span>Rank 1, 2, 3 assigned</span></div><div class="sample-table-wrapper result-table-wrapper"><table class="sample-table"><thead><tr><th>first_name</th><th>dept_id</th><th>salary</th><th>rank_in_dept</th></tr></thead><tbody><tr><td>Alice</td><td>10</td><td>95000</td><td>1</td></tr><tr><td>Diana</td><td>10</td><td>88000</td><td>2</td></tr><tr><td>Bob</td><td>10</td><td>82000</td><td>3</td></tr><tr><td>Evan</td><td>20</td><td>91000</td><td>1</td></tr></tbody></table></div></div></div><div class="query-code-card">
+    <div class="query-code-top">
+        <span class="query-code-lang"><i class="fas fa-terminal"></i> SQL Query (TECHCORP DB)</span>
+        <div class="query-code-actions">
+            <button class="btn-try-playground" onclick="loadQueryToEditor('SELECT first_name, last_name, dept_id, salary,     DENSE_RANK() OVER (PARTITION BY dept_id ORDER BY salary DESC) AS rank_in_dept FROM employees WHERE dept_id IS NOT NULL;', 'techcorp')"><i class="fas fa-play"></i> Run in Playground</button>
+            <button class="btn-code-copy" onclick="copyQueryText(this, `SELECT first_name, last_name, dept_id, salary,
+    DENSE_RANK() OVER (PARTITION BY dept_id ORDER BY salary DESC) AS rank_in_dept
+FROM employees
+WHERE dept_id IS NOT NULL;`)"><i class="far fa-copy"></i> Copy</button>
+        </div>
+    </div>
+    <pre><code>SELECT first_name, last_name, dept_id, salary,
+    DENSE_RANK() OVER (PARTITION BY dept_id ORDER BY salary DESC) AS rank_in_dept
+FROM employees
+WHERE dept_id IS NOT NULL;</code></pre>
+</div></div><div class="query-item-box">
+        <div class="query-item-header">
+            <div class="query-item-title">11.2 Cumulative Running Totals over Time</div>
+            <div class="query-badge-row"><span class="badge-difficulty badge-advanced">Advanced</span><span class="tag-badge tag-unit">RUNNING TOTAL</span></div>
+        </div>
+        <p class="query-concept-text">Calculate progressive cumulative revenue across orders as time progresses.</p>
+        <div class="comparison-grid">
+            <div class="comparison-box"><div class="comparison-label label-before"><span><i class="fas fa-database"></i> Input: retail.orders</span><span>Chronological amounts</span></div><div class="sample-table-wrapper"><table class="sample-table"><thead><tr><th>order_id</th><th>order_date</th><th>amount</th></tr></thead><tbody><tr><td>1001</td><td>2023-01-15</td><td>$250.00</td></tr><tr><td>1002</td><td>2023-01-20</td><td>$120.50</td></tr><tr><td>1003</td><td>2023-02-10</td><td>$480.00</td></tr></tbody></table></div></div><div class="comparison-divider"><div class="divider-arrow"><i class="fas fa-arrow-right"></i></div></div>
+            <div class="comparison-box"><div class="comparison-label label-after"><span><i class="fas fa-check-circle"></i> Output: Progressive Running Total</span><span>Accumulated Revenue</span></div><div class="sample-table-wrapper result-table-wrapper"><table class="sample-table"><thead><tr><th>order_date</th><th>total_amount</th><th>cumulative_revenue</th></tr></thead><tbody><tr><td>2023-01-15</td><td>$250.00</td><td>$250.00</td></tr><tr><td>2023-01-20</td><td>$120.50</td><td>$370.50</td></tr><tr><td>2023-02-10</td><td>$480.00</td><td>$850.50</td></tr></tbody></table></div></div></div><div class="query-code-card">
+    <div class="query-code-top">
+        <span class="query-code-lang"><i class="fas fa-terminal"></i> SQL Query (RETAIL DB)</span>
+        <div class="query-code-actions">
+            <button class="btn-try-playground" onclick="loadQueryToEditor('SELECT order_id, order_date, total_amount,     SUM(total_amount) OVER (ORDER BY order_date ASC) AS cumulative_revenue FROM orders;', 'retail')"><i class="fas fa-play"></i> Run in Playground</button>
+            <button class="btn-code-copy" onclick="copyQueryText(this, `SELECT order_id, order_date, total_amount,
+    SUM(total_amount) OVER (ORDER BY order_date ASC) AS cumulative_revenue
+FROM orders;`)"><i class="far fa-copy"></i> Copy</button>
+        </div>
+    </div>
+    <pre><code>SELECT order_id, order_date, total_amount,
+    SUM(total_amount) OVER (ORDER BY order_date ASC) AS cumulative_revenue
+FROM orders;</code></pre>
+</div></div><div class="query-item-box">
+        <div class="query-item-header">
+            <div class="query-item-title">11.3 Common Table Expressions (CTE with WITH)</div>
+            <div class="query-badge-row"><span class="badge-difficulty badge-advanced">Advanced</span><span class="tag-badge tag-unit">CTE (WITH)</span></div>
+        </div>
+        <p class="query-concept-text">CTEs modularize complex queries into temporary named result sets that can be referenced in the main query just like a table.</p>
+        <div class="comparison-grid">
+            <div class="comparison-box"><div class="comparison-label label-before"><span><i class="fas fa-database"></i> CTE: Pre-computed Dept Averages</span><span>dept_id &rarr; avg_sal</span></div><div class="sample-table-wrapper"><table class="sample-table"><thead><tr><th>dept_name</th><th>dept_avg</th></tr></thead><tbody><tr><td>Engineering</td><td>$88,333.33</td></tr><tr><td>Marketing</td><td>$79,500.00</td></tr><tr><td>Sales</td><td>$80,500.00</td></tr></tbody></table></div></div><div class="comparison-divider"><div class="divider-arrow"><i class="fas fa-arrow-right"></i></div></div>
+            <div class="comparison-box"><div class="comparison-label label-after"><span><i class="fas fa-check-circle"></i> Output: Earners Above Dept Average</span><span>Filtered against CTE</span></div><div class="sample-table-wrapper result-table-wrapper"><table class="sample-table"><thead><tr><th>first_name</th><th>dept_name</th><th>salary</th><th>dept_avg</th></tr></thead><tbody><tr><td>Alice</td><td>Engineering</td><td>$95,000</td><td>$88,333.33</td></tr><tr><td>Evan</td><td>Marketing</td><td>$91,000</td><td>$79,500.00</td></tr></tbody></table></div></div></div><div class="query-code-card">
+    <div class="query-code-top">
+        <span class="query-code-lang"><i class="fas fa-terminal"></i> SQL Query (TECHCORP DB)</span>
+        <div class="query-code-actions">
+            <button class="btn-try-playground" onclick="loadQueryToEditor('WITH DeptStats AS (     SELECT dept_id, AVG(salary) AS avg_sal     FROM employees     WHERE dept_id IS NOT NULL     GROUP BY dept_id ) SELECT e.first_name, e.salary, d.dept_name, ROUND(ds.avg_sal, 2) AS dept_avg FROM employees e JOIN DeptStats ds ON e.dept_id = ds.dept_id JOIN departments d ON e.dept_id = d.dept_id WHERE e.salary > ds.avg_sal;', 'techcorp')"><i class="fas fa-play"></i> Run in Playground</button>
+            <button class="btn-code-copy" onclick="copyQueryText(this, `WITH DeptStats AS (
+    SELECT dept_id, AVG(salary) AS avg_sal
+    FROM employees
+    WHERE dept_id IS NOT NULL
+    GROUP BY dept_id
+)
+SELECT e.first_name, e.salary, d.dept_name, ROUND(ds.avg_sal, 2) AS dept_avg
+FROM employees e
+JOIN DeptStats ds ON e.dept_id = ds.dept_id
+JOIN departments d ON e.dept_id = d.dept_id
+WHERE e.salary > ds.avg_sal;`)"><i class="far fa-copy"></i> Copy</button>
+        </div>
+    </div>
+    <pre><code>WITH DeptStats AS (
+    SELECT dept_id, AVG(salary) AS avg_sal
+    FROM employees
+    WHERE dept_id IS NOT NULL
+    GROUP BY dept_id
+)
+SELECT e.first_name, e.salary, d.dept_name, ROUND(ds.avg_sal, 2) AS dept_avg
+FROM employees e
+JOIN DeptStats ds ON e.dept_id = ds.dept_id
+JOIN departments d ON e.dept_id = d.dept_id
+WHERE e.salary > ds.avg_sal;</code></pre>
+</div></div></div>
+<div class="query-module-card" data-category="challenges">
+        <div class="module-header">
+            <div class="module-title-group">
+                <h2><i class="fas fa-trophy"></i> Module 12: Real-World Interview &amp; Benchmark Challenges</h2>
+                <p>SQLZoo, LeetCode, and FAANG technical interview benchmark queries with explanations and optimal solutions.</p>
+            </div>
+            <span class="module-badge">4 Challenges</span>
+        </div>
+
+        <div class="query-item-box">
+            <div class="query-item-header">
+                <div class="query-item-title">Challenge 1: Find the Second Highest Salary (LeetCode #176)</div>
+                <div class="query-badge-row"><span class="badge-difficulty badge-intermediate">Interview Classic</span></div>
+            </div>
+            <p class="query-concept-text"><strong>Problem Statement:</strong> Write an SQL query to report the second highest distinct salary from the employees table. If there is no second highest salary, return NULL.</p><div class="query-code-card">
+    <div class="query-code-top">
+        <span class="query-code-lang"><i class="fas fa-terminal"></i> SQL Query (TECHCORP DB)</span>
+        <div class="query-code-actions">
+            <button class="btn-try-playground" onclick="loadQueryToEditor('SELECT MAX(salary) AS SecondHighestSalary FROM employees WHERE salary < (SELECT MAX(salary) FROM employees);', 'techcorp')"><i class="fas fa-play"></i> Run in Playground</button>
+            <button class="btn-code-copy" onclick="copyQueryText(this, `SELECT MAX(salary) AS SecondHighestSalary
+FROM employees
+WHERE salary < (SELECT MAX(salary) FROM employees);`)"><i class="far fa-copy"></i> Copy</button>
+        </div>
+    </div>
+    <pre><code>SELECT MAX(salary) AS SecondHighestSalary
+FROM employees
+WHERE salary < (SELECT MAX(salary) FROM employees);</code></pre>
+</div><p style="font-size:0.85rem; color:#64748b;"><em>Alternative with Window Functions:</em> <code>SELECT salary FROM (SELECT salary, DENSE_RANK() OVER (ORDER BY salary DESC) as rnk FROM employees) WHERE rnk = 2 LIMIT 1;</code></p></div><div class="query-item-box">
+        <div class="query-item-header">
+            <div class="query-item-title">Challenge 2: Department Top 3 Salaries (LeetCode #185)</div>
+            <div class="query-badge-row"><span class="badge-difficulty badge-advanced">Hard</span></div>
+        </div>
+        <p class="query-concept-text"><strong>Problem Statement:</strong> High earners in a company are employees whose salaries are in the top three unique salaries for their department.</p><div class="query-code-card">
+    <div class="query-code-top">
+        <span class="query-code-lang"><i class="fas fa-terminal"></i> SQL Query (TECHCORP DB)</span>
+        <div class="query-code-actions">
+            <button class="btn-try-playground" onclick="loadQueryToEditor('WITH RankedSalaries AS (     SELECT          d.dept_name AS Department,         e.first_name || \' \' || e.last_name AS Employee,         e.salary AS Salary,         DENSE_RANK() OVER (PARTITION BY e.dept_id ORDER BY e.salary DESC) AS rnk     FROM employees e     JOIN departments d ON e.dept_id = d.dept_id ) SELECT Department, Employee, Salary FROM RankedSalaries WHERE rnk <= 3 ORDER BY Department ASC, Salary DESC;', 'techcorp')"><i class="fas fa-play"></i> Run in Playground</button>
+            <button class="btn-code-copy" onclick="copyQueryText(this, `WITH RankedSalaries AS (
+    SELECT 
+        d.dept_name AS Department,
+        e.first_name || ' ' || e.last_name AS Employee,
+        e.salary AS Salary,
+        DENSE_RANK() OVER (PARTITION BY e.dept_id ORDER BY e.salary DESC) AS rnk
+    FROM employees e
+    JOIN departments d ON e.dept_id = d.dept_id
+)
+SELECT Department, Employee, Salary
+FROM RankedSalaries
+WHERE rnk <= 3
+ORDER BY Department ASC, Salary DESC;`)"><i class="far fa-copy"></i> Copy</button>
+        </div>
+    </div>
+    <pre><code>WITH RankedSalaries AS (
+    SELECT 
+        d.dept_name AS Department,
+        e.first_name || ' ' || e.last_name AS Employee,
+        e.salary AS Salary,
+        DENSE_RANK() OVER (PARTITION BY e.dept_id ORDER BY e.salary DESC) AS rnk
+    FROM employees e
+    JOIN departments d ON e.dept_id = d.dept_id
+)
+SELECT Department, Employee, Salary
+FROM RankedSalaries
+WHERE rnk <= 3
+ORDER BY Department ASC, Salary DESC;</code></pre>
+</div></div><div class="query-item-box">
+        <div class="query-item-header">
+            <div class="query-item-title">Challenge 3: Customers Who Never Order (LeetCode #183)</div>
+            <div class="query-badge-row"><span class="badge-difficulty badge-beginner">Easy</span></div>
+        </div>
+        <p class="query-concept-text"><strong>Problem Statement:</strong> Find all customers who have never placed an order in the retail store.</p><div class="query-code-card">
+    <div class="query-code-top">
+        <span class="query-code-lang"><i class="fas fa-terminal"></i> SQL Query (RETAIL DB)</span>
+        <div class="query-code-actions">
+            <button class="btn-try-playground" onclick="loadQueryToEditor('SELECT c.name AS Customers FROM customers c LEFT JOIN orders o ON c.customer_id = o.customer_id WHERE o.order_id IS NULL;', 'retail')"><i class="fas fa-play"></i> Run in Playground</button>
+            <button class="btn-code-copy" onclick="copyQueryText(this, `SELECT c.name AS Customers
+FROM customers c
+LEFT JOIN orders o ON c.customer_id = o.customer_id
+WHERE o.order_id IS NULL;`)"><i class="far fa-copy"></i> Copy</button>
+        </div>
+    </div>
+    <pre><code>SELECT c.name AS Customers
+FROM customers c
+LEFT JOIN orders o ON c.customer_id = o.customer_id
+WHERE o.order_id IS NULL;</code></pre>
+</div></div><div class="query-item-box">
+        <div class="query-item-header">
+            <div class="query-item-title">Challenge 4: Find Highest-Grossing Director per Era</div>
+            <div class="query-badge-row"><span class="badge-difficulty badge-intermediate">Intermediate</span></div>
+        </div>
+        <p class="query-concept-text"><strong>Problem Statement:</strong> Rank directors by their total domestic box office earnings for movies released after 2000.</p><div class="query-code-card">
+    <div class="query-code-top">
+        <span class="query-code-lang"><i class="fas fa-terminal"></i> SQL Query (MOVIES DB)</span>
+        <div class="query-code-actions">
+            <button class="btn-try-playground" onclick="loadQueryToEditor('SELECT      m.director,     COUNT(m.id) AS total_films,     SUM(b.domestic_sales) AS total_domestic_gross FROM movies m JOIN box_office b ON m.id = b.movie_id WHERE m.year >= 2000 GROUP BY m.director ORDER BY total_domestic_gross DESC;', 'movies')"><i class="fas fa-play"></i> Run in Playground</button>
+            <button class="btn-code-copy" onclick="copyQueryText(this, `SELECT 
+    m.director,
+    COUNT(m.id) AS total_films,
+    SUM(b.domestic_sales) AS total_domestic_gross
+FROM movies m
+JOIN box_office b ON m.id = b.movie_id
+WHERE m.year >= 2000
+GROUP BY m.director
+ORDER BY total_domestic_gross DESC;`)"><i class="far fa-copy"></i> Copy</button>
+        </div>
+    </div>
+    <pre><code>SELECT 
+    m.director,
+    COUNT(m.id) AS total_films,
+    SUM(b.domestic_sales) AS total_domestic_gross
+FROM movies m
+JOIN box_office b ON m.id = b.movie_id
+WHERE m.year >= 2000
+GROUP BY m.director
+ORDER BY total_domestic_gross DESC;</code></pre>
+</div></div></div>
+
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <h3><i class="fas fa-database"></i> DBMS Hub</h3>
+                    <p>Complete University &amp; Competitive Exam Reference Guide for Database Management Systems.</p>
+                </div>
+                <div class="footer-links">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="queries.html">SQL Query Lab</a></li>
+                        <li><a href="theory.html">Theory Bank</a></li>
+                        <li><a href="previousyear.html">Solved PYQs</a></li>
+                        <li><a href="mcq.html">MCQ Bank</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 DBMS Hub. Engineered for Academic Excellence.</p>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>
