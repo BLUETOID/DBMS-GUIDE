@@ -3439,3 +3439,301 @@ body.dark-theme .challenge-solution {
 .challenge-solution.is-open {
     display: block;
 }
+
+/* ==========================================================================
+   Pure Visual SQL Examples Catalog Styling
+   ========================================================================== */
+.catalog-header {
+    text-align: center;
+    padding: 2.5rem 1rem 1.5rem;
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.catalog-header h1 {
+    font-size: 2.5rem;
+    font-weight: 800;
+    margin-bottom: 0.75rem;
+    background: linear-gradient(135deg, #3776ab, #10b981);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.catalog-header p {
+    font-size: 1.1rem;
+    color: var(--text-secondary, #64748b);
+    line-height: 1.6;
+}
+
+/* Catalog Search & Navigation Sticky Header */
+.catalog-controls-bar {
+    position: sticky;
+    top: 60px;
+    z-index: 90;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border-color, #e2e8f0);
+    padding: 12px 0;
+    margin-bottom: 2.5rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+    transition: background-color 0.3s ease;
+}
+
+body.dark-theme .catalog-controls-bar {
+    background: rgba(15, 23, 42, 0.95);
+    border-color: #334155;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.catalog-search-wrapper {
+    position: relative;
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+.catalog-search-input {
+    width: 100%;
+    padding: 10px 16px 10px 42px;
+    border-radius: 30px;
+    border: 1px solid var(--border-color, #cbd5e1);
+    background: var(--card-bg, #ffffff);
+    color: var(--text-color, #1e293b);
+    font-size: 0.95rem;
+    outline: none;
+    transition: all 0.2s ease;
+}
+
+.catalog-search-input:focus {
+    border-color: var(--primary-color, #3776ab);
+    box-shadow: 0 0 0 3px rgba(55, 118, 171, 0.15);
+}
+
+body.dark-theme .catalog-search-input {
+    background: #1e293b;
+    border-color: #475569;
+    color: #f8fafc;
+}
+
+.catalog-search-icon {
+    position: absolute;
+    left: 14px;
+    color: #94a3b8;
+    pointer-events: none;
+    font-size: 0.95rem;
+}
+
+.catalog-stats-badge {
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    background: rgba(55, 118, 171, 0.1);
+    color: var(--primary-color, #3776ab);
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+body.dark-theme .catalog-stats-badge {
+    background: rgba(56, 189, 248, 0.15);
+    color: #38bdf8;
+}
+
+/* Category Quick Jump Pills */
+.category-pills-container {
+    display: flex;
+    gap: 8px;
+    overflow-x: auto;
+    padding-bottom: 4px;
+    scrollbar-width: thin;
+}
+
+.category-pills-container::-webkit-scrollbar {
+    height: 4px;
+}
+.category-pills-container::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 4px;
+}
+
+.cat-pill {
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 0.82rem;
+    font-weight: 600;
+    text-decoration: none;
+    white-space: nowrap;
+    background: var(--bg-color, #f1f5f9);
+    color: var(--text-color, #475569);
+    border: 1px solid transparent;
+    transition: all 0.2s ease;
+    cursor: pointer;
+}
+
+.cat-pill:hover,
+.cat-pill.active {
+    background: var(--primary-color, #3776ab);
+    color: #ffffff;
+    box-shadow: 0 2px 8px rgba(55, 118, 171, 0.3);
+}
+
+body.dark-theme .cat-pill {
+    background: #1e293b;
+    color: #94a3b8;
+}
+body.dark-theme .cat-pill:hover,
+body.dark-theme .cat-pill.active {
+    background: #38bdf8;
+    color: #0f172a;
+}
+
+/* Module Section Dividers */
+.catalog-module-section {
+    scroll-margin-top: 170px;
+    margin-bottom: 3.5rem;
+}
+
+.module-header-box {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding-bottom: 12px;
+    border-bottom: 2px solid var(--border-color, #e2e8f0);
+    margin-bottom: 1.5rem;
+}
+
+body.dark-theme .module-header-box {
+    border-color: #334155;
+}
+
+.module-number-badge {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    background: linear-gradient(135deg, #3776ab, #10b981);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    font-size: 1.1rem;
+    box-shadow: 0 2px 8px rgba(55, 118, 171, 0.25);
+    flex-shrink: 0;
+}
+
+.module-title-wrap h2 {
+    font-size: 1.45rem;
+    font-weight: 800;
+    margin: 0;
+    color: var(--text-color, #0f172a);
+}
+
+body.dark-theme .module-title-wrap h2 {
+    color: #f8fafc;
+}
+
+.module-title-wrap p {
+    font-size: 0.9rem;
+    color: var(--text-secondary, #64748b);
+    margin: 2px 0 0;
+}
+
+/* Query Card Pure */
+.query-example-card {
+    background: var(--card-bg, #ffffff);
+    border: 1px solid var(--card-border, #e2e8f0);
+    border-radius: 12px;
+    padding: 22px 24px;
+    margin-bottom: 24px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.query-example-card:hover {
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.06);
+}
+
+body.dark-theme .query-example-card {
+    background: #1e293b;
+    border-color: #334155;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+}
+
+.example-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 12px;
+    margin-bottom: 12px;
+}
+
+.example-card-title {
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--text-color, #0f172a);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 0;
+    flex-wrap: wrap;
+}
+
+body.dark-theme .example-card-title {
+    color: #f8fafc;
+}
+
+.example-badge {
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    padding: 2px 8px;
+    border-radius: 4px;
+    background: rgba(55, 118, 171, 0.12);
+    color: var(--primary-color, #3776ab);
+}
+
+body.dark-theme .example-badge {
+    background: rgba(56, 189, 248, 0.15);
+    color: #38bdf8;
+}
+
+.example-problem-stmt {
+    font-size: 0.95rem;
+    color: var(--text-secondary, #475569);
+    margin-bottom: 16px;
+    line-height: 1.5;
+}
+
+body.dark-theme .example-problem-stmt {
+    color: #94a3b8;
+}
+
+/* Key Takeaway Badge */
+.takeaway-note {
+    background: rgba(16, 185, 129, 0.08);
+    border-left: 3px solid #10b981;
+    padding: 10px 14px;
+    border-radius: 0 8px 8px 0;
+    font-size: 0.88rem;
+    color: #065f46;
+    margin-top: 14px;
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+}
+
+body.dark-theme .takeaway-note {
+    background: rgba(16, 185, 129, 0.12);
+    color: #6ee7b7;
+    border-color: #10b981;
+}
+
+.takeaway-note i {
+    color: #10b981;
+    margin-top: 2px;
+    flex-shrink: 0;
+}
+
