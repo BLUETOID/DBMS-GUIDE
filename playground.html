@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Database Playground &bull; DBMS Learning Hub</title>
+    <meta name="description" content="An interactive in-browser SQLite database playground. Create tables, insert records, run DDL, DML, and complex relational queries with live schema discovery.">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800&family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css">
+</head>
+<body>
+    <!-- Top Navigation Bar -->
+    <nav class="navbar" role="navigation" aria-label="Main navigation">
+        <div class="nav-container">
+            <a href="index.html" class="logo" aria-label="DBMS Hub Home">
+                <i class="fas fa-database" aria-hidden="true"></i> DBMS Hub
+            </a>
+            <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation menu" aria-expanded="false" aria-controls="navMenu">
+                <i class="fas fa-bars" aria-hidden="true"></i>
+            </button>
+            <ul class="nav-menu" id="navMenu">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="unit1.html">Unit I</a></li>
+                <li><a href="unit2.html">Unit II</a></li>
+                <li><a href="unit3.html">Unit III</a></li>
+                <li><a href="unit4.html">Unit IV</a></li>
+                <li><a href="unit5.html">Unit V</a></li>
+                <li><a href="theory.html">Theory</a></li>
+                <li><a href="queries.html">SQL Guide</a></li>
+                <li><a href="playground.html" class="active"><i class="fas fa-terminal"></i> Playground</a></li>
+                <li><a href="mcq.html">MCQ Bank</a></li>
+                <li><a href="cheatsheet.html">Cheat Sheet</a></li>
+                <li class="nav-divider"></li>
+                <li><a href="previousyear.html">Solved PYQs</a></li>
+            </ul>
+            <button class="theme-toggle-btn" id="darkModeToggle" onclick="toggleDarkMode()" aria-label="Toggle Dark Mode">
+                <i class="fas fa-moon"></i>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Main Container -->
+    <main class="container" style="max-width: 1300px; padding: 0 16px;">
+        <!-- Header Banner -->
+        <header class="playground-page-header">
+            <div class="playground-title-row">
+                <h1><i class="fas fa-terminal" style="font-size: 1.8rem;"></i> SQL Database Playground</h1>
+                <div class="engine-status-badge">
+                    <span class="status-dot-pulse"></span>
+                    <span id="engineStatusText">SQLite 3 WebAssembly Initializing...</span>
+                </div>
+            </div>
+            <p class="playground-desc">
+                Practice all database operations in real-time: execute <code>CREATE TABLE</code>, <code>INSERT</code>, <code>UPDATE</code>, <code>DELETE</code>, multi-table <code>JOIN</code>s, and subqueries with zero server setup.
+            </p>
+        </header>
+
+        <!-- Top Controls Toolbar -->
+        <div class="playground-toolbar">
+            <div class="toolbar-group">
+                <button class="btn-run-sql" id="btnRunSql" title="Execute entire script (Ctrl + Enter)">
+                    <i class="fas fa-play"></i> Run SQL <span style="font-size: 0.75rem; opacity: 0.85;">(Ctrl+Enter)</span>
+                </button>
+                <button class="btn-toolbar" id="btnRunSelection" title="Execute only highlighted snippet">
+                    <i class="fas fa-i-cursor"></i> Run Selected
+                </button>
+                <button class="btn-toolbar" id="btnFormatSql" title="Format SQL keywords to uppercase">
+                    <i class="fas fa-magic"></i> Format SQL
+                </button>
+                <button class="btn-toolbar" id="btnClearEditor" title="Clear current editor">
+                    <i class="fas fa-eraser"></i> Clear
+                </button>
+            </div>
+
+            <div class="toolbar-group">
+                <label for="templateSelect" style="font-size: 0.85rem; font-weight: 600; color: var(--text-secondary,#64748b);">Template:</label>
+                <select id="templateSelect" class="template-select" aria-label="Load database template schema">
+                    <option value="blank">Blank Database (Sandbox)</option>
+                    <option value="university">University Portal (Students &amp; Courses)</option>
+                    <option value="ecommerce">E-Commerce Store (Customers &amp; Orders)</option>
+                    <option value="hr">TechCorp Enterprise HR (Staff &amp; Depts)</option>
+                    <option value="banking">Banking System (Accounts &amp; Ledger)</option>
+                </select>
+
+                <button class="btn-toolbar" id="btnResetDb" style="color: #ef4444;" title="Wipe database memory and reload clean template">
+                    <i class="fas fa-redo"></i> Reset DB
+                </button>
+                <button class="btn-toolbar" id="btnExportCsv" title="Export current query result table to CSV">
+                    <i class="fas fa-file-csv"></i> CSV
+                </button>
+                <button class="btn-toolbar" id="btnExportSqlite" title="Download the in-memory database as a .sqlite file">
+                    <i class="fas fa-download"></i> .sqlite
+                </button>
+            </div>
+        </div>
+
+        <!-- Split-Pane Workspace -->
+        <div class="playground-workspace">
+            <!-- Left Panel: Live Schema Explorer Sidebar -->
+            <aside class="schema-sidebar" aria-label="Database Schema Explorer">
+                <div class="schema-sidebar-header">
+                    <h2 class="schema-sidebar-title">
+                        <i class="fas fa-sitemap" style="color: var(--primary-color,#3776ab);"></i> Schema Explorer
+                    </h2>
+                    <span class="table-count-badge" id="tableCountBadge">0 Tables</span>
+                </div>
+
+                <div class="schema-filter-box">
+                    <input type="text" id="schemaFilterInput" class="schema-filter-input" placeholder="Filter tables..." aria-label="Filter tables in schema">
+                </div>
+
+                <div class="schema-tables-list" id="schemaTablesList">
+                    <div style="padding: 24px 10px; text-align: center; color: var(--text-secondary, #64748b); font-size: 0.85rem;">
+                        <i class="fas fa-spinner fa-spin" style="font-size: 1.5rem; margin-bottom: 8px; display: block;"></i>
+                        Loading schema...
+                    </div>
+                </div>
+
+                <div style="padding: 8px 12px; background: var(--bg-color, #f8fafc); border-top: 1px solid var(--border-color, #e2e8f0); font-size: 0.72rem; color: #64748b; text-align: center;">
+                    <i class="fas fa-info-circle"></i> Tables update live upon executing DDL/DML.
+                </div>
+            </aside>
+
+            <!-- Right Panel: Editor & Tabbed Results -->
+            <section class="playground-main-panel">
+                <!-- SQL Code Editor Card -->
+                <div class="editor-card">
+                    <div class="editor-header">
+                        <div class="editor-title">
+                            <i class="fas fa-code"></i> SQL Script &amp; Query Editor
+                        </div>
+                        <div class="editor-shortcuts-hint">
+                            Run: <kbd>Ctrl</kbd> + <kbd>Enter</kbd> &bull; Indent: <kbd>Tab</kbd>
+                        </div>
+                    </div>
+                    <div class="editor-body">
+                        <pre class="editor-gutter" id="editorGutter">1</pre>
+                        <textarea class="editor-textarea" id="sqlEditorTextarea" spellcheck="false" placeholder="Write SQL commands here (e.g. CREATE TABLE, INSERT INTO, SELECT *)..." aria-label="SQL Editor"></textarea>
+                    </div>
+                </div>
+
+                <!-- Results & Console Output Card -->
+                <div class="results-card">
+                    <div class="results-tab-bar">
+                        <div class="results-tabs">
+                            <button class="res-tab-btn active" data-tab="tabResults">
+                                <i class="fas fa-table"></i> Query Results
+                            </button>
+                            <button class="res-tab-btn" data-tab="tabConsole">
+                                <i class="fas fa-terminal"></i> Console Log
+                            </button>
+                            <button class="res-tab-btn" data-tab="tabHistory">
+                                <i class="fas fa-history"></i> Query History
+                            </button>
+                            <button class="res-tab-btn" data-tab="tabCheat">
+                                <i class="fas fa-book-open"></i> Quick Syntax
+                            </button>
+                        </div>
+                        <div class="execution-stat-pill" id="executionStatPill">
+                            <i class="fas fa-info-circle"></i> Ready
+                        </div>
+                    </div>
+
+                    <!-- Tab 1: Result Table Pane -->
+                    <div class="res-tab-pane active" id="tabResults">
+                        <div id="resultTableContainer">
+                            <div style="padding: 40px 20px; text-align: center; color: var(--text-secondary, #64748b);">
+                                <i class="fas fa-play-circle" style="font-size: 2.2rem; color: #10b981; margin-bottom: 12px; display: block; opacity: 0.8;"></i>
+                                <h3 style="margin: 0 0 6px; font-size: 1.1rem; color: var(--text-color, #1e293b);">Ready to Execute</h3>
+                                <p style="font-size: 0.9rem; margin: 0;">
+                                    Click <strong>Run SQL</strong> or press <kbd>Ctrl+Enter</kbd> to execute the current script.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Tab 2: Console Log Pane -->
+                    <div class="res-tab-pane" id="tabConsole">
+                        <div class="console-log-box" id="consoleLogBox"></div>
+                    </div>
+
+                    <!-- Tab 3: Query History Pane -->
+                    <div class="res-tab-pane" id="tabHistory">
+                        <div class="history-list" id="queryHistoryList"></div>
+                    </div>
+
+                    <!-- Tab 4: Quick Syntax Cheatsheet -->
+                    <div class="res-tab-pane" id="tabCheat">
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 14px;">
+                            <div style="background: var(--bg-color,#f8fafc); border:1px solid var(--border-color,#e2e8f0); border-radius:8px; padding:12px;">
+                                <h4 style="margin:0 0 6px; font-size:0.9rem; color:var(--primary-color,#3776ab);"><i class="fas fa-plus-circle"></i> Create Table (DDL)</h4>
+                                <pre style="margin:0; background:#0b0f19; color:#38bdf8; padding:8px; border-radius:4px; font-size:0.78rem;"><code>CREATE TABLE users (
+    id INTEGER PRIMARY KEY,
+    name TEXT NOT NULL,
+    email TEXT UNIQUE
+);</code></pre>
+                            </div>
+                            <div style="background: var(--bg-color,#f8fafc); border:1px solid var(--border-color,#e2e8f0); border-radius:8px; padding:12px;">
+                                <h4 style="margin:0 0 6px; font-size:0.9rem; color:var(--primary-color,#3776ab);"><i class="fas fa-arrow-down"></i> Insert Rows (DML)</h4>
+                                <pre style="margin:0; background:#0b0f19; color:#38bdf8; padding:8px; border-radius:4px; font-size:0.78rem;"><code>INSERT INTO users (name, email)
+VALUES ('Alice', 'alice@corp.com'),
+       ('Bob', 'bob@corp.com');</code></pre>
+                            </div>
+                            <div style="background: var(--bg-color,#f8fafc); border:1px solid var(--border-color,#e2e8f0); border-radius:8px; padding:12px;">
+                                <h4 style="margin:0 0 6px; font-size:0.9rem; color:var(--primary-color,#3776ab);"><i class="fas fa-edit"></i> Update Rows (DML)</h4>
+                                <pre style="margin:0; background:#0b0f19; color:#38bdf8; padding:8px; border-radius:4px; font-size:0.78rem;"><code>UPDATE users 
+SET email = 'new@corp.com' 
+WHERE id = 1;</code></pre>
+                            </div>
+                            <div style="background: var(--bg-color,#f8fafc); border:1px solid var(--border-color,#e2e8f0); border-radius:8px; padding:12px;">
+                                <h4 style="margin:0 0 6px; font-size:0.9rem; color:var(--primary-color,#3776ab);"><i class="fas fa-trash-alt"></i> Delete Rows (DML)</h4>
+                                <pre style="margin:0; background:#0b0f19; color:#38bdf8; padding:8px; border-radius:4px; font-size:0.78rem;"><code>DELETE FROM users 
+WHERE id = 2;</code></pre>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3><i class="fas fa-database"></i> DBMS Hub</h3>
+                    <p>Your complete, university-grade study guide to mastering Database Management Systems, university examinations, and competitive engineering assessments.</p>
+                </div>
+                <div class="footer-section">
+                    <h3>Quick Links</h3>
+                    <ul>
+                        <li><a href="unit1.html">Unit I - ER &amp; Architecture</a></li>
+                        <li><a href="unit2.html">Unit II - Relational &amp; SQL</a></li>
+                        <li><a href="unit3.html">Unit III - Normalization</a></li>
+                        <li><a href="unit4.html">Unit IV - Transactions &amp; Recovery</a></li>
+                        <li><a href="unit5.html">Unit V - Concurrency Control</a></li>
+                        <li><a href="queries.html">Visual SQL Handbook</a></li>
+                        <li><a href="playground.html">SQL Playground</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>Exam Resources</h3>
+                    <ul>
+                        <li><a href="cheatsheet.html">DBMS &amp; SQL Cheat Sheet</a></li>
+                        <li><a href="previousyear.html">Solved University PYQs</a></li>
+                        <li><a href="previousyear.html#unit1">Unit I Exam Numericals</a></li>
+                        <li><a href="previousyear.html#unit3">Normalization Problems</a></li>
+                        <li><a href="previousyear.html#unit4">Serializability Proofs</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 DBMS Learning Hub &bull; BCS501 Academic Courseware. Built with <i class="fas fa-heart"></i> for Computer Science Students.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts: SQLite WebAssembly (sql.js) + Playground Controller -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.8.0/sql-wasm.js"></script>
+    <script src="js/script.js"></script>
+    <script src="js/playground.js"></script>
+</body>
+</html>
